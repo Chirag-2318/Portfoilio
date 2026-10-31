@@ -60,3 +60,32 @@ This document logs decisions, trade-offs, and verification results across all im
 
 5. **Placeholder View Architecture**:
    - Scaffolding `/work`, `/about`, `/resume`, and `/contact` with `ViewFrame` and `ComingTogether` editorial proof sheets (28pt grid, crop ticks, `PROOF PENDING` banner).
+
+
+
+## Prompt 3 — The One-Screen Home View and the Signature ("Second Pass" Lens)
+
+1. **Dual-Layer Lens Architecture**:
+   - Stacked `<HeroContent variant="final" />` (interactive, base) and `<HeroContent variant="draft" />` (overlay, `aria-hidden="true"`, `inert`, `pointer-events: none`).
+   - `useLens.ts` coordinates MotionValues (`x`, `y`, `r`) driven by spring physics (`stiffness: 420, damping: 38`), writing directly to `draftEl.style.clipPath = circle(${r}px at ${x - rect.left}px ${y - rect.top}px)` and translating the SVG Loupe ring (`LoupeRing.tsx`) via `requestAnimationFrame` without React re-renders.
+   - Interactive radii targets: rest `0`, hover `120px` (fine pointer) / `96px` (touch), held `180px`, over interactive elements `36px` (`a, button, [data-lens-shrink]`).
+   - One-time auto-sweep: Runs once per session via module-level `introPlayed` flag if pointer hasn't moved after entrance finish (~900ms), sweeping across the `[data-name]` element over 900ms with in-out-quart easing.
+
+2. **Construction Guide Line Calibration**:
+   - Calibrated against Fraunces 144opsz font metrics:
+     - `--g-cap: 0.12em;`
+     - `--g-xheight: 0.44em;`
+     - `--g-baseline: 0.76em;`
+   - Dashed rules with 10px JetBrains Mono uppercase labels (`CAP HEIGHT`, `X-HEIGHT`, `BASELINE`) and edge registration `+` ticks.
+
+3. **Draft Layer Opacity and React 19 Inert Support**:
+   - Initial entrance animation is strictly reserved for `variant="final"` (`isFirstIntro = !isDraft && ...`). Draft layer elements use `initial={false}`, rendering 100% visible at all times beneath the clip path.
+   - Standardized `inert` to boolean attribute (`inert={true}` or `inert={isDraft ? true : undefined}`) for React 19 compliance, eliminating console warnings.
+
+4. **CSS Cascade Layering for Button Typography**:
+   - In Tailwind CSS v4, base resets (`a { color: inherit; }`) defined outside `@layer` took precedence over `@layer utilities` classes (`.text-paper`). Wrapped all base resets into `@layer base { ... }` in `src/app/globals.css`, ensuring `.text-paper` on `.bg-ink` primary buttons renders correctly in all viewports.
+
+5. **Single Viewport No-Scroll Constraint (Heights ≥ 640px)**:
+   - On `< 768px`, calibrated `--name-vw: 24vw`, `font-size: clamp(3.25rem, min(var(--name-vw), 18svh), 14rem)`, mobile portrait dimensions to `60x75px`, and container vertical padding to `0.5rem 0`.
+   - Verified that viewports from 360x740 up to 1440x900 have `docScroll: false` and `contentScroll: false`.
+

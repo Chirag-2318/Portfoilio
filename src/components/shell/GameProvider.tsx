@@ -30,3 +30,4 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 export function useGame(): GameContextType {
   return React.useContext(GameContext);
 }
+

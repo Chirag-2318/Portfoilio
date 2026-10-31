@@ -32,3 +32,4 @@ export function CropMarks() {
     </div>
   );
 }
+

@@ -97,3 +97,40 @@
   - `docs/PROGRESS.md`
 - **Anything deferred**:
   - Full home view (two-layer lens, portrait, and index list) deferred to Prompt 3 as specified.
+
+
+
+## Prompt 3 of 10 — The One-Screen Home View and the Signature ("Second Pass" Lens)
+- **What was done**:
+  - Implemented the complete single-viewport Home view replacing temporary token page at `src/app/page.tsx`.
+  - Built `DraftContext.tsx` providing draft state, `toggle()`, `setDraft()`, reset on route change/unmount, and Escape key listener.
+  - Built `DraftToggle.tsx` providing a pill button on mobile screens and a subtle registration mark button on desktop/tablet.
+  - Built `LoupeRing.tsx` featuring 1px accent circular ring, four 6px outward crosshair ticks (N, S, E, W), and 10px JetBrains Mono "1ST PASS" label.
+  - Built `useLens.ts` coordinating MotionValues (`x`, `y`, `r`) with spring physics (stiffness 420, damping 38), pointer listeners, dynamic interactive radii (0 / 36 / 96 / 120 / 180 / 2400px), one-time intro auto-sweep, and direct rAF DOM clip-path updates.
+  - Built `Portrait.tsx` with 4:5 aspect frame, radius-md, `var(--line-strong)` border, and 4 corner crop ticks. Supports actual photo asset (`public/images/chirag.jpg`) in full color vs grayscale + dot grid in draft, or fallback SVG monogram "CP" (filled in final, outline + center crosshair in draft).
+  - Built `IndexList.tsx` rendering semantic `<dl>` grid rows (`NOW`, `BUILT`, `WON`, `STUDY`, `BASED`, `REACH`) with `ViewLink` hover effects, email copy button with aria-live toast, and strikethrough styling in draft.
+  - Built `HeroContent.tsx` managing dual variants (`final` and `draft`):
+    - Entrance animation for final variant using `EASE_OUT_EXPO` stagger.
+    - Draft variant rendering outline typography with text-stroke, inline draft comment `// next: take it further`, and full-width construction guides (cap-height, x-height, baseline) with registration ticks.
+  - Built `HomeStage.tsx` stacking final and draft layers inside `DraftProvider`.
+  - Configured `home.css` with responsive clamp scaling, zero-scroll constraint at heights ≥ 640px, and calibrated guide positions.
+  - Verified static export build (`npm run build`) and lint (`npm run lint`).
+  - Captured verification screenshots across 360x740, 390x844, 768x1024, 1366x768, 1440x900, 1440x700 in light and dark themes, verifying lens interaction, portrait fallback, and full draft expansion.
+- **Files created/modified**:
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+  - `src/components/home/HomeStage.tsx`
+  - `src/components/home/HeroContent.tsx`
+  - `src/components/home/Portrait.tsx`
+  - `src/components/home/IndexList.tsx`
+  - `src/components/home/DraftToggle.tsx`
+  - `src/components/home/LoupeRing.tsx`
+  - `src/components/home/useLens.ts`
+  - `src/components/home/DraftContext.tsx`
+  - `src/components/home/home.css`
+  - `scripts/take-screenshots-p3.mjs`
+  - `docs/DECISIONS.md`
+  - `docs/PROGRESS.md`
+- **Anything deferred**:
+  - Work view (`/work`) and case study template deferred to Prompt 4 as specified.
+

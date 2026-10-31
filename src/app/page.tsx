@@ -1,5 +1,5 @@
-import { TokenShowcase } from "@/components/ui/TokenShowcase";
+import { HomeStage } from "@/components/home/HomeStage";
 
 export default function HomePage() {
-  return <TokenShowcase />;
+  return <HomeStage />;
 }

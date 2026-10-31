@@ -14,3 +14,4 @@ export function useMotionOK(): boolean {
   const shouldReduceMotion = useReducedMotion();
   return !shouldReduceMotion;
 }
+

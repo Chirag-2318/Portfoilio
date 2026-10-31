@@ -46,3 +46,4 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
 export function useCommand(): CommandContextType {
   return React.useContext(CommandContext);
 }
+

@@ -53,3 +53,4 @@ export function ComingTogether({ title, note }: ComingTogetherProps) {
     </div>
   );
 }
+

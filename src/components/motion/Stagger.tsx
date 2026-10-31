@@ -32,3 +32,4 @@ export function Stagger({
 
   return <Component className={className}>{staggeredChildren}</Component>;
 }
+

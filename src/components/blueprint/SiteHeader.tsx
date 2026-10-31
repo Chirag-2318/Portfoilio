@@ -40,7 +40,20 @@ export function SiteHeader({ className }: SiteHeaderProps) {
       }
     );
 
-    const sectionIds = ["experience", "projects", "education", "resume", "overview", "about"];
+    const sectionIds = [
+      "top",
+      "overview",
+      "socials",
+      "about",
+      "numbers",
+      "experience",
+      "projects",
+      "achievements",
+      "education",
+      "stack",
+      "resume",
+      "contact",
+    ];
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
@@ -57,14 +70,29 @@ export function SiteHeader({ className }: SiteHeaderProps) {
       )}
     >
       <div className="mx-auto md:max-w-3xl h-full flex items-center gap-2 sm:gap-4 border-x border-[var(--line)] pl-4 pr-2 screen-line-top screen-line-bottom relative">
-        {/* Left: Original 28px "CP" monogram built from square pixel blocks, links to #top */}
-        <a
-          href="#top"
-          aria-label="Chirag Patil — back to top"
-          className="text-foreground hover:opacity-80 transition-opacity focus-visible:ring-2 focus-visible:ring-ring rounded-sm shrink-0"
-        >
-          <PixelMonogramCP size={28} />
-        </a>
+        {/* Left: Original 28px "CP" monogram + Breadcrumb */}
+        <div className="flex items-center gap-2.5">
+          <a
+            href="#top"
+            aria-label="Chirag Patil — back to top"
+            className="text-foreground hover:opacity-80 transition-opacity focus-visible:ring-2 focus-visible:ring-ring rounded-sm shrink-0"
+          >
+            <PixelMonogramCP size={28} />
+          </a>
+
+          {/* Breadcrumb (hidden below 640px / sm): clicking opens command menu */}
+          <button
+            type="button"
+            onClick={toggleCommand}
+            aria-label="Open command menu"
+            className="hidden sm:inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors group cursor-pointer focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            <span className="text-muted-foreground/60">/</span>
+            <span className="group-hover:text-[var(--accent)] transition-colors">
+              {activeSection || "top"}
+            </span>
+          </button>
+        </div>
 
         {/* Spacer */}
         <div className="flex-1" />
@@ -81,9 +109,9 @@ export function SiteHeader({ className }: SiteHeaderProps) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "transition-colors",
+                  "transition-colors relative py-1",
                   isActive
-                    ? "text-foreground font-semibold"
+                    ? "text-foreground font-semibold underline decoration-2 decoration-[var(--accent)] underline-offset-[6px]"
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >

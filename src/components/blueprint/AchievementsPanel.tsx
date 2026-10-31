@@ -31,12 +31,7 @@ export function AchievementsPanel() {
 
   return (
     <div className="relative">
-      {/* Handwritten note on right margin pointing left */}
-      <HandwrittenNote side="right" arrow="point-left" className="top-12">
-        9 recognitions
-      </HandwrittenNote>
-
-      <PanelHeader title="Achievements" />
+      <PanelHeader title="Achievements" sheet="SHEET 05 / 09" />
 
       <div className="divide-y divide-[var(--line)]">
         {visibleItems.map((item) => (

@@ -74,19 +74,17 @@ export function ProjectsPanel() {
 
   return (
     <div className="relative">
-      {/* Handwritten note on left margin pointing right */}
-      <HandwrittenNote side="left" arrow="point-right" className="top-12">
-        hackathons
-      </HandwrittenNote>
-
-      <PanelHeader>
-        <h2 className="text-3xl font-medium tracking-tight text-foreground flex items-baseline">
-          Projects
-          <sup className="text-xs font-mono text-muted-foreground ml-1.5 font-normal">
-            (3)
-          </sup>
-        </h2>
-      </PanelHeader>
+      <PanelHeader
+        sheet="SHEET 04 / 09"
+        title={
+          <span className="flex items-baseline">
+            Projects
+            <sup className="text-xs font-mono text-muted-foreground ml-1.5 font-normal">
+              (3)
+            </sup>
+          </span>
+        }
+      />
 
       <ul className="divide-y divide-[var(--line)] list-none p-0 m-0">
         {PROJECTS_DATA.map((project, index) => {
@@ -101,11 +99,11 @@ export function ProjectsPanel() {
                 aria-expanded={isExpanded}
                 className="w-full text-left flex items-stretch hover:bg-[var(--accent-muted)] transition-colors duration-150 select-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                {/* Left cell: IconTile with project index or code icon */}
+                {/* Left cell: Mono index tile "P-01", "P-02", "P-03" */}
                 <div className="p-4 flex items-center justify-center shrink-0">
-                  <IconTile>
-                    <CodeFolderIcon index={index + 1} />
-                  </IconTile>
+                  <span className="inline-flex items-center justify-center h-6 px-1.5 rounded-md select-none shrink-0 border border-muted-foreground/15 ring-1 ring-inset ring-foreground/5 text-muted-foreground font-mono text-[11px] font-medium bg-[var(--muted)]">
+                    P-0{index + 1}
+                  </span>
                 </div>
 
                 {/* Right cell: border-l dashed var(--line), p-4 */}

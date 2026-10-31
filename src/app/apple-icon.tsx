@@ -15,11 +15,12 @@ export default function AppleIcon() {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#09090b",
+          position: "relative",
         }}
       >
         <svg
-          width="120"
-          height="120"
+          width="110"
+          height="110"
           viewBox="0 0 28 28"
           fill="#fafafa"
         >
@@ -45,6 +46,31 @@ export default function AppleIcon() {
           <rect x="20" y="12" width="4" height="4" />
           <rect x="24" y="12" width="4" height="4" />
         </svg>
+
+        {/* Small accent registration crosshair circle */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 16,
+            right: 16,
+            width: 16,
+            height: 16,
+            borderRadius: "50%",
+            border: "2px solid #ff5a2c",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              backgroundColor: "#ff5a2c",
+            }}
+          />
+        </div>
       </div>
     ),
     {

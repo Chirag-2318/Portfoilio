@@ -101,6 +101,6 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(`Static server running at http://localhost:${PORT} serving ${OUT_DIR}`);
+server.listen(PORT, () => {
+  console.log(`Static server running at http://127.0.0.1:${PORT} serving ${OUT_DIR}`);
 });

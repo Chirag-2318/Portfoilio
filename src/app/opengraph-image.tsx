@@ -83,6 +83,24 @@ export default async function OpenGraphImage() {
           }}
         />
 
+        {/* Registration crosshairs at hairline intersections */}
+        <div style={{ position: "absolute", top: 56, left: 56, width: 9, height: 9, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ position: "absolute", width: 9, height: 1, backgroundColor: "#ff5a2c" }} />
+          <div style={{ position: "absolute", width: 1, height: 9, backgroundColor: "#ff5a2c" }} />
+        </div>
+        <div style={{ position: "absolute", top: 56, right: 56, width: 9, height: 9, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ position: "absolute", width: 9, height: 1, backgroundColor: "#ff5a2c" }} />
+          <div style={{ position: "absolute", width: 1, height: 9, backgroundColor: "#ff5a2c" }} />
+        </div>
+        <div style={{ position: "absolute", bottom: 56, left: 56, width: 9, height: 9, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ position: "absolute", width: 9, height: 1, backgroundColor: "#ff5a2c" }} />
+          <div style={{ position: "absolute", width: 1, height: 9, backgroundColor: "#ff5a2c" }} />
+        </div>
+        <div style={{ position: "absolute", bottom: 56, right: 56, width: 9, height: 9, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ position: "absolute", width: 9, height: 1, backgroundColor: "#ff5a2c" }} />
+          <div style={{ position: "absolute", width: 1, height: 9, backgroundColor: "#ff5a2c" }} />
+        </div>
+
         {/* Top bar with dimensions and drawing metadata */}
         <div
           style={{
@@ -186,7 +204,7 @@ export default async function OpenGraphImage() {
                 width: 8,
                 height: 8,
                 borderRadius: "50%",
-                backgroundColor: "#3b82f6",
+                backgroundColor: "#ff5a2c",
               }}
             />
             <span style={{ color: "#a1a1aa" }}>ACTIVE // 2026</span>

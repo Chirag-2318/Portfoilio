@@ -10,7 +10,7 @@ export function ContactPanel() {
 
   return (
     <div className="relative">
-      <PanelHeader title="Contact" />
+      <PanelHeader title="Contact" sheet="SHEET 09 / 09" />
 
       {/* Handwritten note "say hi" on the right outside the column (xl and up) */}
       <HandwrittenNote

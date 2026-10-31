@@ -77,3 +77,18 @@ All earlier visual decisions in /docs/DESIGN.md are superseded by /docs/REDESIGN
 - Original CP pixel monogram and blueprint drawing utilized for `icon.tsx`, `apple-icon.tsx`, and `opengraph-image.tsx`.
 - Responsive layout verified across mobile (390px), tablet (768px), and desktop (1440px) in both dark and light modes.
 - Static export build passes cleanly with zero errors.
+
+### Originality Pass (branch: `design/originality`)
+- Overhauled the Blueprint Grid layout with 11 signature details establishing a distinct identity for Chirag Patil.
+- Added Instrument Serif typography for all titles and headings; Geist Sans and Mono retained for text and meta.
+- Added warm redline `--accent` token (`#ff5a2c` dark, `#e8441a` light, `#ffd166` blueprint) used strictly for drawing marks, pins, crosshairs, active states, and selection.
+- Built engineer's ruler dividers (32px, 0–768 numerals) replacing diagonal stripe bands.
+- Added 9px registration crosshairs (`RegMark.tsx`) at vertical-horizontal hairline intersections.
+- Added 160px square ID-frame avatar badge with drafting corner crop marks and dimension.
+- Enhanced hero with interactive CAD crosshairs, live coordinates, 1–5 callout pins, Web Audio synthesized blips, and drafting title block.
+- Converted "In numbers" into a formal technical drawing "Bill of materials" table.
+- Added drawing sheet numbers (`SHEET 01 / 09` through `SHEET 09 / 09`), project indexing (`P-01` to `P-03`), and a fixed left-gutter scroll ruler.
+- Added dynamic header breadcrumb `"/ [section]"` opening cmdk, and redline accent handwritten notes.
+- Added full third theme "Blueprint" (`#0a2b5c` cyanotype background, `#ffd166` gold accent) with 3-state cycling toggle.
+- Formatted greeting as a technical cover note with self-drawing accent underline.
+

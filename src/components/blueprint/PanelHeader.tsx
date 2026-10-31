@@ -3,8 +3,9 @@ import { cn } from "@/lib/cn";
 
 interface PanelHeaderProps {
   children?: React.ReactNode;
-  title?: string;
+  title?: React.ReactNode;
   eyebrow?: string;
+  sheet?: string;
   className?: string;
   noBottomLine?: boolean;
 }
@@ -13,6 +14,7 @@ export function PanelHeader({
   children,
   title,
   eyebrow,
+  sheet,
   className,
   noBottomLine = false,
 }: PanelHeaderProps) {
@@ -25,16 +27,29 @@ export function PanelHeader({
       )}
     >
       {eyebrow && (
-        <span className="text-sm/none font-medium tracking-wide uppercase text-muted-foreground mb-1 text-center">
+        <span className="text-xs/none font-mono uppercase tracking-wider text-muted-foreground mb-1 text-center">
           {eyebrow}
         </span>
       )}
-      {title && (
-        <h2 className="text-3xl font-medium tracking-tight text-balance text-foreground">
-          {title}
-        </h2>
-      )}
-      {children}
+
+      <div className="flex items-baseline justify-between gap-4">
+        {title && (
+          <h2
+            className="font-serif text-[2.25rem] leading-[1.05] font-normal tracking-[-0.005em] text-balance text-foreground"
+            style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
+          >
+            {title}
+          </h2>
+        )}
+
+        {children}
+
+        {sheet && (
+          <span className="font-mono text-xs text-[var(--dimension-foreground)] shrink-0 tracking-wider uppercase ml-auto">
+            {sheet}
+          </span>
+        )}
+      </div>
     </header>
   );
 }

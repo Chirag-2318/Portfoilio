@@ -23,7 +23,7 @@ export function ResumePanel() {
 
   return (
     <div className="relative">
-      <PanelHeader title="Resume" />
+      <PanelHeader title="Resume" sheet="SHEET 08 / 09" />
 
       <div className="p-4 space-y-4">
         <p className="text-sm text-muted-foreground leading-relaxed">

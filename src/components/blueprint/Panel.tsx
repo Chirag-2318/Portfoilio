@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/cn";
+import { RegMark } from "./RegMark";
 
 interface PanelProps {
   id?: string;
@@ -29,6 +30,20 @@ export function Panel({
         className
       )}
     >
+      {/* Registration marks at hairline intersections (skip duplicates between adjacent panels) */}
+      {!noTopLine && (
+        <>
+          <RegMark position="top-left" />
+          <RegMark position="top-right" />
+        </>
+      )}
+      {!noBottomLine && (
+        <>
+          <RegMark position="bottom-left" />
+          <RegMark position="bottom-right" />
+        </>
+      )}
+
       {children}
     </section>
   );

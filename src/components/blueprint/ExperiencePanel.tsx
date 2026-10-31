@@ -10,7 +10,7 @@ export function ExperiencePanel() {
 
   return (
     <div className="relative">
-      <PanelHeader title="Experience" />
+      <PanelHeader title="Experience" sheet="SHEET 03 / 09" />
 
       {/* Experience Entry */}
       <div className="p-4 relative">

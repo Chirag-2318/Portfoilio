@@ -21,13 +21,13 @@ export function SocialPanel() {
     <div className="p-4 relative">
       <h2 className="sr-only">Social links</h2>
 
-      {/* Handwritten note "follow me" with an arrow on the left outside the column (xl and up) */}
+      {/* Handwritten note "find me here" with an arrow on the left outside the column (xl and up) */}
       <HandwrittenNote
         side="left"
         arrow="point-right"
         className="top-1/2 -translate-y-1/2"
       >
-        follow me
+        find me here
       </HandwrittenNote>
 
       <div className="flex flex-wrap items-center gap-2">

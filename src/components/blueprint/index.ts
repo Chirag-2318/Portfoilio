@@ -24,4 +24,6 @@ export * from "./ContributionsPanel";
 export * from "./ResumePanel";
 export * from "./ContactPanel";
 export * from "./ScrollTopButton";
+export * from "./ScrollRuler";
+export * from "./RegMark";
 export * from "./CommandMenu";

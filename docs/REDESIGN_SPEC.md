@@ -106,3 +106,114 @@ Below the body: two 1px hairlines with a 16px gap between them (the "double rule
 - **ramx.in**: compact lists with "Show all" pill buttons, the Ctrl+K search pill in the header, concise resume access.
 - **vanshnagar.com**: the small floating utility buttons at the bottom right (scroll to top) and the optional playable game opened from a tiny header icon.
 - **pixel-perfect.space / iconspace.dev**: small crafted micro-interactions and icons (use sparingly, matching the monochrome palette).
+
+## ORIGINALITY PASS (Signature Identity Overhaul)
+The site's underlying skeleton retains the narrow centered column (max-w-3xl), full-bleed hairlines, and technical drafting aesthetic, but introduces 11 signature details that make it unmistakably Chirag Patil's personal portfolio.
+
+### 1. Redline Accent Colour
+Introduces `--accent` and `--accent-foreground` tokens:
+- **Dark theme**: `--accent: #ff5a2c` (warm cadmium redline)
+- **Light theme**: `--accent: #e8441a` (deep drafting red)
+- **Blueprint theme**: `--accent: #ffd166` (drafting amber/gold)
+
+**Strict Usage Boundaries**:
+The accent colour is used exclusively for:
+1. Text selection background (`rgba(accent, 0.25)`).
+2. Keyboard `:focus-visible` outline rings.
+3. Active navigation item underline (2px height, offset 6px).
+4. Link hover underline decoration.
+5. Status dot core & pulsing ping ring (Experience upcoming indicator).
+6. Hero CAD crosshairs & coordinates readout balloon.
+7. Dropped callout pin balloons and leader lines.
+8. Handwritten notes and hand-drawn SVG indicator arrows.
+9. Scroll ruler active progress triangle marker.
+10. Command palette (`cmdk`) active item 2px left indicator bar.
+11. Inline game target highlights and timer countdown line.
+*Accent colour is never used for body typography or large decorative fills.*
+
+### 2. Serif Display Type
+Added **Instrument Serif** (`Instrument_Serif` via `next/font/google`, regular and italic, weight 400).
+- **Hero H1 name**: 3.25rem/1 (sm+) and 2.5rem/1 (mobile), tracking `-0.01em`, weight 400.
+- **Panel Titles**: 2.25rem/1.05, weight 400, tracking `-0.005em`, text-balance.
+- **Greeting Heading**: Instrument Serif with the final word in italic (e.g., *"Good afternoon"*).
+- **Game Headings**: Title and overlay headings in Instrument Serif.
+- *Geist Sans and Geist Mono are retained for all body text, metadata, labels, and code.*
+
+### 3. Engineer's Ruler Dividers
+Replaced 32px diagonal hatch stripes with a precision 32px engineer's ruler band:
+- 1px baseline along bottom edge (`var(--line-strong)`).
+- Minor ticks every 8px (6px tall), mid ticks every 40px (10px tall), and major ticks every 80px (14px tall) in `var(--dimension)`.
+- Full-bleed outer gradient (`repeating-linear-gradient`) spanning 100vw beyond the column.
+- Centered inline SVG ruler inside column measuring 0 to 768 with tiny 9px mono numerals at each 80px interval.
+
+### 4. Registration Marks (`RegMark.tsx`)
+At hairline intersection junctions where the 768px vertical column boundaries intersect panel horizontal hairlines, 9px crosshairs with a centered 5px circle in `var(--dimension)` are rendered:
+- Positioned absolutely at top-left, top-right, bottom-left, and bottom-right.
+- Automatically suppressed on adjoining boundaries to prevent duplicate stacking.
+- Hidden below 640px (sm) where the column edges align with the viewport margins.
+
+### 5. Square ID-Frame Avatar with Crop Marks
+Replaced circular avatar badge with a precision square portrait:
+- 160px × 160px square tile (128px on mobile), `rounded-[4px]`.
+- Grayscale contrast-105 filtering with 1px inset ring (`foreground/20`).
+- Four L-shaped drafting crop marks (10px arms, 1px `foreground/60`, 6px gap from tile corners).
+- Horizontal dimension annotation `"160 × 160"` centered below tile.
+
+### 6. Hero CAD Crosshairs, Callout Pins & Drawing Block
+- **Interactive Crosshairs**: Moving fine pointers inside the hero draws 1px accent horizontal and vertical hair crosshairs with an 80ms smoothed lag and live coordinate badge (`"x 412  y 188"`).
+- **Callout Pins**: Clicking within the hero drops numbered callout pin balloons (1 through 5, 6th click clears pins) with leader lines.
+- **Web Audio Blip**: Dropping pins triggers a synthesized 40ms sine blip (520Hz to 640Hz rising, gain 0.03), accompanied by a toggleable sound icon button with persistent state.
+- **Desktop Title Block**: Lower-right drafting title block detailing:
+  - `DRAWN BY`: `C.P.`
+  - `SHEET`: `01 OF 01`
+  - `REV`: `2026`
+  - `SCALE`: `1:1`
+- **Handwritten Redline**: Accent handwritten note `"measure me, click to pin"` with SVG arrow.
+
+### 7. Bill of Materials Panel
+Replaced dotted leader numbers with a formal technical drawing Bill of Materials:
+- Panel Title: *"Bill of materials"* (Instrument Serif).
+- Header row: `NO.` (mono 3ch), `ITEM`, `QTY` (right-aligned mono).
+- Items (strict facts from context):
+  - `01`: Hackathon wins / `1`
+  - `02`: Hackathon finals reached / `3`
+  - `03`: Validation rules built (ValidEDI) / `50+`
+  - `04`: Relational entities modelled (SAR Generator) / `15+`
+
+### 8. Sheet Indexing & Left Gutter Scroll Ruler
+- **Sheet Numbers**: Every panel header features a right-aligned mono sheet indicator (`SHEET 01 / 09` through `SHEET 09 / 09`).
+- **Project Indexing**: Project rows prefixed with mono index badges (`P-01`, `P-02`, `P-03`).
+- **Vertical Scroll Ruler (`ScrollRuler.tsx`)**: Fixed in left gutter at 1280px+ viewports:
+  - 24px tick marks with height proportional to page height.
+  - Accent triangle marker tracking active scroll percentage.
+  - Mono active section name label indicator.
+
+### 9. Header Breadcrumb & Redline Annotations
+- **Header Breadcrumb**: Logo accompanied by dynamic `"/ [activeSection]"` breadcrumb (hidden <640px) that triggers the command palette on click.
+- **Handwritten Redline Notes**: All Caveat notes switched to accent color with 90% opacity, -5° rotation, and 1.5px stroke accent SVG arrows:
+  - Hero: `"measure me, click to pin"`
+  - Socials: `"find me here"`
+  - Contact: `"say hi"`
+
+### 10. Third Theme: "Blueprint"
+Added a full third theme alongside Dark and Light, cycling Dark → Light → Blueprint → Dark via `ThemeToggle` (Moon, Sun, Set-Square icons):
+- `--background`: `#0a2b5c` (classic cyanotype blueprint blue)
+- `--foreground`: `#eaf2ff` (crisp white ink)
+- `--muted-foreground`: `#9db8e0` (soft cobalt tone)
+- `--muted`: `#0f3470`
+- `--border`: `#2a5190`
+- `--line`: `#1d437f`
+- `--line-strong`: `#2f5ea8`
+- `--dimension`: `#3a6bb5`
+- `--dimension-foreground`: `#8ab4f8`
+- `--accent`: `#ffd166` (drafting yellow-gold)
+- Fully supported in inline anti-flash script and cmdk theme selection.
+
+### 11. Greeting as a Technical Cover Note
+- About section greets visitor with time-aware greeting title (Instrument Serif with italicized final word and a self-drawing SVG accent underline).
+- Narrative formatted as concise technical cover bullets:
+  - `"Hello. I'm Chirag, a developer from Pune."`
+  - Dual-degree education details (PICT + IIT Madras).
+  - Hackathon finalist and winner accolades.
+  - Upcoming Barclays internship role and primary stack expertise.
+

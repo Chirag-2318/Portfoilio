@@ -16,11 +16,12 @@ export default function Icon() {
           justifyContent: "center",
           backgroundColor: "#09090b",
           borderRadius: 6,
+          position: "relative",
         }}
       >
         <svg
-          width="24"
-          height="24"
+          width="22"
+          height="22"
           viewBox="0 0 28 28"
           fill="#fafafa"
         >
@@ -46,6 +47,19 @@ export default function Icon() {
           <rect x="20" y="12" width="4" height="4" />
           <rect x="24" y="12" width="4" height="4" />
         </svg>
+
+        {/* Small accent registration mark */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 3,
+            right: 3,
+            width: 4,
+            height: 4,
+            borderRadius: "50%",
+            backgroundColor: "#ff5a2c",
+          }}
+        />
       </div>
     ),
     {

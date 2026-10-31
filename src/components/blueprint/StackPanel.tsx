@@ -47,7 +47,7 @@ const STACK_GROUPS: StackGroup[] = [
 export function StackPanel() {
   return (
     <div className="relative">
-      <PanelHeader title="Stack" />
+      <PanelHeader title="Stack" sheet="SHEET 07 / 09" />
 
       <div className="divide-y divide-[var(--line)]">
         {STACK_GROUPS.map((group) => (

@@ -44,7 +44,7 @@ export function InlineGame() {
       {/* Top Bar HUD */}
       <div className="h-10 px-4 border-b border-[var(--line)] flex items-center justify-between text-xs font-mono text-muted-foreground">
         <div className="flex items-center gap-3">
-          <span className="text-foreground font-semibold uppercase tracking-wider text-[11px]">
+          <span className="font-serif text-base text-foreground font-normal tracking-tight" style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}>
             Registration
           </span>
           <span>·</span>
@@ -52,17 +52,17 @@ export function InlineGame() {
         </div>
 
         <div className="flex items-center gap-4 tabular-nums">
-          <span>Prints: <strong className="text-foreground">{String(prints).padStart(2, "0")}</strong></span>
+          <span>Prints: <strong className="text-[var(--accent)]">{String(prints).padStart(2, "0")}</strong></span>
           <span>Best: {String(best).padStart(2, "0")}</span>
         </div>
       </div>
 
-      {/* 2px timer line */}
+      {/* 2px timer line in accent */}
       <div
         ref={timerLineRef}
         aria-hidden="true"
         style={{ transformOrigin: "left", transform: "scaleX(1)" }}
-        className="h-[2px] bg-foreground w-full will-change-transform"
+        className="h-[2px] bg-[var(--accent)] w-full will-change-transform"
       />
 
       {/* Canvas Area */}
@@ -96,11 +96,14 @@ export function InlineGame() {
 
         {gameState === "over" && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 bg-black/50 backdrop-blur-xs gap-2">
-            <h4 className="text-xl font-medium text-foreground">
+            <h4
+              className="font-serif text-2xl font-normal text-foreground"
+              style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
+            >
               Out of sheets.
             </h4>
             <p className="font-mono text-xs text-muted-foreground">
-              Final prints: {prints} · Best: {best}
+              Final prints: <span className="text-[var(--accent)] font-semibold">{prints}</span> · Best: {best}
             </p>
             <button
               type="button"

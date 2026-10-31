@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { Caveat } from "next/font/google";
+import { Caveat, Instrument_Serif } from "next/font/google";
 import { site, isPlaceholder } from "@/content/site";
 import { getSocials } from "@/lib/socials";
 import { getAssets } from "@/lib/assets";
@@ -13,6 +13,14 @@ const caveat = Caveat({
   variable: "--font-caveat",
   subsets: ["latin"],
   weight: ["500"],
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -53,8 +61,8 @@ const themeScript = `
   try {
     var stored = localStorage.getItem('theme');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = stored === 'light' ? 'light' : stored === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light');
-    document.documentElement.classList.remove('dark','light');
+    var theme = stored === 'light' ? 'light' : stored === 'blueprint' ? 'blueprint' : stored === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light');
+    document.documentElement.classList.remove('dark','light','blueprint');
     document.documentElement.classList.add(theme);
   } catch(e) {
     document.documentElement.classList.add('dark');
@@ -96,7 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistMono.variable} ${caveat.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${caveat.variable} ${instrumentSerif.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

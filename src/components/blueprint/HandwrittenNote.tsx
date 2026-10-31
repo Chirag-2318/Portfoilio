@@ -18,16 +18,16 @@ export function HandwrittenNote({
     <div
       aria-hidden="true"
       className={cn(
-        "hidden xl:flex flex-col items-center pointer-events-none select-none absolute z-20 w-36",
+        "hidden xl:flex flex-col items-center pointer-events-none select-none absolute z-20 w-40",
         side === "right" ? "left-[calc(100%+1.5rem)]" : "right-[calc(100%+1.5rem)]",
         className
       )}
     >
       <span
-        className="text-xl/none font-medium text-muted-foreground text-center"
+        className="text-xl/none font-medium text-[var(--accent)] opacity-90 text-center tracking-tight"
         style={{
           fontFamily: "var(--font-caveat), cursive",
-          transform: "rotate(-6deg)",
+          transform: "rotate(-5deg)",
         }}
       >
         {children}
@@ -39,18 +39,18 @@ export function HandwrittenNote({
           height="32"
           viewBox="0 0 48 32"
           fill="none"
-          className="text-muted-foreground/70 mt-1"
+          className="text-[var(--accent)] opacity-90 mt-1"
         >
           <path
             d="M 6 8 C 18 10, 32 14, 42 22"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
           />
           <path
             d="M 33 22 L 42 22 L 40 13"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -63,18 +63,18 @@ export function HandwrittenNote({
           height="32"
           viewBox="0 0 48 32"
           fill="none"
-          className="text-muted-foreground/70 mt-1"
+          className="text-[var(--accent)] opacity-90 mt-1"
         >
           <path
             d="M 42 8 C 30 10, 16 14, 6 22"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
           />
           <path
             d="M 15 22 L 6 22 L 8 13"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -87,18 +87,18 @@ export function HandwrittenNote({
           height="40"
           viewBox="0 0 48 40"
           fill="none"
-          className="text-muted-foreground/70 mt-1"
+          className="text-[var(--accent)] opacity-90 mt-1"
         >
           <path
             d="M 36 6 C 24 16, 16 26, 8 32"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
           />
           <path
             d="M 18 32 L 8 32 L 10 22"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
@@ -111,18 +111,18 @@ export function HandwrittenNote({
           height="40"
           viewBox="0 0 48 40"
           fill="none"
-          className="text-muted-foreground/70 mt-1"
+          className="text-[var(--accent)] opacity-90 mt-1"
         >
           <path
             d="M 12 6 C 24 16, 32 26, 40 32"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
           />
           <path
             d="M 30 32 L 40 32 L 38 22"
             stroke="currentColor"
-            strokeWidth="1.25"
+            strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />

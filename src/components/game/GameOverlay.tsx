@@ -271,7 +271,7 @@ export default function GameOverlay({
             <span className="text-muted-foreground uppercase tracking-wider text-[11px]">
               Prints
             </span>
-            <span className="font-semibold text-foreground text-sm sm:text-base">
+            <span className="font-semibold text-[var(--accent)] text-sm sm:text-base">
               {String(prints).padStart(2, "0")}
             </span>
           </div>
@@ -311,12 +311,12 @@ export default function GameOverlay({
           </button>
         </div>
 
-        {/* 2px timer line under the top bar - foreground accent only */}
+        {/* 2px timer line under the top bar in accent */}
         <div
           ref={timerLineRef}
           aria-hidden="true"
           style={{ transformOrigin: "left", transform: "scaleX(1)" }}
-          className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground will-change-transform"
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent)] will-change-transform"
         />
       </header>
 
@@ -357,7 +357,10 @@ export default function GameOverlay({
             {/* INTRO CARD */}
             {gameState === "intro" && (
               <div className="w-[min(360px,calc(100%-32px))] bg-[var(--background)] border border-[var(--line-strong)] rounded-xl p-6 sm:p-7 shadow-2xl flex flex-col gap-4 text-center">
-                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
+                <h3
+                  className="font-serif text-3xl font-normal tracking-tight text-foreground"
+                  style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
+                >
                   Registration
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -379,7 +382,10 @@ export default function GameOverlay({
             {/* PAUSED CARD */}
             {gameState === "paused" && (
               <div className="w-[min(360px,calc(100%-32px))] bg-[var(--background)] border border-[var(--line-strong)] rounded-xl p-6 sm:p-7 shadow-2xl flex flex-col gap-4 text-center">
-                <h3 className="text-2xl font-medium tracking-tight text-foreground">
+                <h3
+                  className="font-serif text-3xl font-normal tracking-tight text-foreground"
+                  style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
+                >
                   Paused
                 </h3>
                 <div className="flex flex-col gap-2 pt-2">
@@ -415,15 +421,18 @@ export default function GameOverlay({
                 aria-live="polite"
                 className="w-[min(360px,calc(100%-32px))] bg-[var(--background)] border border-[var(--line-strong)] rounded-xl p-6 sm:p-7 shadow-2xl flex flex-col gap-4 text-center"
               >
-                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
+                <h3
+                  className="font-serif text-3xl font-normal tracking-tight text-foreground"
+                  style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
+                >
                   Out of sheets.
                 </h3>
                 <div className="text-sm font-mono text-muted-foreground flex items-center justify-center gap-2">
-                  <span>Prints {String(prints).padStart(2, "0")}</span>
+                  <span>Prints <strong className="text-[var(--accent)] font-semibold">{String(prints).padStart(2, "0")}</strong></span>
                   <span>·</span>
                   <span>Best {String(best).padStart(2, "0")}</span>
                   {isNewBest && (
-                    <span className="font-semibold text-foreground ml-1">
+                    <span className="font-semibold text-[var(--accent)] ml-1">
                       New best.
                     </span>
                   )}

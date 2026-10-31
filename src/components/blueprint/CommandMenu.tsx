@@ -106,7 +106,7 @@ export function CommandMenu() {
             onSelect={() => navigate("#about")}
           />
           <CommandRow
-            label="In Numbers"
+            label="Bill of materials"
             hint="#numbers"
             onSelect={() => navigate("#numbers")}
           />
@@ -194,19 +194,19 @@ export function CommandMenu() {
           className="[&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1 [&_[cmdk-group-heading]]:block"
         >
           <CommandRow
-            label="Light"
-            hint={theme === "light" ? "Active" : undefined}
-            onSelect={() => handleAction(() => setTheme("light"))}
-          />
-          <CommandRow
             label="Dark"
             hint={theme === "dark" ? "Active" : undefined}
             onSelect={() => handleAction(() => setTheme("dark"))}
           />
           <CommandRow
-            label="System"
-            hint={theme === "system" ? "Active" : undefined}
-            onSelect={() => handleAction(() => setTheme("system"))}
+            label="Light"
+            hint={theme === "light" ? "Active" : undefined}
+            onSelect={() => handleAction(() => setTheme("light"))}
+          />
+          <CommandRow
+            label="Blueprint"
+            hint={theme === "blueprint" ? "Active" : undefined}
+            onSelect={() => handleAction(() => setTheme("blueprint"))}
           />
         </Command.Group>
 
@@ -245,7 +245,7 @@ function CommandRow({
     <Command.Item
       value={`${label} ${hint ?? ""}`}
       onSelect={onSelect}
-      className="relative h-9 px-3 rounded-md flex items-center justify-between text-sm font-medium text-foreground cursor-pointer select-none transition-colors data-[selected=true]:bg-[var(--muted)] data-[selected=true]:text-foreground"
+      className="relative h-9 px-3 rounded-md flex items-center justify-between text-sm font-medium text-foreground cursor-pointer select-none transition-colors data-[selected=true]:bg-[var(--muted)] data-[selected=true]:text-foreground data-[selected=true]:before:content-[''] data-[selected=true]:before:absolute data-[selected=true]:before:left-0 data-[selected=true]:before:top-1.5 data-[selected=true]:before:bottom-1.5 data-[selected=true]:before:w-0.5 data-[selected=true]:before:bg-[var(--accent)] data-[selected=true]:before:rounded-full"
     >
       <span className="truncate">{label}</span>
       {hint && (

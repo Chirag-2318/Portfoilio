@@ -2,14 +2,12 @@
  * Topping Out V2 — Color Palettes & Block Shading
  */
 
-export type PaletteId = "rainbow" | "dusk" | "mint" | "mono" | "gold" | "copper";
+export type PaletteId = "rainbow" | "dusk" | "mint" | "mono";
 
 export interface PaletteMeta {
   id: PaletteId;
   name: string;
-  unlockThreshold?: number;
-  requiredAchievement?: string;
-  unlockHint?: string;
+  unlockThreshold: number;
   previewHue: number;
 }
 
@@ -18,33 +16,12 @@ export const PALETTES: PaletteMeta[] = [
   { id: "dusk", name: "Dusk", unlockThreshold: 10, previewHue: 300 },
   { id: "mint", name: "Mint", unlockThreshold: 20, previewHue: 175 },
   { id: "mono", name: "Mono", unlockThreshold: 30, previewHue: 14 },
-  {
-    id: "gold",
-    name: "Gold Hour",
-    requiredAchievement: "skyline",
-    unlockHint: "Unlock Skyline (30 floors)",
-    previewHue: 38,
-  },
-  {
-    id: "copper",
-    name: "Copper",
-    requiredAchievement: "chartered-architect",
-    unlockHint: "Unlock Chartered Architect",
-    previewHue: 16,
-  },
 ];
 
-export function isPaletteUnlocked(
-  palette: PaletteId,
-  bestScore: number = 0,
-  unlockedAchievements?: Record<string, number>
-): boolean {
+export function isPaletteUnlocked(palette: PaletteId, bestScore: number): boolean {
   const meta = PALETTES.find((p) => p.id === palette);
   if (!meta) return false;
-  if (meta.requiredAchievement) {
-    return Boolean(unlockedAchievements && unlockedAchievements[meta.requiredAchievement]);
-  }
-  return bestScore >= (meta.unlockThreshold ?? 0);
+  return bestScore >= meta.unlockThreshold;
 }
 
 export interface BlockColors {
@@ -122,34 +99,6 @@ export function blockColors(floorIndex: number, palette: PaletteId = "rainbow"):
         windowDark: "#3f3f46",
         windowLit,
         highlight: "rgba(255, 255, 255, 0.4)",
-      };
-    }
-
-    case "gold": {
-      const rawHue = 38 + 8 * Math.sin(floorIndex * 0.3);
-      const hue = Math.round(((rawHue % 360) + 360) % 360);
-      return {
-        top: `hsl(${hue}, 78%, 70%)`,
-        left: `hsl(${hue}, 78%, 60%)`,
-        right: `hsl(${hue}, 78%, 48%)`,
-        edge: `hsl(${hue}, 78%, 30%)`,
-        windowDark: `hsl(${hue}, 45%, 22%)`,
-        windowLit,
-        highlight: `hsla(${hue}, 80%, 80%, 0.6)`,
-      };
-    }
-
-    case "copper": {
-      const rawHue = 16 + 10 * Math.sin(floorIndex * 0.25);
-      const hue = Math.round(((rawHue % 360) + 360) % 360);
-      return {
-        top: `hsl(${hue}, 62%, 70%)`,
-        left: `hsl(${hue}, 62%, 60%)`,
-        right: `hsl(${hue}, 62%, 48%)`,
-        edge: `hsl(${hue}, 62%, 30%)`,
-        windowDark: `hsl(${hue}, 45%, 22%)`,
-        windowLit,
-        highlight: `hsla(${hue}, 80%, 80%, 0.6)`,
       };
     }
   }

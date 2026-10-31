@@ -2,20 +2,17 @@
  * Landmark comparison lines based on building height in metres (floors * 3)
  */
 
-export type LandmarkId = "gateway" | "qutub" | "statue" | "eiffel" | "burj";
-
 export interface Landmark {
-  id: LandmarkId;
   metres: number;
   name: string;
 }
 
 export const LANDMARK_LIST: Landmark[] = [
-  { id: "gateway", metres: 26, name: "Gateway of India" },
-  { id: "qutub", metres: 73, name: "Qutub Minar" },
-  { id: "statue", metres: 182, name: "Statue of Unity" },
-  { id: "eiffel", metres: 330, name: "Eiffel Tower" },
-  { id: "burj", metres: 828, name: "Burj Khalifa" },
+  { metres: 26, name: "Gateway of India" },
+  { metres: 73, name: "Qutub Minar" },
+  { metres: 182, name: "Statue of Unity" },
+  { metres: 330, name: "Eiffel Tower" },
+  { metres: 828, name: "Burj Khalifa" },
 ];
 
 /**

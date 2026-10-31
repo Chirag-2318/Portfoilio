@@ -164,8 +164,8 @@ export function SiteHeader({ className }: SiteHeaderProps) {
             type="button"
             data-game-slot
             onClick={() => openGame()}
-            aria-label="Play game"
-            title="Play Registration game"
+            aria-label="Play Topping Out game"
+            title="Play Topping Out"
             className="size-8 rounded-[10px] text-muted-foreground hover:text-foreground hover:bg-[var(--muted)] flex items-center justify-center transition-colors focus-visible:ring-2 focus-visible:ring-ring"
           >
             <svg

@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import zlib from "node:zlib";
 
-const PORT = 4173;
-const OUT_DIR = path.join(process.cwd(), "out");
+const PORT = parseInt(process.argv[2] || process.env.PORT || "4173", 10);
+const OUT_DIR = path.join(process.cwd(), process.argv[3] || "out");
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",

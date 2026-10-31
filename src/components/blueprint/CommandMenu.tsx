@@ -216,8 +216,8 @@ export function CommandMenu() {
           className="[&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1 [&_[cmdk-group-heading]]:block"
         >
           <CommandRow
-            label="Play the game"
-            hint="Registration mini-game"
+            label="Play Topping Out"
+            hint="Isometric stacking game"
             onSelect={() => handleAction(() => openGame())}
           />
         </Command.Group>

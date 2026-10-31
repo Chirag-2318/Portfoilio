@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { Panel } from "@/components/blueprint/Panel";
 import { StripeDivider } from "@/components/blueprint/StripeDivider";
-import { InlineGame } from "@/components/game/InlineGame";
+import { ToppingOut } from "@/components/game/topping-out";
 
 export const metadata = {
   title: "404 — Not Found — Chirag Patil",
@@ -14,17 +15,29 @@ export default function NotFound() {
       <StripeDivider />
 
       <Panel noTopLine noBottomLine className="py-6 px-4">
-        <div className="max-w-xl mx-auto space-y-4">
-          <div className="text-center space-y-1">
+        <div className="max-w-xl mx-auto space-y-6">
+          <div className="text-center space-y-2">
             <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground block">
               // 404 — Page Not Found
             </span>
-            <h1 className="text-2xl font-medium tracking-tight text-foreground">
+            <h1 className="font-serif text-3xl font-normal tracking-tight text-foreground">
               Off the blueprint.
             </h1>
+            <p className="font-mono text-xs text-muted-foreground">
+              404. Page not found. Play instead.
+            </p>
           </div>
 
-          <InlineGame />
+          <ToppingOut mode="inline" autoFocus={false} />
+
+          <div className="text-center pt-2">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground link transition-colors"
+            >
+              ← Return to blueprint
+            </Link>
+          </div>
         </div>
       </Panel>
 

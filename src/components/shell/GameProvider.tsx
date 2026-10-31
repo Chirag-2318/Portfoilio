@@ -20,10 +20,15 @@ const GameContext = React.createContext<GameContextType>({
   closeGame: () => {},
 });
 
-export const preloadGame = () => import("../game/GameOverlay");
+export const preloadGame = () => import("../game/topping-out/ToppingOutOverlay");
 
-const GameOverlay = dynamic(() => import("../game/GameOverlay"), {
+const ToppingOutOverlay = dynamic(() => import("../game/topping-out/ToppingOutOverlay"), {
   ssr: false,
+  loading: () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--background)]/80">
+      <div className="font-mono text-xs text-muted-foreground animate-pulse">Loading Topping Out...</div>
+    </div>
+  ),
 });
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
@@ -79,9 +84,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     <GameContext.Provider value={{ open, openGame, closeGame }}>
       {children}
       {mounted && (
-        <GameOverlay
+        <ToppingOutOverlay
           open={open}
-          origin={origin}
           onExited={handleExited}
           onClose={closeGame}
         />

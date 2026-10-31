@@ -38,6 +38,18 @@ export const site = {
   ],
   home: {
     tagline: "Backend and Android developer. Hackathon winner.",
+    taglines: [
+      "Fluent in Java, Kotlin and chai.",
+      "Turns coffee into stack traces.",
+      "Pune traffic taught me patience. Production taught me panic.",
+      "Ctrl+Z is my love language.",
+      "It works on my machine. Let me check yours.",
+      "Off-by-one errors are my spirit animal.",
+      "I read the docs. Eventually. Under pressure.",
+      "Naming things is hard. I do it anyway.",
+      "Writes code. Sometimes even on purpose.",
+      "Ships first, apologises to the linter later.",
+    ],
     githubUsername: "PLACEHOLDER_GITHUB_USERNAME", // PLACEHOLDER
     kicker: "Engineering student & developer — Pune, India",
     taglineA: "I do the task.",

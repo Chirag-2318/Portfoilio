@@ -217,3 +217,72 @@ Added a full third theme alongside Dark and Light, cycling Dark → Light → Bl
   - Hackathon finalist and winner accolades.
   - Upcoming Barclays internship role and primary stack expertise.
 
+---
+
+## CALM PASS (Supersedes Earlier Decisions)
+
+Following an architectural review to eliminate visual anxiety, reduce grid clutter, and remove blue cast in dark mode, the following design decisions supersede previous sections:
+
+### 1. Theme Fix: Neutral Dark & Pure Light (Blueprint Theme Removed)
+- **Two Themes Only**: `dark` and `light`. Default theme is strictly `dark` regardless of system settings on first visit.
+- **Blueprint Theme Removed**: Completely excised from CSS variables, theme toggle cycle, command palette, and documentation.
+- **Stale State Sanitization**: Inline anti-flash script and NextThemes provider safely overwrite any legacy `"blueprint"` localStorage values to `"dark"`.
+- **Pure Neutral Dark Mode**:
+  - `--background`: `#09090b` (pure neutral near-black, zero blue tint)
+  - `--foreground`: `#fafafa`
+  - `--line-soft`: `#141417`
+  - `--line`: `#1c1c1f`
+  - `--line-strong`: `#27272a`
+  - Light mode: `--background`: `#ffffff`, `--line-soft`: `#f0f0f2`, `--line`: `#e4e4e7`.
+
+### 2. Grid Clutter Reduction & Line Softening
+- **No Full-Bleed Lines**: `.screen-line-top` and `.screen-line-bottom` now span strictly the column width (max 768px). All `100vw` pseudo-elements and bleed bands are eliminated.
+- **Softened Side Rails**: Column side borders updated from `--line` to `--line-soft` (`#141417` dark / `#f0f0f2` light), providing a subtle visual rail instead of an architectural cage.
+- **Section Dividers**: Replaced all hatched full-bleed ruler dividers with a clean 40px gap (`h-10`, `border-x border-[var(--line-soft)]`, transparent background).
+- **Registration Marks Removed**: Deleted all `RegMark` corner crosshairs and related CSS.
+- **Left Scroll Ruler Removed**: Deleted `ScrollRuler.tsx` and unmounted it from `AppShell`.
+- **Dimensions Removed**: Removed all technical dimension text (`768`, `Ø160`, `32`, `30°`) and extension lines across the site.
+- **Avatar Badge Cleaned**: Removed technical cross-lines and `"160 x 160"` dimension label; placeholder is a clean muted square with mono "CP".
+- **Internal Spacing & Layout Breathing Room**:
+  - Panel headers: `px-5 py-5`.
+  - Panel bodies: `p-5 sm:p-6`.
+  - List rows: `py-4 px-5`.
+  - Overview panel: removed dashed vertical divider, expanded grid spacing to `gap-x-8 gap-y-4`.
+  - Projects panel: replaced hatched index tiles with plain mono text `P-01`, `P-02`, `P-03` in `--muted-foreground`.
+  - Sheet tags: dimmed to 60% opacity (`opacity-60`).
+
+### 3. Hero Artwork: "Construction Sheet Monogram"
+- **Clean 2D Vector Drafting**: Replaced the 3D isometric slab block drawing with `ConstructionMonogram.tsx` in a 768x400 viewBox.
+- **Precise Geometry**:
+  - Letter **C**: arc with outer radius $R = 100$, inner radius $r = 76$ (stroke width 24), open mouth at 30°.
+  - Letter **P**: vertical stem (stroke width 24) spanning $y = 90$ to $y = 290$, semicircular bowl with radius $r = 56$ matching C's cap height.
+  - Centered horizontally at $x = 384$ via $+4\text{px}$ alignment shift.
+  - Underlying construction lines in 1px `var(--line-strong)`: tangents, concentric reference circles, center marks, and exactly two callout labels (`R = 100`, `r = 56`).
+- **Placement & Animation**:
+  - Placed in the upper hero zone (`bottom-[148px] sm:bottom-[160px]`), ensuring $>32\text{px}$ breathing room above the avatar and name block.
+  - 1.8s draw-in animation with traveling pen tips, settling at 45% opacity, interactive hover brightening to 80%.
+  - Reduced hero height: `h-[340px] sm:h-[440px]`.
+
+### 4. Rotating Humour Tagline
+- Replaced static hero tagline with `RotatingTagline.tsx`.
+- Cycles 10 developer humour taglines every 4.5 seconds with a smooth blur and fade transition.
+- **Zero Layout Shift**: Invisible CSS grid stacking reserves the exact height of the longest tagline (`col-start-1 row-start-1 invisible`).
+- **Accessibility & Controls**: Pauses rotation on mouse hover, keyboard `focus-within`, and when browser tab is inactive (`visibilitychange`). Provides an `sr-only` description and static single line on `prefers-reduced-motion`.
+
+### 5. "The Numbers" Strip
+- Replaced the "Bill of Materials" table with a clean 4-column strip (`NumbersPanel.tsx`).
+- Responsive: 4 columns on desktop, 2 columns below 640px.
+- Features large Instrument Serif numerals (`3.5rem` desktop, `2.75rem` mobile) that smoothly count up from 0 on viewport intersection over 700ms.
+- 4 resume facts:
+  1. `1` — Hackathon win
+  2. `3` — Hackathon finals
+  3. `3` — Hackathon projects built
+  4. `2` — Degrees in progress
+
+### 6. Tag Contrast & Experience Entry Clean-up
+- **WCAG AA Compliance**: Updated `.blueprint-tag` and `.tag-badge` styles:
+  - Light mode: bg `#f4f4f5`, text `#52525b`, border `#e4e4e7` (contrast ratio $> 5:1$).
+  - Dark mode: bg `#18181b`, text `#a1a1aa`, border `#27272a` (contrast ratio $> 5:1$).
+- **Experience Entry De-clutter**: Under Barclays "Summer Intern", removed redundant pill badges ("Hack-O-Hire", "Internship"). Kept only the company title, "Upcoming" status dot, and single bullet point fact.
+
+

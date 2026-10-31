@@ -4,7 +4,6 @@ import * as React from "react";
 import { SkipLink } from "@/components/shell/SkipLink";
 import { SiteHeader } from "@/components/blueprint/SiteHeader";
 import { ScrollTopButton } from "@/components/blueprint/ScrollTopButton";
-import { ScrollRuler } from "@/components/blueprint/ScrollRuler";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -14,7 +13,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     >
       <SkipLink />
       <SiteHeader />
-      <ScrollRuler />
       <main id="content" tabIndex={-1} className="focus:outline-none">
         {children}
       </main>

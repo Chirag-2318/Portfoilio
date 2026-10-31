@@ -60,8 +60,10 @@ const themeScript = `
 (function(){
   try {
     var stored = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = stored === 'light' ? 'light' : stored === 'blueprint' ? 'blueprint' : stored === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light');
+    var theme = stored === 'light' ? 'light' : 'dark';
+    if (stored !== 'light' && stored !== 'dark') {
+      try { localStorage.setItem('theme', 'dark'); } catch(e){}
+    }
     document.documentElement.classList.remove('dark','light','blueprint');
     document.documentElement.classList.add(theme);
   } catch(e) {

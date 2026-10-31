@@ -53,7 +53,7 @@ export function StackPanel() {
         {STACK_GROUPS.map((group) => (
           <div key={group.name} className="relative">
             {/* Group Header Row */}
-            <div className="px-4 py-2 bg-[var(--muted)]/40 border-b border-[var(--line)]">
+            <div className="px-5 py-3 bg-[var(--muted)]/40 border-b border-[var(--line)]">
               <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
                 {group.name}
               </span>
@@ -65,7 +65,7 @@ export function StackPanel() {
                 return (
                   <div
                     key={item}
-                    className="flex items-center gap-2.5 px-4 py-3 border-r border-b border-[var(--line)] hover:bg-[var(--accent-muted)] transition-colors duration-150 group"
+                    className="flex items-center gap-2.5 px-5 py-3.5 border-r border-b border-[var(--line)] hover:bg-[var(--accent-muted)] transition-colors duration-150 group"
                   >
                     <TechIcon name={item} />
                     <span className="text-sm text-foreground truncate font-sans">

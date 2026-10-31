@@ -25,7 +25,7 @@ export function ResumePanel() {
     <div className="relative">
       <PanelHeader title="Resume" sheet="SHEET 08 / 09" />
 
-      <div className="p-4 space-y-4">
+      <div className="p-5 sm:p-6 space-y-4">
         <p className="text-sm text-muted-foreground leading-relaxed">
           A one-page summary of my education, skills, projects and achievements.
         </p>

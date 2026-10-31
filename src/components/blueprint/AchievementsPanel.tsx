@@ -37,7 +37,7 @@ export function AchievementsPanel() {
         {visibleItems.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between py-3 px-4 gap-3 hover:bg-[var(--accent-muted)] transition-colors duration-150"
+            className="flex items-center justify-between py-4 px-5 gap-3 hover:bg-[var(--accent-muted)] transition-colors duration-150"
           >
             <div className="flex items-center gap-3 min-w-0">
               <IconTile size={24}>
@@ -58,7 +58,7 @@ export function AchievementsPanel() {
       </div>
 
       {!showAll && (
-        <div className="py-3 px-4 flex justify-center bg-[var(--background)]">
+        <div className="py-4 px-5 flex justify-center bg-[var(--background)]">
           <button
             type="button"
             onClick={() => setShowAll(true)}

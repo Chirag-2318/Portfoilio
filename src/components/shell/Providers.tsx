@@ -19,7 +19,7 @@ export function Providers({
       attribute="class"
       defaultTheme="dark"
       enableSystem={false}
-      themes={["dark", "light", "blueprint"]}
+      themes={["dark", "light"]}
       storageKey="theme"
       disableTransitionOnChange
     >

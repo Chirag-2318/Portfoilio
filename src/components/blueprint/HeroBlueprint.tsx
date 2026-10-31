@@ -4,6 +4,8 @@ import * as React from "react";
 import { site } from "@/content/site";
 import { AvatarBadge } from "@/components/blueprint/AvatarBadge";
 import { HandwrittenNote } from "@/components/blueprint/HandwrittenNote";
+import { ConstructionMonogram } from "@/components/hero/ConstructionMonogram";
+import { RotatingTagline } from "@/components/hero/RotatingTagline";
 
 interface HeroBlueprintProps {
   hasPhoto: boolean;
@@ -25,6 +27,7 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
   const [pins, setPins] = React.useState<CalloutPin[]>([]);
   const [soundEnabled, setSoundEnabled] = React.useState(true);
   const [isCrosshairActive, setIsCrosshairActive] = React.useState(false);
+  const [isHeroHovered, setIsHeroHovered] = React.useState(false);
   const [isReducedMotion, setIsReducedMotion] = React.useState(false);
   const [isFinePointer, setIsFinePointer] = React.useState(false);
 
@@ -32,8 +35,6 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
   const targetPos = React.useRef({ x: 0, y: 0 });
   const currentPos = React.useRef({ x: 0, y: 0 });
   const rafId = React.useRef<number | null>(null);
-
-  const currentYear = new Date().getFullYear();
 
   React.useEffect(() => {
     try {
@@ -102,39 +103,48 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
     [soundEnabled]
   );
 
-  // RAF loop for CAD crosshair with 80ms easing lag
+  // Smooth crosshair animation loop with ~80ms lag
   const animateCrosshair = React.useCallback(() => {
-    // Easing factor ~0.35 gives ~80ms 2-frame response
-    const ease = 0.35;
-    currentPos.current.x += (targetPos.current.x - currentPos.current.x) * ease;
-    currentPos.current.y += (targetPos.current.y - currentPos.current.y) * ease;
-
-    const x = Math.round(currentPos.current.x);
-    const y = Math.round(currentPos.current.y);
+    const lagFactor = 0.16; // gives ~80ms response at 60fps
+    currentPos.current.x += (targetPos.current.x - currentPos.current.x) * lagFactor;
+    currentPos.current.y += (targetPos.current.y - currentPos.current.y) * lagFactor;
 
     if (crosshairXRef.current) {
-      crosshairXRef.current.style.transform = `translate3d(${x}px, 0, 0)`;
+      crosshairXRef.current.style.transform = `translateX(${currentPos.current.x}px)`;
     }
     if (crosshairYRef.current) {
-      crosshairYRef.current.style.transform = `translate3d(0, ${y}px, 0)`;
+      crosshairYRef.current.style.transform = `translateY(${currentPos.current.y}px)`;
     }
     if (readoutRef.current) {
-      readoutRef.current.style.transform = `translate3d(${x + 12}px, ${y + 12}px, 0)`;
-      readoutRef.current.textContent = `x ${x}  y ${y}`;
+      // Keep readout slightly offset from intersection so it's not obscured
+      const offsetX = currentPos.current.x + 10;
+      const offsetY = currentPos.current.y + 10;
+      readoutRef.current.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      readoutRef.current.textContent = `x ${Math.round(currentPos.current.x)}  y ${Math.round(currentPos.current.y)}`;
     }
 
     rafId.current = requestAnimationFrame(animateCrosshair);
   }, []);
 
-  const handlePointerEnter = React.useCallback(() => {
-    if (!isFinePointer || isReducedMotion) return;
-    setIsCrosshairActive(true);
-    if (!rafId.current) {
-      rafId.current = requestAnimationFrame(animateCrosshair);
-    }
-  }, [animateCrosshair, isFinePointer, isReducedMotion]);
+  const handlePointerEnter = React.useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      setIsHeroHovered(true);
+      if (!isFinePointer || isReducedMotion) return;
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      targetPos.current.x = e.clientX - rect.left;
+      targetPos.current.y = e.clientY - rect.top;
+      currentPos.current = { ...targetPos.current };
+      setIsCrosshairActive(true);
+      if (!rafId.current) {
+        rafId.current = requestAnimationFrame(animateCrosshair);
+      }
+    },
+    [animateCrosshair, isFinePointer, isReducedMotion]
+  );
 
   const handlePointerLeave = React.useCallback(() => {
+    setIsHeroHovered(false);
     setIsCrosshairActive(false);
     if (rafId.current) {
       cancelAnimationFrame(rafId.current);
@@ -144,7 +154,8 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
 
   const handlePointerMove = React.useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!isFinePointer || isReducedMotion || !containerRef.current) return;
+      if (!isFinePointer || isReducedMotion) return;
+      if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       targetPos.current.x = e.clientX - rect.left;
       targetPos.current.y = e.clientY - rect.top;
@@ -197,17 +208,17 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
       onPointerEnter={handlePointerEnter}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative mx-auto max-w-3xl w-full border-x border-[var(--line)] screen-line-bottom overflow-y-clip select-none h-[340px] sm:h-[500px] grid grid-cols-[auto_1fr] grid-rows-[1fr_auto] bg-[var(--background)] cursor-crosshair"
+      className="relative mx-auto max-w-3xl w-full border-x border-[var(--line-soft)] screen-line-bottom overflow-hidden select-none h-[340px] sm:h-[440px] grid grid-cols-[auto_1fr] grid-rows-[1fr_auto] bg-[var(--background)] cursor-crosshair"
     >
-      {/* 1. Static Isometric Blueprint Drawing background */}
+      {/* 1. New Hero Artwork: Construction Sheet Monogram CP (upper hero area above name/avatar) */}
       <div
-        className="absolute inset-0 pointer-events-none select-none z-0"
+        className="absolute top-0 left-0 right-0 bottom-[148px] sm:bottom-[160px] flex items-center justify-center pointer-events-none select-none z-0 px-4"
         aria-hidden="true"
       >
-        <BlueprintDrawing />
+        <ConstructionMonogram isHeroHovered={isHeroHovered} />
       </div>
 
-      {/* 2. CAD Crosshair: 1px vertical & 1px horizontal line in var(--accent) at 55% opacity */}
+      {/* 2. CAD Crosshair: 1px vertical & 1px horizontal line in var(--accent) at 55% opacity (inside hero bounds) */}
       {isFinePointer && !isReducedMotion && isCrosshairActive && (
         <div
           className="absolute inset-0 pointer-events-none z-20 overflow-hidden"
@@ -216,19 +227,19 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
           {/* Vertical 1px line */}
           <div
             ref={crosshairXRef}
-            className="absolute top-0 bottom-0 left-0 w-px bg-[var(--accent)] opacity-55 will-change-transform"
+            className="absolute top-0 bottom-0 left-0 w-px bg-[var(--accent)] opacity-55 will-change-transform pointer-events-none"
           />
 
           {/* Horizontal 1px line */}
           <div
             ref={crosshairYRef}
-            className="absolute left-0 right-0 top-0 h-px bg-[var(--accent)] opacity-55 will-change-transform"
+            className="absolute left-0 right-0 top-0 h-px bg-[var(--accent)] opacity-55 will-change-transform pointer-events-none"
           />
 
           {/* Coordinates readout */}
           <div
             ref={readoutRef}
-            className="absolute top-0 left-0 font-mono text-[11px] text-[var(--accent)] font-medium bg-[var(--background)]/85 px-1 py-0.5 rounded border border-[var(--accent)]/30 will-change-transform shadow-xs"
+            className="absolute top-0 left-0 font-mono text-[11px] text-[var(--accent)] font-medium bg-[var(--background)]/85 px-1 py-0.5 rounded border border-[var(--accent)]/30 will-change-transform shadow-xs pointer-events-none"
           >
             x 0  y 0
           </div>
@@ -246,7 +257,7 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
             style={{ left: pin.x, top: pin.y }}
             className={`absolute ${
               isReducedMotion ? "" : "animate-pop-in"
-            } -translate-x-1.5 translate-y-1.5`}
+            } -translate-x-1.5 translate-y-1.5 pointer-events-none`}
           >
             {/* SVG Leader line and tick */}
             <svg
@@ -287,39 +298,20 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
         ))}
       </div>
 
-      {/* 4. Desktop Title Block (bottom-right corner, 2 cols x 3 rows table) */}
-      <div
-        aria-hidden="true"
-        className="hidden md:block absolute right-3 bottom-24 z-15 pointer-events-none select-none font-mono text-[10px] bg-[var(--background)] border border-[var(--line-strong)]"
-      >
-        <div className="grid grid-cols-2 divide-x divide-[var(--line-strong)] border-b border-[var(--line-strong)]">
-          <div className="px-2 py-1 text-muted-foreground">DRAWN BY</div>
-          <div className="px-2 py-1 font-medium text-foreground">C.P.</div>
-        </div>
-        <div className="grid grid-cols-2 divide-x divide-[var(--line-strong)] border-b border-[var(--line-strong)]">
-          <div className="px-2 py-1 text-muted-foreground">SHEET</div>
-          <div className="px-2 py-1 font-medium text-foreground">01 OF 01</div>
-        </div>
-        <div className="grid grid-cols-2 divide-x divide-[var(--line-strong)]">
-          <div className="px-2 py-1 text-muted-foreground">REV / {currentYear}</div>
-          <div className="px-2 py-1 font-medium text-foreground">SCALE 1:1</div>
-        </div>
-      </div>
-
       {/* Spacer grid row */}
       <div className="col-span-2 min-h-0 pointer-events-none" />
 
-      {/* 5. Avatar Block: Square ID-Frame Avatar with Crop Marks (left cell, bottom aligned) */}
+      {/* 4. Avatar Block: Square ID-Frame Avatar with Crop Marks (left cell, bottom aligned) */}
       <div className="relative z-10 self-end screen-line-top border-r border-[var(--line)] -mx-px flex items-end justify-center p-2.5 sm:p-3 bg-[var(--background)]">
         <AvatarBadge hasPhoto={hasPhoto} />
       </div>
 
-      {/* 6. Name Block: Serif display type + Mono Tagline + Mute Button */}
+      {/* 5. Name Block: Serif display type + Rotating Humour Tagline + Mute Button */}
       <div className="relative z-10 self-end flex flex-col justify-end min-w-0 bg-[var(--background)]">
         {/* Row 1: Serif H1 name (2.5rem mobile, 3.25rem desktop) + Mute toggle */}
         <div className="border-t border-[var(--line)] pl-3 sm:pl-5 pr-2 sm:pr-4 py-2 flex items-center justify-between sm:justify-start gap-3">
           <h1
-            className="font-serif text-[2.25rem] sm:text-[3.25rem] leading-none font-normal tracking-[-0.01em] text-foreground whitespace-nowrap"
+            className="font-serif text-[2rem] sm:text-[3.25rem] leading-none font-normal tracking-[-0.01em] text-foreground whitespace-nowrap"
             style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
           >
             {site.name.full}
@@ -372,15 +364,13 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
           </button>
         </div>
 
-        {/* Row 2: Tagline mono */}
+        {/* Row 2: Rotating Humour Tagline */}
         <div className="border-t border-[var(--line)] h-[44px] sm:h-10 py-1 pl-3 sm:pl-5 pr-3 flex items-center">
-          <p className="font-mono text-xs sm:text-sm text-balance text-muted-foreground leading-tight">
-            {site.home.tagline}
-          </p>
+          <RotatingTagline className="w-full" />
         </div>
       </div>
 
-      {/* 7. Handwritten Redline Note: "measure me, click to pin" in accent colour */}
+      {/* 6. Handwritten Redline Note: "measure me, click to pin" in accent colour */}
       <HandwrittenNote
         side="right"
         arrow="curved-down-left"
@@ -389,157 +379,5 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
         measure me, click to pin
       </HandwrittenNote>
     </div>
-  );
-}
-
-/** Static Isometric Blueprint Drawing with Monogram CP on 30-degree axes */
-function BlueprintDrawing() {
-  return (
-    <svg
-      viewBox="0 0 768 500"
-      preserveAspectRatio="xMidYMid slice"
-      className="w-full h-full overflow-visible"
-    >
-      <defs>
-        <pattern
-          id="blueprint-hatch-hero"
-          width="4"
-          height="4"
-          patternTransform="rotate(45)"
-          patternUnits="userSpaceOnUse"
-        >
-          <line
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="4"
-            stroke="var(--line-strong)"
-            strokeWidth="1"
-            strokeOpacity="0.5"
-          />
-        </pattern>
-      </defs>
-
-      {/* Two faint construction diagonals */}
-      <line
-        x1="-600"
-        y1="-390"
-        x2="1368"
-        y2="890"
-        stroke="var(--line-strong)"
-        strokeWidth="1"
-        strokeOpacity="0.25"
-        strokeDasharray="6 4"
-      />
-      <line
-        x1="-600"
-        y1="890"
-        x2="1368"
-        y2="-390"
-        stroke="var(--line-strong)"
-        strokeWidth="1"
-        strokeOpacity="0.25"
-        strokeDasharray="6 4"
-      />
-
-      {/* Isometric Monogram "CP" */}
-      <g
-        stroke="var(--line-strong)"
-        strokeWidth="1"
-        strokeOpacity="0.6"
-        fill="none"
-      >
-        {/* Letter 'C' */}
-        <g>
-          <polygon
-            points="280,120 310,137 280,154 250,137"
-            fill="url(#blueprint-hatch-hero)"
-          />
-          <polygon points="250,137 280,154 280,254 250,237" />
-          <polygon points="280,154 310,137 310,237 280,254" />
-        </g>
-        <g>
-          <polygon
-            points="310,137 390,183 360,200 280,154"
-            fill="url(#blueprint-hatch-hero)"
-          />
-          <polygon points="280,154 360,200 360,230 280,184" />
-          <polygon points="360,200 390,183 390,213 360,230" />
-        </g>
-        <g>
-          <polygon
-            points="310,237 390,283 360,300 280,254"
-            fill="url(#blueprint-hatch-hero)"
-          />
-          <polygon points="280,254 360,300 360,330 280,284" />
-          <polygon points="360,300 390,283 390,313 360,330" />
-        </g>
-
-        {/* Letter 'P' */}
-        <g>
-          <polygon
-            points="440,120 470,137 440,154 410,137"
-            fill="url(#blueprint-hatch-hero)"
-          />
-          <polygon points="410,137 440,154 440,320 410,303" />
-          <polygon points="440,154 470,137 470,303 440,320" />
-        </g>
-        <g>
-          <polygon
-            points="470,137 540,177 510,194 440,154"
-            fill="url(#blueprint-hatch-hero)"
-          />
-          <polygon points="440,154 510,194 510,224 440,184" />
-          <polygon points="510,194 540,177 540,207 510,224" />
-        </g>
-        <g>
-          <polygon
-            points="540,177 570,194 540,211 510,194"
-            fill="url(#blueprint-hatch-hero)"
-          />
-          <polygon points="510,194 540,211 540,261 510,244" />
-          <polygon points="540,211 570,194 570,244 540,261" />
-        </g>
-        <g>
-          <polygon
-            points="470,207 540,247 510,264 440,224"
-            fill="url(#blueprint-hatch-hero)"
-          />
-          <polygon points="440,224 510,264 510,294 440,254" />
-          <polygon points="510,264 540,247 540,277 510,294" />
-        </g>
-
-        {/* 30° angle label */}
-        <g transform="translate(570, 194)">
-          <path
-            d="M 0 0 L 50 0"
-            stroke="var(--line-strong)"
-            strokeWidth="0.75"
-            strokeDasharray="2 2"
-          />
-          <path
-            d="M 0 0 L 43.3 25"
-            stroke="var(--line-strong)"
-            strokeWidth="0.75"
-          />
-          <path
-            d="M 28 0 A 28 28 0 0 1 24.2 14"
-            stroke="var(--accent)"
-            strokeWidth="1.25"
-          />
-          <text
-            x="34"
-            y="12"
-            fill="var(--dimension-foreground)"
-            fontSize="10"
-            fontFamily="monospace"
-            textAnchor="start"
-            stroke="none"
-          >
-            30°
-          </text>
-        </g>
-      </g>
-    </svg>
   );
 }

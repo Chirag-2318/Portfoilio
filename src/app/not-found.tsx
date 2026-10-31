@@ -41,7 +41,7 @@ export default function NotFound() {
         </div>
       </Panel>
 
-      <footer className="mx-auto max-w-3xl border-x border-[var(--line)] screen-line-top relative bg-[var(--background)] px-4 py-4 flex items-center justify-between text-xs font-mono text-muted-foreground">
+      <footer className="mx-auto max-w-3xl border-x border-[var(--line-soft)] screen-line-top relative bg-[var(--background)] px-5 py-5 flex items-center justify-between text-xs font-mono text-muted-foreground">
         <span>Designed and built by Chirag Patil</span>
         <span className="tabular-nums">{currentYear}</span>
       </footer>

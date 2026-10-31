@@ -117,7 +117,7 @@ export function ContributionsPanel() {
     <div id="contributions" className="mx-auto max-w-3xl border-x border-[var(--line)] bg-[var(--background)] relative">
       <h2 className="sr-only">GitHub contributions</h2>
 
-      <div className="p-4 overflow-hidden">
+      <div className="p-5 sm:p-6 overflow-hidden">
         {loading ? (
           /* Skeleton */
           <div className="h-32 flex items-center justify-center">

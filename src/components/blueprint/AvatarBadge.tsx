@@ -72,32 +72,13 @@ export function AvatarBadge({ hasPhoto, className }: AvatarBadgeProps) {
               decoding="async"
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-[var(--muted)] text-muted-foreground relative">
-              {/* Technical cross lines in the background */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-20"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(to right, var(--line-strong) 1px, transparent 1px), linear-gradient(to bottom, var(--line-strong) 1px, transparent 1px)",
-                  backgroundSize: "20px 20px",
-                }}
-              />
-              <span className="font-mono text-2xl sm:text-3xl font-medium tracking-wider select-none text-foreground/80 z-10">
+            <div className="w-full h-full flex items-center justify-center bg-[var(--muted)] text-muted-foreground select-none">
+              <span className="font-mono text-2xl sm:text-3xl font-medium tracking-wider text-foreground/80">
                 CP
               </span>
             </div>
           )}
         </div>
-      </div>
-
-      {/* Horizontal Dimension Under Tile: "160 x 160" */}
-      <div
-        aria-hidden="true"
-        className="w-32 sm:w-40 flex items-center justify-between gap-1 pt-2 font-mono text-[10px] text-[var(--dimension-foreground)]"
-      >
-        <span className="w-2 h-px bg-[var(--dimension)]" />
-        <span className="tabular-nums uppercase tracking-wider">160 × 160</span>
-        <span className="w-2 h-px bg-[var(--dimension)]" />
       </div>
     </div>
   );

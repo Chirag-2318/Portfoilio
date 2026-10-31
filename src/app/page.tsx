@@ -14,7 +14,6 @@ import { EducationPanel } from "@/components/blueprint/EducationPanel";
 import { StackPanel } from "@/components/blueprint/StackPanel";
 import { ResumePanel } from "@/components/blueprint/ResumePanel";
 import { ContactPanel } from "@/components/blueprint/ContactPanel";
-import { Dimension } from "@/components/blueprint/Dimension";
 
 export default function HomePage() {
   const assets = getAssets();
@@ -22,102 +21,92 @@ export default function HomePage() {
 
   return (
     <div className="relative isolate px-2">
-      {/* 1. Pre-hero 32px tall strip with horizontal 768 dimension line (desktop only, hidden below 49rem / md) */}
-      <div className="hidden md:flex items-center h-8 mx-auto max-w-3xl border-x border-[var(--line)] px-4 screen-line-top screen-line-bottom relative bg-[var(--background)]">
-        <Dimension label="768" variant="horizontal" className="w-full" />
-      </div>
-
-      {/* 2. Hero Section (500px desktop, 320px mobile) */}
+      {/* 1. Hero Section (440px desktop, 300px mobile) */}
       <HeroBlueprint hasPhoto={assets.hasPhoto} />
 
-      {/* 3. 32px Stripe divider with vertical 32 dimension annotation to the right (hidden below lg) */}
-      <div className="relative">
-        <StripeDivider />
-        <div className="hidden lg:block absolute left-[calc(100%+0.75rem)] top-1/2 -translate-y-1/2 w-6 h-8">
-          <Dimension label="32" variant="vertical" className="h-full" />
-        </div>
-      </div>
+      {/* 2. Plain 40px gap between sections */}
+      <StripeDivider />
 
-      {/* 4. Overview Panel (id=overview) */}
+      {/* 3. Overview Panel (id=overview) */}
       <Panel id="overview" noTopLine noBottomLine>
         <OverviewPanel />
       </Panel>
 
-      {/* 5. Social Panel (id=socials) */}
+      {/* 4. Social Panel (id=socials) */}
       <Panel id="socials" noTopLine noBottomLine>
         <SocialPanel />
       </Panel>
 
-      {/* 6. GitHub Contributions (conditionally rendered if username configured) */}
+      {/* 5. GitHub Contributions (conditionally rendered if username configured) */}
       <ContributionsPanel />
 
-      {/* 7. Stripe Divider before About */}
+      {/* 6. Gap before About */}
       <StripeDivider />
 
-      {/* 8. About Panel (id=about) */}
+      {/* 7. About Panel (id=about) */}
       <Panel id="about" noTopLine noBottomLine>
         <AboutPanel />
       </Panel>
 
-      {/* 9. Stripe Divider between About / Numbers */}
+      {/* 8. Gap between About / Numbers */}
       <StripeDivider />
 
-      {/* 10. In Numbers (id=numbers) */}
+      {/* 9. The numbers (id=numbers) */}
       <Panel id="numbers" noTopLine noBottomLine>
         <NumbersPanel />
       </Panel>
 
-      {/* 11. Stripe Divider between Numbers / Experience */}
+      {/* 10. Gap between Numbers / Experience */}
       <StripeDivider />
 
-      {/* 12. Experience (id=experience) */}
+      {/* 11. Experience (id=experience) */}
       <Panel id="experience" noTopLine>
         <ExperiencePanel />
       </Panel>
 
-      {/* 13. Projects (id=projects) */}
+      {/* 12. Projects (id=projects) */}
       <Panel id="projects" noTopLine noBottomLine>
         <ProjectsPanel />
       </Panel>
 
-      {/* 14. Stripe Divider between Projects / Achievements */}
+      {/* 13. Gap between Projects / Achievements */}
       <StripeDivider />
 
-      {/* 15. Achievements (id=achievements) */}
+      {/* 14. Achievements (id=achievements) */}
       <Panel id="achievements" noTopLine>
         <AchievementsPanel />
       </Panel>
 
-      {/* 16. Education (id=education) */}
+      {/* 15. Education (id=education) */}
       <Panel id="education" noTopLine>
         <EducationPanel />
       </Panel>
 
-      {/* 17. Stack (id=stack) */}
+      {/* 16. Stack (id=stack) */}
       <Panel id="stack" noTopLine noBottomLine>
         <StackPanel />
       </Panel>
 
-      {/* 18. Stripe Divider between Stack / Resume */}
+      {/* 17. Gap between Stack / Resume */}
       <StripeDivider />
 
-      {/* 19. Resume (id=resume) */}
+      {/* 18. Resume (id=resume) */}
       <Panel id="resume" noTopLine>
         <ResumePanel />
       </Panel>
 
-      {/* 20. Contact (id=contact) */}
+      {/* 19. Contact (id=contact) */}
       <Panel id="contact" noTopLine noBottomLine>
         <ContactPanel />
       </Panel>
 
-      {/* 21. Footer row: panel-like row with mono text-xs muted "Designed and built by Chirag Patil" and current year */}
-      <footer className="mx-auto max-w-3xl border-x border-[var(--line)] screen-line-top relative bg-[var(--background)] px-4 py-4 flex items-center justify-between text-xs font-mono text-muted-foreground">
+      {/* 20. Footer row */}
+      <footer className="mx-auto max-w-3xl border-x border-[var(--line-soft)] screen-line-top relative bg-[var(--background)] px-5 py-5 flex items-center justify-between text-xs font-mono text-muted-foreground">
         <span>Designed and built by Chirag Patil</span>
         <span className="tabular-nums">{currentYear}</span>
       </footer>
 
-      {/* 22. Closing Stripe */}
+      {/* 21. Closing gap */}
       <StripeDivider />
     </div>
   );

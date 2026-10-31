@@ -69,7 +69,7 @@ export function SiteHeader({ className }: SiteHeaderProps) {
         className
       )}
     >
-      <div className="mx-auto md:max-w-3xl h-full flex items-center gap-2 sm:gap-4 border-x border-[var(--line)] pl-4 pr-2 screen-line-top screen-line-bottom relative">
+      <div className="mx-auto md:max-w-3xl h-full flex items-center gap-2 sm:gap-4 border-x border-[var(--line-soft)] pl-4 pr-2 screen-line-top screen-line-bottom relative">
         {/* Left: Original 28px "CP" monogram + Breadcrumb */}
         <div className="flex items-center gap-2.5">
           <a

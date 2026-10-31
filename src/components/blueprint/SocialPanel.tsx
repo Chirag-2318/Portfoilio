@@ -18,7 +18,7 @@ export function SocialPanel() {
   }
 
   return (
-    <div className="p-4 relative">
+    <div className="p-5 sm:p-6 relative">
       <h2 className="sr-only">Social links</h2>
 
       {/* Handwritten note "find me here" with an arrow on the left outside the column (xl and up) */}

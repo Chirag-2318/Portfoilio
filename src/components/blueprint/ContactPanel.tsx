@@ -21,7 +21,7 @@ export function ContactPanel() {
         say hi
       </HandwrittenNote>
 
-      <div className="p-4 space-y-5">
+      <div className="p-5 sm:p-6 space-y-5">
         <p className="text-sm text-muted-foreground leading-relaxed">
           Open to internships, hackathon teams and interesting problems.
         </p>

@@ -21,7 +21,7 @@ export function PanelHeader({
   return (
     <header
       className={cn(
-        "px-4 py-3 relative bg-[var(--background)] flex flex-col justify-center",
+        "px-5 py-5 relative bg-[var(--background)] flex flex-col justify-center",
         noBottomLine ? "screen-line-bottom-none" : "screen-line-bottom",
         className
       )}
@@ -45,7 +45,7 @@ export function PanelHeader({
         {children}
 
         {sheet && (
-          <span className="font-mono text-xs text-[var(--dimension-foreground)] shrink-0 tracking-wider uppercase ml-auto">
+          <span className="font-mono text-xs text-[var(--dimension-foreground)] opacity-60 shrink-0 tracking-wider uppercase ml-auto">
             {sheet}
           </span>
         )}

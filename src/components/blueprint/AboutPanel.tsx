@@ -59,7 +59,7 @@ export function AboutPanel() {
         </h2>
       </PanelHeader>
 
-      <div className="p-4 pt-3">
+      <div className="p-5 sm:p-6 pt-3">
         <ul className="list-disc ps-3.5 space-y-2.5 text-sm text-foreground marker:text-muted-foreground leading-relaxed">
           <li>
             Hello. I&apos;m Chirag, a developer from Pune.

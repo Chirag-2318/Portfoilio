@@ -10,9 +10,10 @@ export function Tag({ children, className }: TagProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border border-border px-1.5 py-0.5",
-        "font-mono text-xs text-muted-foreground",
-        "bg-zinc-900 light:bg-zinc-50",
+        "tag-badge inline-flex items-center rounded-full px-2 py-0.5",
+        "font-mono text-xs select-none",
+        "bg-[#18181b] text-[#a1a1aa] border border-[#27272a]",
+        "light:bg-[#f4f4f5] light:text-[#52525b] light:border-[#e4e4e7] [.light_&]:bg-[#f4f4f5] [.light_&]:text-[#52525b] [.light_&]:border-[#e4e4e7]",
         className
       )}
     >

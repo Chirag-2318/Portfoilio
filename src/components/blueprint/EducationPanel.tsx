@@ -9,7 +9,7 @@ export function EducationPanel() {
 
       <div className="divide-y divide-[var(--line)]">
         {/* Entry 1: PICT */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between py-4 px-4 gap-2 hover:bg-[var(--accent-muted)] transition-colors duration-150">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between py-4 px-5 gap-2 hover:bg-[var(--accent-muted)] transition-colors duration-150">
           <div className="flex items-start gap-3 min-w-0">
             <IconTile size={24} className="mt-0.5">
               <GraduationCapIcon />
@@ -33,7 +33,7 @@ export function EducationPanel() {
         </div>
 
         {/* Entry 2: IIT Madras */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between py-4 px-4 gap-2 hover:bg-[var(--accent-muted)] transition-colors duration-150">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between py-4 px-5 gap-2 hover:bg-[var(--accent-muted)] transition-colors duration-150">
           <div className="flex items-start gap-3 min-w-0">
             <IconTile size={24} className="mt-0.5">
               <GraduationCapIcon />

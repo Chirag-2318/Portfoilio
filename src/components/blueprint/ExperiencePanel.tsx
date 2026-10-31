@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { IconTile } from "@/components/blueprint/IconTile";
-import { Tag } from "@/components/blueprint/Tag";
 import { PanelHeader } from "@/components/blueprint/PanelHeader";
 
 export function ExperiencePanel() {
@@ -13,7 +12,7 @@ export function ExperiencePanel() {
       <PanelHeader title="Experience" sheet="SHEET 03 / 09" />
 
       {/* Experience Entry */}
-      <div className="p-4 relative">
+      <div className="p-5 sm:p-6 relative">
         {/* Top Company Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3">
           <div className="flex items-center gap-3">
@@ -103,11 +102,6 @@ export function ExperiencePanel() {
                     Selected for Barclays&apos; Internship Program after clearing the Hack-O-Hire hackathon round and the subsequent interview process.
                   </li>
                 </ul>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  <Tag>Hack-O-Hire</Tag>
-                  <Tag>Internship</Tag>
-                </div>
               </div>
             </div>
           </div>

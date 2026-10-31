@@ -1,7 +1,6 @@
 export * from "./Panel";
 export * from "./PanelHeader";
 export * from "./StripeDivider";
-export * from "./Dimension";
 export * from "./HandwrittenNote";
 export * from "./IconTile";
 export * from "./CopyButton";
@@ -24,6 +23,4 @@ export * from "./ContributionsPanel";
 export * from "./ResumePanel";
 export * from "./ContactPanel";
 export * from "./ScrollTopButton";
-export * from "./ScrollRuler";
-export * from "./RegMark";
 export * from "./CommandMenu";

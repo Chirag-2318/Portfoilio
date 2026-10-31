@@ -203,11 +203,6 @@ export function CommandMenu() {
             hint={theme === "light" ? "Active" : undefined}
             onSelect={() => handleAction(() => setTheme("light"))}
           />
-          <CommandRow
-            label="Blueprint"
-            hint={theme === "blueprint" ? "Active" : undefined}
-            onSelect={() => handleAction(() => setTheme("blueprint"))}
-          />
         </Command.Group>
 
         {/* Group: Fun */}

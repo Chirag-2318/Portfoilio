@@ -58,16 +58,10 @@ export function OverviewPanel() {
   }, []);
 
   return (
-    <div className="p-4 relative">
+    <div className="p-5 sm:p-6 relative">
       <h2 className="sr-only">Overview</h2>
 
-      <div className="relative grid gap-x-4 gap-y-3 sm:grid-cols-2">
-        {/* 1px dashed vertical line centred between the two columns (sm and up) */}
-        <div
-          className="hidden sm:block absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px border-r border-dashed border-[var(--line)] pointer-events-none"
-          aria-hidden="true"
-        />
-
+      <div className="relative grid gap-x-8 gap-y-4 sm:grid-cols-2">
         {/* Row 1: Spans both columns: Briefcase icon */}
         <div className="sm:col-span-2 flex items-center gap-3 font-mono text-sm group">
           <IconTile>

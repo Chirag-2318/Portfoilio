@@ -97,17 +97,15 @@ export function ProjectsPanel() {
                 type="button"
                 onClick={() => toggle(project.id)}
                 aria-expanded={isExpanded}
-                className="w-full text-left flex items-stretch hover:bg-[var(--accent-muted)] transition-colors duration-150 select-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="w-full text-left flex items-center py-4 px-5 gap-4 hover:bg-[var(--accent-muted)] transition-colors duration-150 select-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                {/* Left cell: Mono index tile "P-01", "P-02", "P-03" */}
-                <div className="p-4 flex items-center justify-center shrink-0">
-                  <span className="inline-flex items-center justify-center h-6 px-1.5 rounded-md select-none shrink-0 border border-muted-foreground/15 ring-1 ring-inset ring-foreground/5 text-muted-foreground font-mono text-[11px] font-medium bg-[var(--muted)]">
-                    P-0{index + 1}
-                  </span>
-                </div>
+                {/* Left cell: Plain mono index text */}
+                <span className="font-mono text-xs text-muted-foreground select-none shrink-0 w-8">
+                  P-0{index + 1}
+                </span>
 
-                {/* Right cell: border-l dashed var(--line), p-4 */}
-                <div className="flex-1 min-w-0 border-l border-dashed border-[var(--line)] p-4 flex items-center justify-between gap-4">
+                {/* Right cell: details */}
+                <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-2 mb-1">
                       <span className="font-medium text-foreground text-base tracking-tight truncate">
@@ -169,7 +167,7 @@ export function ProjectsPanel() {
                     : "max-h-0 opacity-0"
                 }`}
               >
-                <div className="p-4 sm:pl-16 space-y-4 bg-[var(--background)]">
+                <div className="p-5 sm:pl-16 space-y-4 bg-[var(--background)]">
                   <ul className="list-disc ps-4 space-y-2 text-sm text-foreground marker:text-muted-foreground leading-relaxed">
                     {project.bullets.map((bullet, i) => (
                       <li key={i}>{bullet}</li>

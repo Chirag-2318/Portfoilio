@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import { site } from "@/content/site";
+import { getAssets } from "@/lib/assets";
 import { Providers } from "@/components/shell/Providers";
+import { AppShell } from "@/components/shell/AppShell";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -44,6 +46,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const assets = getAssets();
+
   return (
     <html
       lang="en"
@@ -51,7 +55,9 @@ export default function RootLayout({
       className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-sans antialiased">
-        <Providers>{children}</Providers>
+        <Providers assets={assets}>
+          <AppShell>{children}</AppShell>
+        </Providers>
       </body>
     </html>
   );

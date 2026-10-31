@@ -62,3 +62,4 @@ Do NOT claim a project won or placed anywhere unless stated above. Specifically 
 1. Photo at /public/images/chirag.jpg (detected at build time; site looks finished without it)
 2. Resume at /public/Chirag_Patil_Resume.pdf (detected at build time)
 3. Social URLs (GitHub, LinkedIn) and the site URL in src/content/site.ts
+

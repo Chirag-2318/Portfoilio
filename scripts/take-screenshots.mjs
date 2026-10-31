@@ -27,7 +27,7 @@ async function getPageWsUrl() {
         }
       }
     } catch {
-      // wait and retry
+      // retry
     }
     await wait(300);
   }
@@ -94,7 +94,7 @@ async function main() {
     await cdp.send("Runtime.enable");
 
     // Wait for hydration
-    await wait(3000);
+    await wait(2500);
 
     const viewports = [
       { name: "mobile-390", width: 390, height: 844, mobile: true },
@@ -103,16 +103,25 @@ async function main() {
       { name: "desktop-1440", width: 1440, height: 900, mobile: false },
     ];
 
-    for (const theme of ["light", "dark"]) {
-      // Toggle theme via the button
+    async function capture(filename) {
+      const screenshot = await cdp.send("Page.captureScreenshot", {
+        format: "png",
+        captureBeyondViewport: false,
+      });
+      const buffer = Buffer.from(screenshot.data, "base64");
+      const filepath = path.join(SCREENSHOT_DIR, filename);
+      fs.writeFileSync(filepath, buffer);
+      console.log(`Saved screenshot: ${filename}`);
+    }
+
+    async function setTheme(theme) {
       await cdp.send("Runtime.evaluate", {
         expression: `
           (() => {
             const current = document.documentElement.getAttribute('data-theme') || 'light';
             if (current !== '${theme}') {
-              // Click the theme toggle button in the header bar
               const buttons = Array.from(document.querySelectorAll('button'));
-              const toggleBtn = buttons.find(b => b.textContent && b.textContent.includes('Toggle'));
+              const toggleBtn = buttons.find(b => b.getAttribute('aria-label')?.includes('theme'));
               if (toggleBtn) {
                 toggleBtn.click();
               } else {
@@ -122,7 +131,12 @@ async function main() {
           })()
         `,
       });
-      await wait(600);
+      await wait(400);
+    }
+
+    // 1. Home viewports in light and dark
+    for (const theme of ["light", "dark"]) {
+      await setTheme(theme);
 
       for (const vp of viewports) {
         await cdp.send("Emulation.setDeviceMetricsOverride", {
@@ -132,19 +146,49 @@ async function main() {
           mobile: vp.mobile,
         });
         await wait(300);
-
-        const screenshot = await cdp.send("Page.captureScreenshot", {
-          format: "png",
-          captureBeyondViewport: false,
-        });
-
-        const buffer = Buffer.from(screenshot.data, "base64");
-        const filename = `${vp.name}-${theme}.png`;
-        const filepath = path.join(SCREENSHOT_DIR, filename);
-        fs.writeFileSync(filepath, buffer);
-        console.log(`Saved screenshot: ${filename}`);
+        await capture(`${vp.name}-${theme}.png`);
       }
     }
+
+    // 2. Navigate to /work on 1440
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: 1440,
+      height: 900,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await cdp.send("Page.navigate", { url: "http://localhost:3000/work" });
+    await wait(1500);
+
+    await setTheme("light");
+    await capture("work-1440-light.png");
+
+    await setTheme("dark");
+    await capture("work-1440-dark.png");
+
+    // 3. Open Command Menu
+    await cdp.send("Runtime.evaluate", {
+      expression: `window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }))`,
+    });
+    await wait(600);
+    await capture("command-menu-1440-dark.png");
+
+    // Close command menu
+    await cdp.send("Runtime.evaluate", {
+      expression: `window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))`,
+    });
+    await wait(400);
+
+    // 4. Open Game popover
+    await setTheme("light");
+    await cdp.send("Runtime.evaluate", {
+      expression: `
+        const btn = document.querySelector('button[aria-label*="Registration"]');
+        if (btn) btn.click();
+      `,
+    });
+    await wait(400);
+    await capture("game-popover-1440-light.png");
 
     cdp.close();
   } finally {

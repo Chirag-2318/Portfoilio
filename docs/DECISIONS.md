@@ -37,3 +37,26 @@ This document logs decisions, trade-offs, and verification results across all im
 7. **Token Verification Page**:
    - Built `TokenShowcase` component displaying all 10 color swatches (with light/dark hex values), typography specimens (display, title-2xl, base, label), radii samples, hairline rules, interactive focus ring test, and a theme switcher using `next-themes`.
    - Mounted at `/` (temporary) and `/dev/tokens` (with `robots: { index: false, follow: false }`).
+
+
+
+## Prompt 2 — Global Shell, Navigation, Transitions, Command Menu
+
+1. **Hydration and Client Detection Patterns**:
+   - Used `React.useSyncExternalStore` for client-only mounting state (`useMounted`, `useIsMac`) to eliminate hydration warnings and avoid synchronous `setState` in `useEffect` (enforcing strict compliance with React 19 rules).
+
+2. **Curtain Synchronization**:
+   - Animated the curtain panel with `inset(100% 0 0 0)` to `inset(0 0 0 0)` for covering (wipe upwards from bottom) and `inset(0 0 0 0)` to `inset(0 0 100% 0)` for revealing.
+   - Synchronized a physical 2px `--accent` leading edge line to the moving boundary during both cover and reveal stages.
+   - Used `requestAnimationFrame` on initial hydration to establish `ready=true`, ensuring initial page reveals animate smoothly.
+
+3. **Header Spacing & Responsive Fitting**:
+   - On tablet viewport (768px), nav indices (`01`, `02`, etc.) are hidden to prioritize page labels and prevent header crowding, expanding to include index tags at `lg` (1024px+).
+   - Clock displays `PUNE HH:MM` on desktop/tablet, concise `HH:MM` on medium-mobile, and gracefully hides below 480px.
+
+4. **Custom SVG Registration Icon**:
+   - Drew inline 24x24 SVG with a center circle (r=6), 4 crosshair lines extending 3px beyond the circle at N, S, W, and E, and an offset smaller circle (r=3) at (+2, +2) stroked with `var(--accent)`.
+   - Added hover transform nudge (`group-hover:translate-x-px group-hover:translate-y-px`) to the offset accent circle.
+
+5. **Placeholder View Architecture**:
+   - Scaffolding `/work`, `/about`, `/resume`, and `/contact` with `ViewFrame` and `ComingTogether` editorial proof sheets (28pt grid, crop ticks, `PROOF PENDING` banner).

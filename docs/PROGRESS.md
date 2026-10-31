@@ -33,3 +33,67 @@
   - `src/lib/assets.ts`
 - **Anything deferred**:
   - Global shell (Header, NavLinks, Clock, MobileTabs, Footer, Curtain) deferred to Prompt 2 as specified.
+
+
+
+## Prompt 2 of 10 — Global Shell, Theme, Navigation, View Transitions, Motion Primitives, Command Menu, Game Slot
+- **What was done**:
+  - Implemented `AssetsContext` and `useAssets` wired to server-side `getAssets()` in `src/app/layout.tsx`.
+  - Configured provider hierarchy in `src/components/shell/Providers.tsx`: `ThemeProvider` → `AssetsProvider` → `DraftProvider` → `ToasterProvider` → `ViewTransitionProvider` → `GameProvider` → `CommandProvider` with persistent `<Curtain />` and `<CommandMenu />`.
+  - Created universal icon wrapper `src/components/ui/Icon.tsx` wrapping `lucide-react` with custom SVG paths for GitHub, LinkedIn, and the signature print registration mark with animated offset accent circle.
+  - Built motion utilities and primitives: `src/components/motion/ease.ts` (`EASE_OUT_EXPO`, `EASE_IN_OUT_QUART`, `SPRING`, `useMotionOK`), `Reveal.tsx` (keyed to transition `ready`), `Stagger.tsx`, `ResolveText.tsx` (dual outline and fill layers), and `RollText.tsx` (CSS-only link roll effect).
+  - Built view transition system: `ViewTransitionProvider.tsx`, `Curtain.tsx` (paper wipe upwards with 2px accent leading edge and destination label), and `ViewLink.tsx` intercepting primary clicks with fallback for external/modified clicks.
+  - Implemented header chrome: `Header.tsx`, `NavLinks.tsx` with animated accent underline (`layoutId="nav-underline"`), `ThemeToggle.tsx` with rotating AnimatePresence icon switch, `Clock.tsx` showing Asia/Kolkata time updating on minute boundaries, `GameSlot.tsx` with "arriving soon" popover and `registration` icon hover nudge, and command menu trigger pill/button with Mac/Windows detection (`useIsMac.ts`).
+  - Implemented `MobileTabs.tsx` fixed bottom bar for viewports < 768px with animated top accent indicator (`layoutId="tab-bar"`).
+  - Built `Footer.tsx` for viewports ≥ 768px, `CropMarks.tsx` (4 L-shaped outward corner marks), and `SkipLink.tsx`.
+  - Built `AppShell.tsx` coordinating layout, focus movement, and top scroll reset on route changes.
+  - Built UI primitives: `Button.tsx` (primary, outline, ghost), `Kbd.tsx`, `Toaster.tsx` (aria-live polite toast notification pill), `useCopy.ts`, and `DraftContext.tsx`.
+  - Built view scaffold primitives: `ViewFrame.tsx` and `ComingTogether.tsx` (editorial blank proof sheet with 28pt grid and crop ticks).
+  - Created placeholder views using `ViewFrame` + `ComingTogether` for `/work`, `/about`, `/resume`, `/contact`, and `not-found.tsx`.
+  - Implemented `CommandMenu.tsx` using `cmdk` with Go to, Projects, Actions, and Elsewhere groups, theme toggle, and draft toggle.
+  - Verified static build (`npm run build`), ESLint (`npm run lint`), dev server, and captured screenshots across 390px, 768px, 1366px, 1440px in light and dark themes.
+- **Files created/modified**:
+  - `src/lib/AssetsContext.tsx`
+  - `src/lib/useIsMac.ts`
+  - `src/lib/useCopy.ts`
+  - `src/components/ui/Icon.tsx`
+  - `src/components/ui/Toaster.tsx`
+  - `src/components/ui/Kbd.tsx`
+  - `src/components/ui/Button.tsx`
+  - `src/components/ui/ViewFrame.tsx`
+  - `src/components/ui/ComingTogether.tsx`
+  - `src/components/motion/ease.ts`
+  - `src/components/motion/Reveal.tsx`
+  - `src/components/motion/Stagger.tsx`
+  - `src/components/motion/ResolveText.tsx`
+  - `src/components/motion/RollText.tsx`
+  - `src/components/transition/ViewTransitionProvider.tsx`
+  - `src/components/transition/Curtain.tsx`
+  - `src/components/transition/ViewLink.tsx`
+  - `src/components/shell/Providers.tsx`
+  - `src/components/shell/ThemeToggle.tsx`
+  - `src/components/shell/Clock.tsx`
+  - `src/components/shell/GameProvider.tsx`
+  - `src/components/shell/GameSlot.tsx`
+  - `src/components/shell/NavLinks.tsx`
+  - `src/components/shell/Header.tsx`
+  - `src/components/shell/MobileTabs.tsx`
+  - `src/components/shell/Footer.tsx`
+  - `src/components/shell/CropMarks.tsx`
+  - `src/components/shell/SkipLink.tsx`
+  - `src/components/shell/AppShell.tsx`
+  - `src/components/command/CommandProvider.tsx`
+  - `src/components/command/CommandMenu.tsx`
+  - `src/components/home/DraftContext.tsx`
+  - `src/app/layout.tsx`
+  - `src/app/globals.css`
+  - `src/app/work/page.tsx`
+  - `src/app/about/page.tsx`
+  - `src/app/resume/page.tsx`
+  - `src/app/contact/page.tsx`
+  - `src/app/not-found.tsx`
+  - `scripts/take-screenshots.mjs`
+  - `docs/DECISIONS.md`
+  - `docs/PROGRESS.md`
+- **Anything deferred**:
+  - Full home view (two-layer lens, portrait, and index list) deferred to Prompt 3 as specified.

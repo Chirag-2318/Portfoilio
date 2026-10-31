@@ -14,3 +14,4 @@ export function getAssets(): { hasPhoto: boolean; hasResume: boolean } {
     hasResume,
   };
 }
+

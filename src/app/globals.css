@@ -82,6 +82,14 @@ body {
   height: 100%;
 }
 
+html {
+  scroll-padding-top: var(--header-h);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   background-color: var(--paper);
   color: var(--ink);

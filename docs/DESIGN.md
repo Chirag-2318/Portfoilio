@@ -119,3 +119,4 @@ Static export (`output: "export"`), no env vars. Import repo on Vercel: framewor
 Resume and Contact views (prompt 6), GameSlot popover "arriving soon" (prompt 8), RollText and button hover (prompt 7), lucide icons (prompt 7), temporary /dev/tokens page (removed in prompt 10).
 ## 17. Copy rules
 Short lines. Plain, warm, first person. No exclamation marks, no buzzwords, no emojis. All copy lives in src/content/site.ts.
+

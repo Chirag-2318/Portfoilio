@@ -29,24 +29,48 @@ export function TechChip({ id, size = "md", className }: TechChipProps) {
       )}
       title={tech.note || tech.name}
     >
-      <span
-        className="flex items-center justify-center shrink-0"
-        style={{ width: iconSize, height: iconSize }}
-        aria-hidden="true"
-      >
-        {tech.isMonoGlyph ? (
-          <span className={cn("font-mono font-bold leading-none", isSmall ? "text-[10px]" : "text-[11px]")}>
-            SQL
-          </span>
-        ) : tech.icon ? (
+      {tech.icon ? (
+        <span
+          className="flex items-center justify-center shrink-0"
+          style={{ width: iconSize, height: iconSize }}
+          aria-hidden="true"
+        >
           <Icon
             icon={tech.icon}
             width={iconSize}
             height={iconSize}
             className={cn("shrink-0 block select-none pointer-events-none", tech.invertOnDark && "dark:invert")}
           />
-        ) : null}
-      </span>
+        </span>
+      ) : tech.isMonoGlyph ? (
+        <span
+          className="flex items-center justify-center shrink-0"
+          style={{ width: iconSize, height: iconSize }}
+          aria-hidden="true"
+        >
+          {tech.id === "oauth2" ? (
+            <svg
+              width={iconSize}
+              height={iconSize}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-muted-foreground"
+            >
+              <circle cx="7.5" cy="15.5" r="5.5" />
+              <path d="m21 2-9.6 9.6" />
+              <path d="m15.5 7.5 3 3L22 7l-3-3" />
+            </svg>
+          ) : (
+            <span className={cn("font-mono font-bold leading-none text-muted-foreground", isSmall ? "text-[9px]" : "text-[10px]")}>
+              {tech.name.slice(0, 3).toUpperCase()}
+            </span>
+          )}
+        </span>
+      ) : null}
       <span className="whitespace-nowrap">{tech.name}</span>
     </span>
   );

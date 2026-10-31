@@ -50,6 +50,28 @@ const TECH_REGISTRY_SPECS = [
   { id: 'groq', name: 'Groq', set: 'lobe-icons', icon: 'groq' },
   { id: 'mlkit', name: 'ML Kit', set: 'logos', icon: 'google-icon', note: 'Parent-brand mapping: Google' },
   { id: 'whisper', name: 'Whisper (ONNX)', set: 'lobe-icons', icon: 'openai', invertOnDark: true, note: 'Parent-brand mapping: OpenAI' },
+  // New technologies for Brackit & Autonomous AI QA Engineer
+  { id: 'react', name: 'React', set: 'logos', icon: 'react' },
+  { id: 'react-19', name: 'React 19', set: 'logos', icon: 'react' },
+  { id: 'typescript', name: 'TypeScript', set: 'logos', icon: 'typescript-icon' },
+  { id: 'flyway', name: 'Flyway', set: 'devicon', icon: 'flyway' },
+  { id: 'docker', name: 'Docker', set: 'logos', icon: 'docker-icon' },
+  { id: 'tailwind', name: 'Tailwind CSS', set: 'logos', icon: 'tailwindcss-icon' },
+  { id: 'vite', name: 'Vite', set: 'logos', icon: 'vitejs' },
+  { id: 'github-api', name: 'GitHub API', set: 'logos', icon: 'github-icon', invertOnDark: true },
+  { id: 'spring-security', name: 'Spring Security', set: 'logos', icon: 'spring-icon' },
+  { id: 'oauth2', name: 'OAuth2', isMonoGlyph: true, note: 'Neutral key glyph' },
+  { id: 'groq-ai', name: 'Groq AI (Llama 3.3)', set: 'lobe-icons', icon: 'groq' },
+  { id: 'nextjs', name: 'Next.js', set: 'logos', icon: 'nextjs-icon', invertOnDark: true },
+  { id: 'playwright', name: 'Playwright', set: 'logos', icon: 'playwright' },
+  { id: 'langgraph', name: 'LangGraph', set: 'lobe-icons', icon: 'langgraph' },
+  { id: 'sqlite', name: 'SQLite', set: 'logos', icon: 'sqlite' },
+  { id: 'pydantic', name: 'Pydantic', set: 'simple-icons', icon: 'pydantic' },
+  { id: 'openapi', name: 'OpenAPI', set: 'logos', icon: 'openapi-icon' },
+  { id: 'java-25', name: 'Java 25', set: 'logos', icon: 'java' },
+  { id: 'sse', name: 'SSE', isNeutralChip: true },
+  { id: 'llms', name: 'LLMs', isNeutralChip: true },
+  { id: 'alembic', name: 'Alembic', isNeutralChip: true },
 ];
 
 let hasError = false;
@@ -58,6 +80,17 @@ const resolvedRegistry = {};
 console.log('Verifying technology icons against installed icon sets...\n');
 
 for (const spec of TECH_REGISTRY_SPECS) {
+  if (spec.isNeutralChip) {
+    console.log(`[OK]      ${spec.id.padEnd(18)} -> Neutral Chip "${spec.name}"`);
+    resolvedRegistry[spec.id] = {
+      id: spec.id,
+      name: spec.name,
+      isNeutralChip: true,
+      note: spec.note,
+    };
+    continue;
+  }
+
   if (spec.isMonoGlyph) {
     console.log(`[OK]      ${spec.id.padEnd(18)} -> Mono Glyph "${spec.name}"`);
     resolvedRegistry[spec.id] = {
@@ -76,12 +109,24 @@ for (const spec of TECH_REGISTRY_SPECS) {
     continue;
   }
 
-  const iconData = getIconData(setObj, spec.icon);
-  if (!iconData) {
+  const rawIconData = getIconData(setObj, spec.icon);
+  if (!rawIconData) {
     console.error(`[MISSING] ${spec.id.padEnd(18)} -> ${spec.set}:${spec.icon}`);
     hasError = true;
   } else {
     console.log(`[OK]      ${spec.id.padEnd(18)} -> ${spec.set}:${spec.icon} (${spec.name})`);
+    // Extract only standard IconifyIcon fields to avoid extraneous properties like `hidden: true`
+    const iconData = {
+      body: rawIconData.body,
+      ...(rawIconData.width !== undefined && { width: rawIconData.width }),
+      ...(rawIconData.height !== undefined && { height: rawIconData.height }),
+      ...(rawIconData.left !== undefined && { left: rawIconData.left }),
+      ...(rawIconData.top !== undefined && { top: rawIconData.top }),
+      ...(rawIconData.rotate !== undefined && { rotate: rawIconData.rotate }),
+      ...(rawIconData.hFlip !== undefined && { hFlip: rawIconData.hFlip }),
+      ...(rawIconData.vFlip !== undefined && { vFlip: rawIconData.vFlip }),
+    };
+
     resolvedRegistry[spec.id] = {
       id: spec.id,
       name: spec.name,
@@ -111,6 +156,7 @@ export interface TechItem {
   name: string;
   icon?: IconifyIcon;
   isMonoGlyph?: boolean;
+  isNeutralChip?: boolean;
   invertOnDark?: boolean;
   note?: string;
 }

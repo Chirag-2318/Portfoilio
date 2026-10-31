@@ -3,57 +3,73 @@ import type { TechId } from "@/lib/tech-icons";
 export const PLACEHOLDER_HOST = "replace-me.invalid";
 export const isPlaceholder = (url: string) => url.includes(PLACEHOLDER_HOST);
 
+export type ProjectCategory = "Full-stack" | "Backend" | "Android";
+export type ProjectPatternType = "dither" | "braille" | "contour";
+
 export type Project = {
-  id: "sar" | "validedi" | "arthix";
-  index: string;
+  id: "brackit" | "qa" | "arthix" | "validedi" | "sar";
+  name: string;
   title: string;
-  kind: string;          // short meta line
-  category: "Backend" | "Android";
+  subtitle: string;
+  category: ProjectCategory;
+  period?: string;
   year?: string;
-  context?: string;      // event/track, only when stated in the facts
-  summary: string;       // 2–3 punchy lines
-  bullets: string[];     // full details, verbatim facts
+  context?: string;
+  summary: string;
+  bullets: string[];
   techs: TechId[];
   stack?: string[];
-  cover: string;
-  coverAlt: string;
-  links?: {
+  image: string;
+  monogram: string;
+  pattern: ProjectPatternType;
+  cover?: string;
+  coverAlt?: string;
+  links: {
     github: string | null;
     live: string | null;
   };
 };
 
 export const site = {
-  url: `https://${PLACEHOLDER_HOST}`, // PLACEHOLDER: set to the real Vercel/custom URL
+  url: "https://chiragpatil.dev",
   name: { full: "Chirag Patil", first: "Chirag", last: "Patil" },
   role: "Engineering student & developer",
   location: { city: "Pune", region: "Maharashtra", country: "India", timeZone: "Asia/Kolkata" },
   email: "chirag23nzr@gmail.com",
   phone: { display: "+91 80806 45366", href: "tel:+918080645366" },
   links: {
-    githubUsername: null as string | null, // TODO: set when known
-    linkedinUrl: null as string | null,    // TODO: set when known
-    sarGenerator: {
-      github: null as string | null,       // TODO
-      live: null as string | null,         // TODO
+    githubUsername: "Chirag-2318",
+    linkedinUrl: "https://www.linkedin.com/in/chirag-patil-593972374",
+    seeMoreProjects: "https://github.com/Chirag-2318?tab=repositories",
+    brackit: {
+      github: "https://github.com/Chirag-2318/hackathon-os",
+      live: "https://brackitos.vercel.app/",
     },
-    validedi: {
-      github: null as string | null,       // TODO
-      live: null as string | null,         // TODO
+    qa: {
+      github: "https://github.com/Aeterio04/vithackie",
+      live: null as string | null,
     },
     arthix: {
-      github: null as string | null,       // TODO
-      live: null as string | null,         // TODO
+      github: "https://github.com/Chirag-2318/ARTHIX",
+      live: null as string | null,
+    },
+    validedi: {
+      github: "https://github.com/Chirag-2318/Valid_EDI",
+      live: null as string | null,
+    },
+    sarGenerator: {
+      github: "https://github.com/Chirag-2318/SAR_Generator",
+      live: null as string | null,
     },
   },
   socials: {
-    github: { label: "GitHub", url: `https://${PLACEHOLDER_HOST}/github` },     // PLACEHOLDER
-    linkedin: { label: "LinkedIn", url: `https://${PLACEHOLDER_HOST}/linkedin` }, // PLACEHOLDER
+    github: { label: "GitHub", url: "https://github.com/Chirag-2318" },
+    linkedin: { label: "LinkedIn", url: "https://www.linkedin.com/in/chirag-patil-593972374" },
   },
   assets: {
-    photo: "/images/chirag.jpg",                 // PLACEHOLDER file, detected at build time
+    photo: "/images/chirag.jpg",
     photoAlt: "Portrait of Chirag Patil",
-    resume: "/Chirag_Patil_Resume.pdf",          // PLACEHOLDER file, detected at build time
+    resume: "/Chirag_Patil_Resume.pdf",
   },
   nav: [
     { href: "/", label: "Home", index: "01" },
@@ -76,7 +92,7 @@ export const site = {
       "Writes code. Sometimes even on purpose.",
       "Ships first, apologises to the linter later.",
     ],
-    githubUsername: "PLACEHOLDER_GITHUB_USERNAME", // PLACEHOLDER
+    githubUsername: "Chirag-2318",
     kicker: "Engineering student & developer — Pune, India",
     taglineA: "I do the task.",
     taglineB: "Then I take it further.",
@@ -86,7 +102,7 @@ export const site = {
     ctaSecondary: { label: "Get in touch", href: "/contact" },
     index: [
       { key: "now", label: "Now", value: "Barclays Summer Intern (upcoming)", href: "/about#highlights" },
-      { key: "built", label: "Built", value: "SAR Generator · ValidEDI · ARTHIX", href: "/work" },
+      { key: "built", label: "Built", value: "Brackit · QA · ARTHIX · ValidEDI · SAR", href: "/work" },
       { key: "won", label: "Won", value: "Winner, COEP Inspiron · Top 7, iQOO Hackathon", href: "/about#highlights" },
       { key: "study", label: "Study", value: "PICT Pune · IIT Madras, 2024–2028", href: "/about#education" },
       { key: "based", label: "Based", value: "Pune, Maharashtra, India" },
@@ -184,59 +200,123 @@ export const site = {
   }[],
   projects: [
     {
-      id: "sar",
-      index: "01",
-      title: "SAR Generator with Audit Trails",
-      kind: "Hackathon project",
-      category: "Backend",
+      id: "brackit",
+      name: "Brackit",
+      title: "Brackit",
+      subtitle: "Hackathon Execution Operating System",
+      category: "Full-stack",
       summary:
-        "A Spring Boot backend that automates Suspicious Activity Report generation. Role-based access for Analyst, Admin and Auditor, with audit logging throughout. A Python AI microservice drafts the narratives.",
+        "AI-powered, real-time team platform that manages the hackathon lifecycle from problem analysis to final submission.",
       bullets: [
-        "Built a Spring Boot backend for automated Suspicious Activity Report (SAR) generation with RESTful APIs, JWT-based authentication and Role-Based Access Control (RBAC) for Analyst, Admin and Auditor roles.",
-        "Designed a scalable data ingestion pipeline for CSV and JSON files, integrating AWS S3 for secure storage and managing 15+ relational entities using PostgreSQL and JPA (Hibernate).",
-        "Integrated AI-powered analysis via a Python microservice for SAR narrative generation, typology detection and end-to-end compliance workflows; implemented audit logging and a DTO-based architecture for data integrity.",
+        "Built a full-stack hackathon execution platform using Spring Boot and React, featuring structured team workspaces, role-based access, real-time synchronization using Server-Sent Events (SSE), and GitHub/Google OAuth2 authentication.",
+        "Developed an AI-powered workflow using Groq Llama models for automated problem statement analysis, rubric extraction, idea evaluation, and generation of PRDs, technical architectures, and 38-task Kanban backlogs.",
+        "Engineered collaborative development tools including a phase-driven Kanban board, GitHub integration, MVP Reality Ledger, Mermaid-based architecture editor, pitch rehearsal with live audio waveform visualization, and submission readiness tracking.",
       ],
-      techs: ["spring-boot", "java", "postgresql", "aws-s3", "jwt", "jpa", "python"],
-      stack: ["Spring Boot", "Java", "PostgreSQL", "AWS S3", "JWT", "JPA / Hibernate", "Python"],
-      cover: "/projects/sar-generator.svg",
-      coverAlt: "Illustration of the SAR Generator interface",
+      techs: [
+        "spring-boot",
+        "java-25",
+        "react-19",
+        "typescript",
+        "postgresql",
+        "flyway",
+        "groq-ai",
+        "sse",
+        "spring-security",
+        "oauth2",
+        "github-api",
+        "docker",
+        "tailwind",
+        "vite",
+      ],
+      stack: [
+        "Spring Boot",
+        "Java 25",
+        "React 19",
+        "TypeScript",
+        "PostgreSQL",
+        "Flyway",
+        "Groq AI (Llama 3.3)",
+        "SSE",
+        "Spring Security",
+        "OAuth2",
+        "GitHub API",
+        "Docker",
+        "Tailwind CSS",
+        "Vite",
+      ],
+      image: "/projects/brackit.png",
+      monogram: "BK",
+      pattern: "dither",
       links: {
-        github: null,
-        live: null,
+        github: "https://github.com/Chirag-2318/hackathon-os",
+        live: "https://brackitos.vercel.app/",
       },
     },
     {
-      id: "validedi",
-      index: "02",
-      title: "ValidEDI — Healthcare EDI Parser and Validator",
-      kind: "Hackathon project",
-      category: "Backend",
-      year: "2025",
+      id: "qa",
+      name: "Autonomous AI QA Engineer",
+      title: "Autonomous AI QA Engineer",
+      subtitle: "AI-Powered Software Testing Platform",
+      category: "Full-stack",
       summary:
-        "An async FastAPI platform that parses and validates X12 HIPAA EDI transactions (837, 835, 834). 50+ validation rules, six access roles, and AI-assisted analysis through Groq Llama 3.3.",
+        "AI-driven QA platform that explores web apps, generates and runs Playwright tests, and verifies bugs with automated replays.",
       bullets: [
-        "Built an async FastAPI platform to process X12 HIPAA EDI transactions (837/835/834) with custom parsing, loop hierarchy construction and 50+ validation rules.",
-        "Implemented Firebase JWT-based RBAC with 6 roles; integrated AWS S3 and PostgreSQL (JSONB, async ORM) for scalable storage and batch processing, with AI-powered EDI analysis via Groq Llama 3.3.",
+        "Built an AI-powered testing platform using FastAPI and LangGraph, integrating intelligent agents for application exploration, test planning, Playwright script generation, and automated bug analysis.",
+        "Developed an automated browser testing engine using Playwright and TypeScript, capturing screenshots, videos, execution traces, console errors, and network failures, with a 3-replay verification mechanism to distinguish confirmed bugs from flaky failures.",
+        "Engineered a full-stack dashboard with Next.js and React for test catalog management, live execution monitoring, bug triaging, evidence inspection, and automated reporting, backed by REST APIs, SQLite persistence, and OpenAPI contracts.",
       ],
-      techs: ["fastapi", "postgresql", "sqlalchemy", "firebase", "aws-s3", "groq"],
-      stack: ["FastAPI", "PostgreSQL", "SQLAlchemy", "Firebase", "AWS S3", "Groq"],
-      cover: "/projects/validedi.svg",
-      coverAlt: "Illustration of the ValidEDI interface",
+      techs: [
+        "python",
+        "fastapi",
+        "nextjs",
+        "react",
+        "typescript",
+        "playwright",
+        "langgraph",
+        "llms",
+        "groq",
+        "sqlite",
+        "pydantic",
+        "openapi",
+        "alembic",
+        "tailwind",
+        "docker",
+      ],
+      stack: [
+        "Python",
+        "FastAPI",
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Playwright",
+        "LangGraph",
+        "LLMs",
+        "Groq",
+        "SQLite",
+        "Pydantic",
+        "OpenAPI",
+        "Alembic",
+        "Tailwind CSS",
+        "Docker",
+      ],
+      image: "/projects/qa.png",
+      monogram: "QA",
+      pattern: "contour",
       links: {
-        github: null,
+        github: "https://github.com/Aeterio04/vithackie",
         live: null,
       },
     },
     {
       id: "arthix",
-      index: "03",
-      title: "ARTHIX — Zero-Typing UPI Expense Tracker",
-      kind: "Android app",
-      category: "Android",
+      name: "ARTHIX",
+      title: "ARTHIX",
+      subtitle: "Zero-Typing UPI Expense Tracker",
+      period: "2026",
       year: "2026",
-      context: "iQOO Hackathon 2026 · FinTech and Commerce",
-      summary:
-        "A fully on-device Android expense tracker that logs UPI spends with no typing. Notifications supply the amount and payee; a shake of the phone supplies the category. Private by design, with an encrypted local database.",
+      context: "iQOO Hackathon 2026, FinTech and Commerce",
+      category: "Android",
+      summary: "Zero-typing UPI expense tracker, fully on-device.",
       bullets: [
         "Built a fully on-device Android expense tracker that logs UPI spends with no typing: bank/UPI notifications (NotificationListenerService) supply the exact amount and payee, while a phone shake supplies the category.",
         "Designed a nearest-neighbour reconciliation engine (120 s symmetric window) pairing shakes and notifications in either order; all amounts stored as Long paise to avoid floating-point errors.",
@@ -244,10 +324,56 @@ export const site = {
       ],
       techs: ["kotlin", "jetpack-compose", "room", "sqlcipher", "hilt", "mlkit", "whisper"],
       stack: ["Kotlin", "Jetpack Compose", "Room", "SQLCipher", "Hilt", "ML Kit", "Whisper (ONNX)"],
-      cover: "/projects/arthix.svg",
-      coverAlt: "Illustration of the ARTHIX app",
+      image: "/projects/arthix.png",
+      monogram: "AR",
+      pattern: "braille",
       links: {
-        github: null,
+        github: "https://github.com/Chirag-2318/ARTHIX",
+        live: null,
+      },
+    },
+    {
+      id: "validedi",
+      name: "ValidEDI",
+      title: "ValidEDI",
+      subtitle: "Healthcare EDI Parser and Validator",
+      period: "2025",
+      year: "2025",
+      category: "Backend",
+      summary: "Healthcare EDI parser and validator.",
+      bullets: [
+        "Built an async FastAPI platform to process X12 HIPAA EDI transactions (837/835/834) with custom parsing, loop hierarchy construction and 50+ validation rules.",
+        "Implemented Firebase JWT-based RBAC with 6 roles; integrated AWS S3 and PostgreSQL (JSONB, async ORM) for scalable storage and batch processing, with AI-powered EDI analysis via Groq Llama 3.3.",
+      ],
+      techs: ["fastapi", "postgresql", "sqlalchemy", "firebase", "aws-s3", "groq"],
+      stack: ["FastAPI", "PostgreSQL", "SQLAlchemy", "Firebase", "AWS S3", "Groq"],
+      image: "/projects/validedi.png",
+      monogram: "VE",
+      pattern: "dither",
+      links: {
+        github: "https://github.com/Chirag-2318/Valid_EDI",
+        live: null,
+      },
+    },
+    {
+      id: "sar",
+      name: "SAR Generator with Audit Trails",
+      title: "SAR Generator with Audit Trails",
+      subtitle: "Suspicious Activity Report generation",
+      category: "Backend",
+      summary: "Automated Suspicious Activity Report generation with role-based access.",
+      bullets: [
+        "Built a Spring Boot backend for automated Suspicious Activity Report (SAR) generation with RESTful APIs, JWT-based authentication and Role-Based Access Control (RBAC) for Analyst, Admin and Auditor roles.",
+        "Designed a scalable data ingestion pipeline for CSV and JSON files, integrating AWS S3 for secure storage and managing 15+ relational entities using PostgreSQL and JPA (Hibernate).",
+        "Integrated AI-powered analysis via a Python microservice for SAR narrative generation, typology detection and end-to-end compliance workflows; implemented audit logging and a DTO-based architecture for data integrity.",
+      ],
+      techs: ["spring-boot", "java", "postgresql", "aws-s3", "jwt", "jpa", "python"],
+      stack: ["Spring Boot", "Java", "PostgreSQL", "AWS S3", "JWT", "JPA / Hibernate", "Python"],
+      image: "/projects/sar.png",
+      monogram: "SA",
+      pattern: "contour",
+      links: {
+        github: "https://github.com/Chirag-2318/SAR_Generator",
         live: null,
       },
     },
@@ -255,4 +381,3 @@ export const site = {
 } as const;
 
 export type Site = typeof site;
-

@@ -1,0 +1,32 @@
+{
+  "brackit": {
+    "src": "/projects/brackit.webp",
+    "width": 1200,
+    "height": 543,
+    "blur": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAADQAQCdASoQAAcABABoJaQAAuso5J62AAD+9N5kfrIaG28+ViptwJCpY169TuUY+CAAAA=="
+  },
+  "qa": {
+    "src": "/projects/qa.webp",
+    "width": 1200,
+    "height": 597,
+    "blur": "data:image/webp;base64,UklGRioAAABXRUJQVlA4IB4AAAAwAQCdASoQAAgABABoJZwAA3AA/vFBlfBIQfCAAAA="
+  },
+  "arthix": {
+    "src": "/projects/arthix.webp",
+    "width": 1200,
+    "height": 672,
+    "blur": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAkABABoJZQCdAEHHcacUAD+7Y36ykQwonNVtjCTXm61CltVZBttpelIViQKKpgppvW9cgAAAA=="
+  },
+  "validedi": {
+    "src": "/projects/validedi.webp",
+    "width": 1200,
+    "height": 549,
+    "blur": "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADQAQCdASoQAAcABABoJZQAAp2+gsZFYAD+84keqka68Fk5m08ZtJ/rZAGKAAAA"
+  },
+  "sar": {
+    "src": "/projects/sar.webp",
+    "width": 832,
+    "height": 467,
+    "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADwAQCdASoQAAkABABoJZgCdADdizAGH0AA/k9GlYnYjfOFsvwYWW2mo8Q7mZiZ1p2ifyIm+JklLCMSsTnRXG3/MPeF8zkZx19VB2FTYJAzOPknSM8SdY72DCV7WJAA"
+  }
+}

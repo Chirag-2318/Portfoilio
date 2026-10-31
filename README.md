@@ -44,12 +44,13 @@ All content is cleanly centralized in `src/content/site.ts` and `public/`. To pe
    - Drop your PDF resume in `public/`.
    - The Resume panel detects file existence via `HEAD` request. If missing, it gracefully displays `// Resume file coming soon.` with disabled action buttons.
 3. **GitHub Username & Live Contribution Graph** (`src/content/site.ts`):
-   - In `src/content/site.ts`, set `site.home.githubUsername = "your-actual-github-username"`.
-   - The site will automatically fetch and render your live 52-week contribution activity grid from the GitHub API. While set to `PLACEHOLDER_GITHUB_USERNAME`, this section is cleanly omitted with zero broken elements.
+   - In `src/content/site.ts`, `site.links.githubUsername` is configured as `"Chirag-2318"`.
+   - The site automatically fetches and renders the live 52-week contribution activity grid from the GitHub API.
 4. **Social & Contact Links** (`src/content/site.ts`):
-   - Set `site.url` to your production domain (e.g. `https://chiragpatil.dev`).
-   - Set `site.socials.github.url` and `site.socials.linkedin.url`.
-   - Set `site.email` and `site.phone` as desired.
+   - Domain configured at `https://chiragpatil.dev`.
+   - GitHub: `https://github.com/Chirag-2318`
+   - LinkedIn: `https://www.linkedin.com/in/chirag-patil-593972374`
+   - Email: `chirag23nzr@gmail.com`
 
 ---
 
@@ -85,7 +86,7 @@ All content is cleanly centralized in `src/content/site.ts` and `public/`. To pe
 │   │   │   ├── HeroBlueprint.tsx    # Blueprint hero with avatar, angle, dimensions
 │   │   │   ├── NumbersPanel.tsx     # Hackathon & architecture metrics
 │   │   │   ├── ExperiencePanel.tsx  # Barclays summer internship & timeline
-│   │   │   ├── ProjectsPanel.tsx    # SAR Generator, ValidEDI, ARTHIX
+│   │   │   ├── ProjectsPanel.tsx    # Compact gallery: Brackit, QA, ARTHIX, ValidEDI, SAR cards
 │   │   │   ├── AchievementsPanel.tsx# 9 recognitions with expandable toggle
 │   │   │   ├── EducationPanel.tsx   # PICT Pune and IIT Madras entries
 │   │   │   ├── StackPanel.tsx       # Grouped skill cells with hairline grid

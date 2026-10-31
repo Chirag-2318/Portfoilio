@@ -399,6 +399,46 @@ Documenting the subtle audio system implemented in Prompt 9:
 - Smooth stroke-dashoffset transitions respecting `prefers-reduced-motion`.
 - Placed in the hero next to the name heading and in the Topping Out game HUD.
 
+## Projects Gallery (Compact Cards on Procedural Patterns)
+
+### 1. Structure & Layout
+- Replaced the linear collapsible rows with a 2-column compact gallery grid (`grid grid-cols-1 md:grid-cols-2 gap-4`).
+- Exactly 5 projects curated in chronological/significance order:
+  1. **Brackit** (Full-stack, Hackathon OS) — Both GitHub and Live Demo (`https://brackitos.vercel.app/`).
+  2. **Autonomous AI QA Engineer** (Backend, Agentic Testing) — GitHub only (`https://github.com/Aeterio04/vithackie`).
+  3. **ARTHIX** (Android, Offline Multilingual Audio Guide) — GitHub only (`https://github.com/Chirag-2318/ARTHIX`).
+  4. **ValidEDI** (Backend, Deterministic Healthcare EDI X12 Validator) — GitHub only (`https://github.com/Chirag-2318/Valid_EDI`).
+  5. **SAR Generator with Audit Trails** (Full-stack, FinTech Compliance Engine) — GitHub only (`https://github.com/Chirag-2318/SAR_Generator`).
+- Responsive category filter pills: `All (5)`, `Full-stack (2)`, `Backend (2)`, `Android (1)`.
+- "See more projects on GitHub →" link pointing to `https://github.com/Chirag-2318?tab=repositories`.
+
+### 2. Cover Art & Procedural Patterns
+- Fixed 16:9 aspect ratio (`aspect-[16/9]`) capped at $\le 215$px on desktop (`max-h-[215px]`) to maintain tight, calm vertical rhythm.
+- Three procedural animated backgrounds dynamically loaded through `ProjectPattern.tsx` with 300px IntersectionObserver margin, pause when off-screen, and speed throttling (0.5x on touch / 0x on prefers-reduced-motion):
+  - **DitherWaveBackground**: WebGL Bayer 8 halftone dither waves reacting subtly to cursor pointer warp.
+  - **BrailleTerrainBackground**: Canvas 2D drifting elevation grid composed of Unicode Braille matrix glyphs.
+  - **ContourMapBackground**: WebGL resolution-independent animated topographic contour lines.
+- Theme-aware palette binding (`PATTERN_PALETTES`) using calm, low-saturation tones matching `--background` and `--foreground`.
+- Staggered pattern assignments ensure no adjacent horizontal or vertical cards share the same pattern:
+  - Brackit: `dither`
+  - QA Engineer: `contour`
+  - ARTHIX: `braille`
+  - ValidEDI: `dither`
+  - SAR Generator: `contour`
+
+### 3. Floating Bleed Screenshot
+- Card screenshots bleed 12px off the bottom and 12px off the right edge (`bottom-[-12px] right-[-12px] w-[82%]`).
+- Rounded corners (`rounded-tl-md`), crisp border (`border border-line/80`), and realistic depth shadow (`shadow-[0_12px_24px_-8px_rgba(0,0,0,0.5)]`).
+- Micro-hover parallax interaction: subtle translation (`translate-x-1 translate-y-1`) on card hover.
+- Pre-optimized WebP assets generated via Sharp ($\le 1200$px, quality 82) with base64 blur data URLs in `project-images.json` to prevent layout shift.
+
+### 4. Details Modal & Metadata
+- Accessible dialog powered by `@radix-ui/react-dialog` with backdrop blur, title, subtitle, 3 technical accomplishment bullets, and a row of `TechChip` pills (`size="sm"`).
+- Sound integration: triggers `playSound("open")` on open and `playSound("close")` on dismissal (Esc / close button / backdrop click).
+- Real-time GitHub stars display (`★ n`) with client-side 30-minute `sessionStorage` caching (`gh-stars:{owner}/{repo}`) and graceful suppression when $n = 0$.
+- Unbranded technologies (SSE, LLMs, Alembic) render as clean neutral chips without false brand icon fallbacks. OAuth2 renders with a custom vector key icon.
+
+
 
 
 

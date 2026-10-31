@@ -39,7 +39,7 @@ function formatDate(dateStr: string): string {
 }
 
 export function ContributionsPanel() {
-  const username = site.links.githubUsername;
+  const username = site.links.githubUsername as string | null | undefined;
 
   // Only render if a real githubUsername is set (not null, not "TODO", not placeholder)
   const isValidUsername =
@@ -47,7 +47,7 @@ export function ContributionsPanel() {
     username !== "TODO" &&
     username !== "PLACEHOLDER_GITHUB_USERNAME" &&
     username !== null &&
-    !username.includes("replace-me");
+    !username?.includes("replace-me");
 
   const [data, setData] = React.useState<ApiResponse | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);

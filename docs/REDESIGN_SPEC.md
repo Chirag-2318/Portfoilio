@@ -357,5 +357,48 @@ Documenting the refinements implemented in Polish Pass 3:
   1. Contact CTA framing (`py-10 px-4 sm:px-6`).
   2. 404 Not Found inline game frame (`p-2 sm:p-3`).
 
+---
+
+## Interface Sound System (Curated & Restrained)
+
+Documenting the subtle audio system implemented in Prompt 9:
+
+### 1. Engine & Foundation
+- **Package**: `@web-kits/audio` providing Web Audio synthesis via custom synthesized patches (sine, triangle, filtered noise).
+- **Component**: `src/components/sound/sound-effects.tsx` exporting `<SoundEffects>`, `<SoundToggle>`, `playSound()`, `useSoundMuted()`, `isSoundMuted()`, `setSoundMuted()`.
+- **Global Storage**: Centralized in `localStorage`:
+  - `cp-sound-muted`: `"1"` for muted, `"0"` for active.
+  - `cp-sound-volume`: float string, default `0.4`.
+  - Deleted legacy storage keys (`hero_muted` and `topping-out-muted`).
+- **SSR Safety**: Safe reads via `useSyncExternalStore` with fallback snapshots; zero access to `window` or `localStorage` during prerendering.
+- **Silence Baseline**: Strict rule ensuring silence on page load, hover, scroll, navigation links, social links, and panel entrances. Audio unlocks only after genuine user interaction (`navigator.userActivation`).
+
+### 2. The Sound Map
+| Control / Interaction | Trigger Mechanism | Sound |
+| :--- | :--- | :--- |
+| **Theme Toggle (Switch to Light)** | `ThemeToggle` onClick | `toggleOn` |
+| **Theme Toggle (Switch to Dark)** | `ThemeToggle` onClick | `toggleOff` |
+| **Header Search Button** | `data-sound="open"` | `open` |
+| **Command Palette Shortcut (`Ctrl+K`, `/`)** | Shortcut keydown handler | `open` |
+| **Command Palette Close (`Esc`, Backdrop click)** | `Command.Dialog` onOpenChange / Esc | `close` |
+| **Command Palette Item Selection** | `.command-overlay .command-option` | `command` |
+| **Project Row Collapsible** | `data-slot="collapsible-trigger"` | `close` (open $\to$ closed) / `open` (closed $\to$ open) |
+| **Experience Position Collapsible** | `data-slot="collapsible-trigger"` | `close` (open $\to$ closed) / `open` (closed $\to$ open) |
+| **Achievements 'Show All' Collapsible** | `data-slot="collapsible-trigger"` | `open` |
+| **Copy Buttons (Email, Phone)** | `data-sound="copy"` on `<CopyButton />` | `copy` |
+| **Project Filter Pills (All, Backend, Android)** | `data-sound="select"` / Arrow navigation | `select` |
+| **Hero Crosshair Pins** | Click handler with detune formula (`pinIndex * 90`) | `select` (`detune: 0, 90, 180, ...`) |
+| **Resume View & Download** | `data-sound="select"` (or `blocked` on `[aria-disabled="true"]`) | `select` / `blocked` |
+| **Header Gamepad Button (Launch Game)** | `openGame()` in `GameProvider` | `open` |
+| **Game HUD Palette Button** | `data-sound="select"` | `select` |
+| **Game Close Button & Esc** | `closeGame()` in `GameProvider` | `close` |
+| **Global SoundToggle Unmute** | Unmute event listener in `SoundEffectListener` | `swoosh` |
+
+### 3. SoundToggle Visual Token
+- Micro-animated SVG speaker with sound waves and an angled slash line controlled by `[data-muted='true']`.
+- Smooth stroke-dashoffset transitions respecting `prefers-reduced-motion`.
+- Placed in the hero next to the name heading and in the Topping Out game HUD.
+
+
 
 

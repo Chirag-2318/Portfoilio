@@ -3,6 +3,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { useGame } from "@/components/shell/GameProvider";
+import { playSound } from "@/components/sound/sound-effects";
 
 export type CommandContextType = {
   open: boolean;
@@ -34,7 +35,12 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
 
   const toggle = React.useCallback(() => {
     setShouldLoad(true);
-    setOpen((prev) => !prev);
+    setOpen((prev) => {
+      const next = !prev;
+      if (next) playSound("open");
+      else playSound("close");
+      return next;
+    });
   }, []);
 
   const handleSetOpen = React.useCallback((nextOpen: boolean) => {
@@ -66,10 +72,20 @@ export function CommandProvider({ children }: { children: React.ReactNode }) {
 
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
+        toggle();
+      } else if (
+        e.key === "/" &&
+        !open &&
+        !["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement)?.tagName) &&
+        !(e.target as HTMLElement)?.isContentEditable
+      ) {
+        e.preventDefault();
         setShouldLoad(true);
-        setOpen((prev) => !prev);
+        playSound("open");
+        setOpen(true);
       } else if (e.key === "Escape" && open) {
         e.preventDefault();
+        playSound("close");
         setOpen(false);
       }
     };

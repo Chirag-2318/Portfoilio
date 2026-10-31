@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "motion/react";
 import { Icon } from "@/components/ui/Icon";
 import { useMotionOK } from "@/components/motion/ease";
+import { playSound } from "@/components/sound/sound-effects";
 
 const emptySubscribe = () => () => {};
 function useMounted() {
@@ -42,6 +43,7 @@ export function ThemeToggle() {
         timeoutRef.current = null;
       }, 240);
     }
+    playSound(isDark ? "toggleOn" : "toggleOff");
     setTheme(isDark ? "light" : "dark");
   };
 

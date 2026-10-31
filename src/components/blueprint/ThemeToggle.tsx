@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
+import { playSound } from "@/components/sound/sound-effects";
 
 interface ThemeToggleProps {
   className?: string;
@@ -23,8 +24,19 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     : "dark";
 
   const cycleTheme = React.useCallback(() => {
-    // dark <-> light
-    const nextTheme = currentTheme === "dark" ? "light" : "dark";
+    // Check real DOM theme class
+    const isDark =
+      typeof document !== "undefined"
+        ? document.documentElement.classList.contains("dark")
+        : currentTheme === "dark";
+
+    const nextTheme = isDark ? "light" : "dark";
+
+    if (nextTheme === "light") {
+      playSound("toggleOn");
+    } else {
+      playSound("toggleOff");
+    }
 
     if (typeof document !== "undefined" && "startViewTransition" in document) {
       (document as unknown as { startViewTransition: (cb: () => void) => void }).startViewTransition(() => {

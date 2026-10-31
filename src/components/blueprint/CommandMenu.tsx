@@ -7,27 +7,13 @@ import { site } from "@/content/site";
 import { useCommand } from "@/components/command/CommandProvider";
 import { useGame } from "@/components/shell/GameProvider";
 import { useCopy } from "@/lib/useCopy";
+import { playSound } from "@/components/sound/sound-effects";
 
 export function CommandMenu() {
   const { open, setOpen } = useCommand();
   const { theme, setTheme } = useTheme();
   const { openGame } = useGame();
   const { copy } = useCopy();
-
-  // Listen for "/" key to open palette (when not already typing in an input/textarea)
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.key === "/" &&
-        !["INPUT", "TEXTAREA", "SELECT"].includes((e.target as HTMLElement)?.tagName)
-      ) {
-        e.preventDefault();
-        setOpen(true);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [setOpen]);
 
   const navigate = React.useCallback((hash: string) => {
     setOpen(false);
@@ -49,9 +35,14 @@ export function CommandMenu() {
   return (
     <Command.Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen && open) {
+          playSound("close");
+        }
+        setOpen(nextOpen);
+      }}
       label="Command Palette"
-      className="fixed top-[12vh] left-1/2 -translate-x-1/2 w-[min(560px,calc(100vw-32px))] rounded-xl border border-[var(--line)] shadow-2xl overflow-hidden z-50 focus:outline-none bg-[var(--background)] text-foreground"
+      className="command-overlay fixed top-[12vh] left-1/2 -translate-x-1/2 w-[min(560px,calc(100vw-32px))] rounded-xl border border-[var(--line)] shadow-2xl overflow-hidden z-50 focus:outline-none bg-[var(--background)] text-foreground"
       overlayClassName="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs"
     >
       {/* Input */}
@@ -238,7 +229,7 @@ function CommandRow({
     <Command.Item
       value={`${label} ${hint ?? ""}`}
       onSelect={onSelect}
-      className="relative h-9 px-3 rounded-md flex items-center justify-between text-sm font-medium text-foreground cursor-pointer select-none transition-colors data-[selected=true]:bg-[var(--muted)] data-[selected=true]:text-foreground data-[selected=true]:before:content-[''] data-[selected=true]:before:absolute data-[selected=true]:before:left-0 data-[selected=true]:before:top-1.5 data-[selected=true]:before:bottom-1.5 data-[selected=true]:before:w-0.5 data-[selected=true]:before:bg-[var(--accent)] data-[selected=true]:before:rounded-full"
+      className="command-option relative h-9 px-3 rounded-md flex items-center justify-between text-sm font-medium text-foreground cursor-pointer select-none transition-colors data-[selected=true]:bg-[var(--muted)] data-[selected=true]:text-foreground data-[selected=true]:before:content-[''] data-[selected=true]:before:absolute data-[selected=true]:before:left-0 data-[selected=true]:before:top-1.5 data-[selected=true]:before:bottom-1.5 data-[selected=true]:before:w-0.5 data-[selected=true]:before:bg-[var(--accent)] data-[selected=true]:before:rounded-full"
     >
       <span className="truncate">{label}</span>
       <div className="flex items-center gap-2 shrink-0 ml-2">

@@ -83,6 +83,7 @@ export function SiteHeader({ className }: SiteHeaderProps) {
           {/* Breadcrumb (hidden below 640px / sm): clicking opens command menu */}
           <button
             type="button"
+            data-sound="open"
             onClick={toggleCommand}
             aria-label="Open command menu"
             className="hidden sm:inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors group cursor-pointer focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
@@ -132,6 +133,7 @@ export function SiteHeader({ className }: SiteHeaderProps) {
           {/* Search ghost button */}
           <button
             type="button"
+            data-sound="open"
             onClick={toggleCommand}
             aria-label="Search"
             title={`Search (${isMac ? "⌘" : "Ctrl"} K)`}

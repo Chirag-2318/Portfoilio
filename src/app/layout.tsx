@@ -7,6 +7,7 @@ import { getSocials } from "@/lib/socials";
 import { getAssets } from "@/lib/assets";
 import { Providers } from "@/components/shell/Providers";
 import { AppShell } from "@/components/shell/AppShell";
+import { SoundEffects } from "@/components/sound/sound-effects";
 import "./globals.css";
 
 const caveat = Caveat({
@@ -119,7 +120,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased">
         <Providers assets={assets}>
-          <AppShell>{children}</AppShell>
+          <SoundEffects>
+            <AppShell>{children}</AppShell>
+          </SoundEffects>
         </Providers>
       </body>
     </html>

@@ -57,17 +57,19 @@ export function AchievementsPanel() {
         ))}
       </div>
 
-      {!showAll && (
-        <div className="py-4 px-5 flex justify-center bg-[var(--background)]">
-          <button
-            type="button"
-            onClick={() => setShowAll(true)}
-            className="h-8 px-3 rounded-lg border border-[var(--border)] text-sm font-medium text-foreground hover:bg-[var(--muted)] active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            Show all achievements ({ACHIEVEMENTS_DATA.length})
-          </button>
-        </div>
-      )}
+      <div className="py-4 px-5 flex justify-center bg-[var(--background)]">
+        <button
+          type="button"
+          onClick={() => setShowAll((prev) => !prev)}
+          aria-expanded={showAll}
+          data-slot="collapsible-trigger"
+          className="h-8 px-3 rounded-lg border border-[var(--border)] text-sm font-medium text-foreground hover:bg-[var(--muted)] active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {showAll
+            ? "Show fewer achievements"
+            : `Show all achievements (${ACHIEVEMENTS_DATA.length})`}
+        </button>
+      </div>
     </div>
   );
 }

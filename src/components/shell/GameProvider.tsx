@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import dynamic from "next/dynamic";
+import { playSound } from "@/components/sound/sound-effects";
 
 export interface GameOrigin {
   x: number;
@@ -63,10 +64,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setOrigin(calculatedOrigin || null);
     setMounted(true);
     setOpen(true);
+    playSound("open");
   }, []);
 
   const closeGame = React.useCallback(() => {
     setOpen(false);
+    playSound("close");
   }, []);
 
   // Global 'G' key shortcut to open game when not focusing inputs

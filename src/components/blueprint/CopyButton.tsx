@@ -30,6 +30,7 @@ export function CopyButton({ text, message, className }: CopyButtonProps) {
   return (
     <button
       type="button"
+      data-sound="copy"
       onClick={handleCopy}
       aria-label={copied ? "Copied to clipboard!" : `Copy ${text}`}
       title={copied ? "Copied!" : `Copy ${text}`}

@@ -6,6 +6,7 @@ import { AvatarBadge } from "@/components/blueprint/AvatarBadge";
 import { HandwrittenNote } from "@/components/blueprint/HandwrittenNote";
 import { ConstructionMonogram } from "@/components/hero/ConstructionMonogram";
 import { RotatingTagline } from "@/components/hero/RotatingTagline";
+import { playSound, SoundToggle } from "@/components/sound/sound-effects";
 
 interface HeroBlueprintProps {
   hasPhoto: boolean;
@@ -25,7 +26,6 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
   const readoutRef = React.useRef<HTMLDivElement>(null);
 
   const [pins, setPins] = React.useState<CalloutPin[]>([]);
-  const [soundEnabled, setSoundEnabled] = React.useState(true);
   const [isCrosshairActive, setIsCrosshairActive] = React.useState(false);
   const [isHeroHovered, setIsHeroHovered] = React.useState(false);
   const [isReducedMotion, setIsReducedMotion] = React.useState(false);
@@ -37,71 +37,12 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
   const rafId = React.useRef<number | null>(null);
 
   React.useEffect(() => {
-    try {
-      const stored = localStorage.getItem("hero_muted");
-      if (stored !== null) {
-        setSoundEnabled(stored !== "true");
-      }
-    } catch {
-      // localStorage unavailable
-    }
-
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setIsReducedMotion(motionQuery.matches);
 
     const fineQuery = window.matchMedia("(pointer: fine)");
     setIsFinePointer(fineQuery.matches);
   }, []);
-
-  const toggleMute = React.useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSoundEnabled((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem("hero_muted", String(!next));
-      } catch {
-        // ignore
-      }
-      return next;
-    });
-  }, []);
-
-  // Web Audio soft tick sound (40ms sine blip, 520-640Hz rising step per pin, gain 0.03)
-  const playPinTick = React.useCallback(
-    (pinNum: number) => {
-      if (!soundEnabled) return;
-      try {
-        const AudioCtx =
-          window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        if (ctx.state === "suspended") {
-          ctx.resume();
-        }
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        // 520Hz to 640Hz rising per pin
-        const freq = 520 + (pinNum - 1) * 30;
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-        gain.gain.setValueAtTime(0.03, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.04);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.04);
-      } catch {
-        // Audio unavailable
-      }
-    },
-    [soundEnabled]
-  );
 
   // Smooth crosshair animation loop with ~80ms lag
   const animateCrosshair = React.useCallback(() => {
@@ -184,8 +125,9 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
           // 6th click clears and restarts
           return [];
         }
-        const nextNum = prev.length + 1;
-        playPinTick(nextNum);
+        const pinIndex = prev.length; // 0..4
+        playSound("select", { detune: pinIndex * 90 });
+        const nextNum = pinIndex + 1;
         return [
           ...prev,
           {
@@ -197,7 +139,7 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
         ];
       });
     },
-    [playPinTick]
+    []
   );
 
   return (
@@ -317,51 +259,7 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
             {site.name.full}
           </h1>
 
-          <button
-            type="button"
-            onClick={toggleMute}
-            aria-label={
-              soundEnabled
-                ? "Mute interactive click tick"
-                : "Enable interactive click tick"
-            }
-            title={soundEnabled ? "Mute click sound" : "Enable click sound"}
-            className="size-7 sm:size-8 rounded-[8px] shrink-0 inline-flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-[var(--muted)] active:scale-[0.98] transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {soundEnabled ? (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-              </svg>
-            ) : (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                <line x1="23" y1="9" x2="17" y2="15" />
-                <line x1="17" y1="9" x2="23" y2="15" />
-              </svg>
-            )}
-          </button>
+          <SoundToggle className="size-7 sm:size-8 rounded-[8px] shrink-0" />
         </div>
 
         {/* Row 2: Rotating Humour Tagline */}

@@ -6,6 +6,7 @@ import { PanelHeader } from "@/components/blueprint/PanelHeader";
 import { MosaicReveal } from "@/components/ui/MosaicReveal";
 import { TechChip } from "@/components/tech/TechChip";
 import { site, type Project } from "@/content/site";
+import { playSound } from "@/components/sound/sound-effects";
 
 type CategoryFilter = "All" | "Backend" | "Android";
 const CATEGORIES: CategoryFilter[] = ["All", "Backend", "Android"];
@@ -79,10 +80,12 @@ export function ProjectsPanel() {
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
       const next = (index + 1) % CATEGORIES.length;
+      playSound("select");
       setSelectedCategory(CATEGORIES[next]);
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
       const prev = (index - 1 + CATEGORIES.length) % CATEGORIES.length;
+      playSound("select");
       setSelectedCategory(CATEGORIES[prev]);
     }
   };
@@ -217,6 +220,7 @@ function ProjectRow({
         type="button"
         onClick={onToggle}
         aria-expanded={isExpanded}
+        data-slot="collapsible-trigger"
         className="w-full text-left flex items-center py-4 px-5 gap-4 hover:bg-[var(--accent-muted)] transition-colors duration-150 select-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         {/* Clean mono index P-01..P-03 */}

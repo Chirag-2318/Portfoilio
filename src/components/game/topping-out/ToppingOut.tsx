@@ -10,6 +10,7 @@ import {
   type ConfettiParticle,
 } from "./render";
 import { ToppingOutAudio } from "./audio";
+import { isSoundMuted, setSoundMuted, SoundToggle } from "@/components/sound/sound-effects";
 import {
   getLandmarkLine,
   getMilestoneNote,
@@ -69,7 +70,6 @@ export function ToppingOut({
   const [best, setBest] = React.useState(0);
   const [top3, setTop3] = React.useState<number[]>([]);
   const [isNewBest, setIsNewBest] = React.useState(false);
-  const [isMuted, setIsMuted] = React.useState(false);
   const [showGameOverCard, setShowGameOverCard] = React.useState(false);
   const [isPaused, setIsPaused] = React.useState(false);
   const [palette, setPalette] = React.useState<PaletteId>("rainbow");
@@ -102,7 +102,6 @@ export function ToppingOut({
 
     const audio = new ToppingOutAudio();
     audioRef.current = audio;
-    setIsMuted(audio.muted);
 
     const engine = new ToppingOutEngine();
     engine.reset(initialBest);
@@ -408,11 +407,7 @@ export function ToppingOut({
       if (e.key === "m" || e.key === "M") {
         e.preventDefault();
         e.stopPropagation();
-        const audio = audioRef.current;
-        if (audio) {
-          audio.toggleMute();
-          setIsMuted(audio.muted);
-        }
+        setSoundMuted(!isSoundMuted());
         return;
       }
 
@@ -727,6 +722,7 @@ export function ToppingOut({
         {/* Palette Selector Button */}
         <button
           type="button"
+          data-sound="select"
           onClick={cyclePalette}
           aria-label={`Palette: ${palette}. Click to cycle`}
           title={
@@ -760,33 +756,9 @@ export function ToppingOut({
         </button>
 
         {/* Audio Mute Toggle Button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            const audio = audioRef.current;
-            if (audio) {
-              audio.toggleMute();
-              setIsMuted(audio.muted);
-            }
-          }}
-          aria-label={isMuted ? "Unmute game audio" : "Mute game audio"}
-          title={isMuted ? "Unmute sound (M)" : "Mute sound (M)"}
+        <SoundToggle
           className="size-9 rounded-md bg-[var(--background)] border border-[var(--line-strong)] text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {isMuted ? (
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <line x1="23" y1="9" x2="17" y2="15" />
-              <line x1="17" y1="9" x2="23" y2="15" />
-            </svg>
-          ) : (
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-            </svg>
-          )}
-        </button>
+        />
 
         {/* Close Button (Overlay mode only) */}
         {onClose && (
@@ -865,6 +837,7 @@ export function ToppingOut({
             <div className="flex flex-col gap-2 pt-1">
               <button
                 type="button"
+                data-sound="select"
                 onClick={handleTrigger}
                 className="w-full py-2 px-4 rounded-md font-mono text-xs font-medium bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-95 transition-opacity cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
               >
@@ -874,6 +847,7 @@ export function ToppingOut({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  data-sound="select"
                   onClick={handleShare}
                   className="flex-1 py-1.5 px-3 rounded-md font-mono text-xs bg-[var(--muted)] border border-[var(--line-strong)] text-foreground hover:bg-[var(--line)] transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
                 >

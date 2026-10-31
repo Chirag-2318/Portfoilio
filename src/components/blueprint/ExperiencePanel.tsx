@@ -54,6 +54,7 @@ export function ExperiencePanel() {
               type="button"
               onClick={() => setExpanded((prev) => !prev)}
               aria-expanded={expanded}
+              data-slot="collapsible-trigger"
               className="w-full text-left flex items-center justify-between gap-3 py-1.5 group select-none rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
             >
               <div className="flex flex-wrap items-center gap-2 text-sm">

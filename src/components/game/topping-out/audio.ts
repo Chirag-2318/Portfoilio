@@ -3,7 +3,7 @@
  * Generated entirely in code, zero audio asset files.
  */
 
-import { GAME_CONSTANTS } from "./constants";
+import { isSoundMuted, setSoundMuted } from "@/components/sound/sound-effects";
 
 const PENTATONIC_SCALE = [
   261.63, // C4
@@ -21,36 +21,18 @@ const PENTATONIC_SCALE = [
 export class ToppingOutAudio {
   private ctx: AudioContext | null = null;
   private masterGain: GainNode | null = null;
-  private isMuted = false;
-
-  constructor() {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_MUTED);
-        this.isMuted = stored === "true";
-      } catch {
-        this.isMuted = false;
-      }
-    }
-  }
 
   public get muted(): boolean {
-    return this.isMuted;
+    return isSoundMuted();
   }
 
   public toggleMute(): boolean {
-    this.isMuted = !this.isMuted;
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(GAME_CONSTANTS.STORAGE_KEY_MUTED, String(this.isMuted));
-      } catch {
-        // ignore storage errors
-      }
-    }
+    const next = !isSoundMuted();
+    setSoundMuted(next);
     if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.05, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(next ? 0 : 0.05, this.ctx.currentTime);
     }
-    return this.isMuted;
+    return next;
   }
 
   private initContext() {
@@ -59,7 +41,7 @@ export class ToppingOutAudio {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       this.ctx = new AudioCtx();
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.05, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(isSoundMuted() ? 0 : 0.05, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
     } catch {
       // AudioContext not supported or disabled
@@ -77,7 +59,7 @@ export class ToppingOutAudio {
    * Perfect drop: note from C major pentatonic scale rising with combo
    */
   public playPerfect(combo: number) {
-    if (this.isMuted) return;
+    if (isSoundMuted()) return;
     this.initContext();
     if (!this.ctx || !this.masterGain) return;
 
@@ -125,7 +107,7 @@ export class ToppingOutAudio {
    * Normal landing: soft low thud (140Hz dropping to 90Hz over 70ms)
    */
   public playThud() {
-    if (this.isMuted) return;
+    if (this.muted) return;
     this.initContext();
     if (!this.ctx || !this.masterGain) return;
 
@@ -153,7 +135,7 @@ export class ToppingOutAudio {
    */
   public playTrim() {
     this.playThud();
-    if (this.isMuted) return;
+    if (this.muted) return;
     this.initContext();
     if (!this.ctx || !this.masterGain) return;
 
@@ -189,7 +171,7 @@ export class ToppingOutAudio {
    * Game over: two descending notes (392Hz then 261.63Hz, 140ms each)
    */
   public playGameOver() {
-    if (this.isMuted) return;
+    if (this.muted) return;
     this.initContext();
     if (!this.ctx || !this.masterGain) return;
 

@@ -86,6 +86,5 @@ export const GAME_CONSTANTS = {
   // Storage Keys
   STORAGE_KEY_BEST: "topping-out-best",
   STORAGE_KEY_TOP3: "topping-out-top3",
-  STORAGE_KEY_MUTED: "topping-out-muted",
   STORAGE_KEY_PALETTE: "topping-out-palette",
 } as const;

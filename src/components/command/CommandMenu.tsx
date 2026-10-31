@@ -6,7 +6,8 @@ import { useTheme } from "next-themes";
 import { Command } from "cmdk";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { Kbd } from "@/components/ui/Kbd";
-import { site, isPlaceholder } from "@/content/site";
+import { site } from "@/content/site";
+import { getSocials } from "@/lib/socials";
 import { useCommand } from "@/components/command/CommandProvider";
 import { useViewTransition } from "@/components/transition/ViewTransitionProvider";
 import { useGame } from "@/components/shell/GameProvider";
@@ -30,10 +31,7 @@ export function CommandMenu() {
     setTimeout(action, 40);
   }, [setOpen]);
 
-  // Show socials if not production or if not placeholder
-  const isProd = process.env.NODE_ENV === "production";
-  const showGithub = !isProd || !isPlaceholder(site.socials.github.url);
-  const showLinkedin = !isProd || !isPlaceholder(site.socials.linkedin.url);
+  const visibleSocials = getSocials().filter((s) => s.visible);
 
   return (
     <Command.Dialog
@@ -181,6 +179,18 @@ export function CommandMenu() {
               onSelect={() => handleSelect(toggleDraft)}
             />
           )}
+          {pathname.startsWith("/resume") && (
+            <CommandItem
+              id="act-print-resume"
+              icon="printer"
+              label="Print resume"
+              onSelect={() =>
+                handleSelect(() => {
+                  window.print();
+                })
+              }
+            />
+          )}
           {hasResume && (
             <CommandItem
               id="act-download-resume"
@@ -206,30 +216,20 @@ export function CommandMenu() {
         </Command.Group>
 
         {/* ELSEWHERE */}
-        {(showGithub || showLinkedin) && (
+        {visibleSocials.length > 0 && (
           <Command.Group heading="Elsewhere" className="[&_[cmdk-group-heading]]:label [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:block">
-            {showGithub && (
+            {visibleSocials.map((s) => (
               <CommandItem
-                id="link-github"
-                icon="github"
-                label="GitHub"
-                hint="External"
+                key={s.key}
+                id={`link-${s.key}`}
+                icon={s.key}
+                label={s.label}
+                hint={s.placeholder ? "Placeholder" : "External"}
                 onSelect={() =>
-                  handleSelect(() => window.open(site.socials.github.url, "_blank", "noopener,noreferrer"))
+                  handleSelect(() => window.open(s.url, "_blank", "noopener,noreferrer"))
                 }
               />
-            )}
-            {showLinkedin && (
-              <CommandItem
-                id="link-linkedin"
-                icon="linkedin"
-                label="LinkedIn"
-                hint="External"
-                onSelect={() =>
-                  handleSelect(() => window.open(site.socials.linkedin.url, "_blank", "noopener,noreferrer"))
-                }
-              />
-            )}
+            ))}
           </Command.Group>
         )}
       </Command.List>

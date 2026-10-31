@@ -13,6 +13,7 @@ import {
   X,
   ChevronDown,
   ExternalLink,
+  Printer,
 } from "lucide-react";
 
 export type IconName =
@@ -27,6 +28,7 @@ export type IconName =
   | "mail"
   | "phone"
   | "download"
+  | "printer"
   | "search"
   | "x"
   | "chevron-down"
@@ -76,6 +78,8 @@ export function Icon({
       return <Phone {...commonProps} />;
     case "download":
       return <Download {...commonProps} />;
+    case "printer":
+      return <Printer {...commonProps} />;
     case "search":
       return <Search {...commonProps} />;
     case "x":

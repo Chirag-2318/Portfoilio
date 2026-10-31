@@ -3,6 +3,7 @@ import * as React from "react";
 export function CropMarks() {
   return (
     <div
+      data-print="hide"
       aria-hidden="true"
       className="fixed inset-0 pointer-events-none z-[5] hidden min-[480px]:block select-none"
     >

@@ -207,12 +207,81 @@
   - `docs/DECISIONS.md`
   - `docs/PROGRESS.md`
 - **Deliberate Placeholders Still to Be Replaced**:
-  - Resume view (`/resume`) — to be implemented in Prompt 6.
-  - Contact view (`/contact`) — to be implemented in Prompt 7.
   - GameSlot popover ("arriving soon" placeholder) — to be implemented in Prompt 8.
   - RollText CSS link roll effect & icon refinements — to be implemented in Prompt 9.
   - Lucide icons / final IconSpace verification — to be completed in Prompt 9.
   - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
+
+
+## Prompt 6 of 10 — Resume View and Contact View
+- **What was done**:
+  - Implemented `src/lib/socials.ts` with `getSocials()`, properly distinguishing production (filtering placeholder socials) and development (retaining placeholder entries with clear indicators).
+  - Implemented `src/lib/usePuneTime.ts` using `React.useSyncExternalStore` for hydration safety and accurate minute-boundary time updates without timer duplication or drift.
+  - Refactored `src/components/shell/Clock.tsx` to use `usePuneTime`.
+  - Added `"printer"` icon (Lucide Printer, stroke 1.5) to `src/components/ui/Icon.tsx`.
+  - Added `download?: string` support to `src/components/ui/Button.tsx`.
+  - Added `data-print="hide"` to Header, Footer, MobileTabs, CropMarks, Curtain, Toaster, SkipLink, and ViewFrame title row; added `id="app-root"` to AppShell root div.
+  - Built `/resume` view:
+    - `src/components/resume/resume.css`: Print media styles for A4, zero background, pure black typography, visible overflow, and hiding non-printable chrome.
+    - `src/components/resume/ResumeSheet.tsx`: Semantic `<article aria-label="Resume of Chirag Patil">` with corner crop ticks, Fraunces masthead with accent period, and 4 sections: Education (two rows with years column), Skills (four rows with semantic list and CSS mid-dots), Projects (three rows with metadata line), and Highlights (five rows with Barclays "Upcoming" status and Hackathons results).
+    - Dynamic 28px bottom fade mask (`linear-gradient`) disappearing when reaching the end of scroll (`data-at-end="true"`).
+    - `src/components/resume/ResumeActions.tsx`: Primary "Download PDF" button (handles missing PDF with toast and disabled state; links to PDF download when present), outline "Print this sheet" button (`window.print()`), and desktop "Jump to" navigation.
+    - `src/components/resume/ResumeView.tsx`: 12-column desktop grid with non-scrolling content and internal sheet scroll, and clean vertical stack on mobile/tablet.
+    - Replaced placeholder at `src/app/resume/page.tsx` with `<ResumeView />` and metadata.
+  - Built `/contact` view:
+    - `src/components/contact/EmailLink.tsx`: Large Fraunces email link (`clamp(1.5rem, 4.4vw, 4.5rem)`) with animated 2px accent underline drawing left-to-right on hover/focus (`scaleX 0→1`, 260ms `out-expo`).
+    - `src/components/contact/ContactRows.tsx`: Semantic `<dl>` with 52px rows for Phone, Based in Pune, Pune time IST, and non-placeholder socials (with dev placeholder indicators).
+    - `src/components/contact/ContactView.tsx`: 12-column desktop grid with no page scroll at 1366×768, primary "Write an email" mailto button, and outline "Copy address" button with 1600ms "Copied" feedback state and toast confirmation.
+    - Replaced placeholder at `src/app/contact/page.tsx` with `<ContactView />` and metadata.
+  - Updated `src/components/command/CommandMenu.tsx` to include "Print resume" when on `/resume`, dynamic socials from `getSocials()`, and verified curtain labels "04 — Resume" and "05 — Contact".
+  - Verified with comprehensive test suite (`scripts/take-screenshots-p6.mjs`, `scripts/test-pdf-detection.mjs`, `scripts/test-socials-env.mjs`, `scripts/smoke-test-all.mjs`):
+    - Static export build passes (`npm run build`).
+    - ESLint passes with 0 errors and 0 warnings.
+    - Zero browser console errors across all routes and interactions.
+    - No page scroll at 1366×768 for `/contact`; resume sheet scrolls internally with thin scrollbar.
+    - Height at 390×844: Contact is 0.93 screens (<= ~1.5); Resume is 2.01 screens (<= ~2.0).
+    - Print media emulation renders only the resume sheet on clean white background.
+    - Captured 15 verification screenshots across 390px, 768px, 1366px, 1440px in light, dark, and emulated print modes.
+- **Files created/modified**:
+  - `src/lib/socials.ts` (created)
+  - `src/lib/usePuneTime.ts` (created)
+  - `src/components/resume/resume.css` (created)
+  - `src/components/resume/ResumeSheet.tsx` (created)
+  - `src/components/resume/ResumeActions.tsx` (created)
+  - `src/components/resume/ResumeView.tsx` (created)
+  - `src/components/contact/EmailLink.tsx` (created)
+  - `src/components/contact/ContactRows.tsx` (created)
+  - `src/components/contact/ContactView.tsx` (created)
+  - `src/app/resume/page.tsx` (modified)
+  - `src/app/contact/page.tsx` (modified)
+  - `src/components/shell/Clock.tsx` (modified)
+  - `src/components/shell/AppShell.tsx` (modified)
+  - `src/components/shell/Header.tsx` (modified)
+  - `src/components/shell/Footer.tsx` (modified)
+  - `src/components/shell/MobileTabs.tsx` (modified)
+  - `src/components/shell/CropMarks.tsx` (modified)
+  - `src/components/shell/SkipLink.tsx` (modified)
+  - `src/components/transition/Curtain.tsx` (modified)
+  - `src/components/ui/Toaster.tsx` (modified)
+  - `src/components/ui/ViewFrame.tsx` (modified)
+  - `src/components/ui/Icon.tsx` (modified)
+  - `src/components/ui/Button.tsx` (modified)
+  - `src/lib/useCopy.ts` (modified)
+  - `src/components/command/CommandMenu.tsx` (modified)
+  - `scripts/take-screenshots-p6.mjs` (created)
+  - `scripts/test-pdf-detection.mjs` (created)
+  - `scripts/test-socials-env.mjs` (created)
+  - `scripts/smoke-test-all.mjs` (created)
+  - `docs/DESIGN.md` (modified)
+  - `docs/DECISIONS.md` (modified)
+  - `docs/PROGRESS.md` (modified)
+- **Deliberate Placeholders Still to Be Replaced**:
+  - GameSlot popover ("arriving soon" placeholder) — to be implemented in Prompt 8.
+  - RollText CSS link roll effect & icon refinements — to be implemented in Prompt 9.
+  - Lucide icons / final IconSpace verification — to be completed in Prompt 9.
+  - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
 
 
 

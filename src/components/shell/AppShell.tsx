@@ -21,6 +21,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div
+      id="app-root"
       data-view={pathname}
       className="flex h-dvh flex-col overflow-hidden bg-paper text-ink relative"
     >

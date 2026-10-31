@@ -12,6 +12,7 @@ export function MobileTabs() {
 
   return (
     <nav
+      data-print="hide"
       aria-label="Mobile Navigation"
       className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-paper border-t border-line pb-[env(safe-area-inset-bottom,0px)] select-none"
     >

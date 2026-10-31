@@ -6,6 +6,7 @@ export type ButtonVariant = "primary" | "outline" | "ghost";
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   href?: string;
+  download?: string;
   target?: string;
   rel?: string;
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export function Button({
   variant = "primary",
   href,
+  download,
   target,
   rel,
   children,
@@ -49,7 +51,7 @@ export function Button({
 
     const defaultRel = target === "_blank" ? "noopener noreferrer" : undefined;
     return (
-      <a href={href} target={target} rel={rel || defaultRel} className={combinedClasses}>
+      <a href={href} download={download} target={target} rel={rel || defaultRel} className={combinedClasses}>
         {children}
       </a>
     );

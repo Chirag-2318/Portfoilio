@@ -22,6 +22,7 @@ export function ViewFrame({
     <div className={`${compactHeader ? "pt-1.5 sm:pt-2.5" : "pt-6 sm:pt-8"} ${className}`}>
       {/* Header row */}
       <div
+        data-print="hide"
         className={`flex flex-col lg:flex-row lg:items-end justify-between border-b border-line hairline border-t-0 border-x-0 gap-3 ${
           compactHeader ? "pb-2.5 mb-3 sm:pb-3 sm:mb-4" : "pb-8 mb-8"
         }`}
@@ -44,7 +45,7 @@ export function ViewFrame({
       </div>
 
       {/* Main children area */}
-      <div>{children}</div>
+      <div className="min-h-0 flex-1 flex flex-col">{children}</div>
     </div>
   );
 }

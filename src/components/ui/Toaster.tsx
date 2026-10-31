@@ -48,6 +48,7 @@ export function useToaster(): ToasterContextType {
 export function Toaster({ message }: { message?: string | null }) {
   return (
     <div
+      data-print="hide"
       className="fixed left-1/2 -translate-x-1/2 bottom-[calc(56px+env(safe-area-inset-bottom,0px)+24px)] md:bottom-[64px] z-50 pointer-events-none"
       aria-live="polite"
       role="status"

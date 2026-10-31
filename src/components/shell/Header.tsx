@@ -28,7 +28,7 @@ export function Header() {
   const kbdText = mounted && isMac ? "⌘K" : "Ctrl K";
 
   return (
-    <header className="relative z-30 h-[var(--header-h)] px-[var(--page-x)] border-b border-line bg-paper select-none">
+    <header data-print="hide" className="relative z-30 h-[var(--header-h)] px-[var(--page-x)] border-b border-line bg-paper select-none">
       <div className="h-full max-w-[1760px] mx-auto flex items-center justify-between">
         {/* Left: Logo & Desktop NavLinks */}
         <div className="flex items-center">

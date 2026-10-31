@@ -73,6 +73,7 @@ export function Curtain() {
 
   return (
     <div
+      data-print="hide"
       ref={panelRef}
       aria-hidden="true"
       style={{ clipPath: "inset(100% 0 0 0)" }}

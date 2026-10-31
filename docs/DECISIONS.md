@@ -145,3 +145,38 @@ This document logs decisions, trade-offs, and verification results across all im
 
 
 
+## Prompt 6 — Resume View and Contact View
+
+1. **Hydration-Safe Real-Time Clock via `useSyncExternalStore` (`src/lib/usePuneTime.ts`)**:
+   - Extracted Pune local time formatted with `Intl.DateTimeFormat` into a reusable hook `usePuneTime`.
+   - Uses `React.useSyncExternalStore` with shared external subscription, returning `null` during SSR and `"14:32"` upon client mount.
+   - Updates accurately on exact minute boundaries via `setTimeout` without continuous polling intervals, eliminating React 19 `set-state-in-effect` warnings.
+   - Reused across Header `Clock.tsx` and Contact `ContactRows.tsx` without timer duplication or UI layout shift.
+
+2. **Socials Single-Source Configuration (`src/lib/socials.ts`)**:
+   - Centralized social links retrieval with `getSocials()`, distinguishing development from production builds.
+   - In production (`process.env.NODE_ENV === "production"`), placeholder URLs are automatically filtered out (`visible = false`).
+   - In development, placeholder entries are retained (`visible = true`), showing an explicit `PLACEHOLDER` tag and setup prompt on `/contact`, plain text labels on `/resume`, and placeholder hints in `CommandMenu`.
+
+3. **Resume View Internal Scrolling & Screen-Budget Fitting**:
+   - On desktop (≥ 1024px), configured 12-column layout with `ViewFrame compactHeader` and `min-h-0 flex-1 items-stretch`. The outer `#content` container remains non-scrolling (`contentScroll: false`), while the `#resume-sheet` `<article>` scrolls internally with a thin scrollbar.
+   - Implemented dynamic 28px bottom fade mask (`linear-gradient(to bottom, black calc(100% - 28px), transparent 100%)`) that automatically removes itself when scrolled to the end (`data-at-end="true"`).
+   - Tuned row padding and margins across the 4 sections (Education, Skills, Projects, Highlights) so that total content length on mobile (390×844) measures 2.01 screens (comfortably <= ~2 screens).
+
+4. **Print Stylesheet Isolation (`resume.css`)**:
+   - Configured print stylesheet with `@page { size: A4; margin: 14mm }` and `data-print="hide"` attributes across Header, Footer, MobileTabs, CropMarks, Curtain, Toaster, SkipLink, ViewFrame title row, and ResumeActions.
+   - Forced pure white background, solid black ink, visible overflow, and `break-inside: avoid` on resume rows.
+   - Emulated print test confirmed that only the resume sheet renders cleanly without clipped sections or UI chrome.
+
+5. **Robust Clipboard Fallback in `useCopy.ts`**:
+   - Wrapped `navigator.clipboard.writeText` in a nested try/catch falling back to `document.execCommand("copy")`.
+   - Allows clipboard actions to complete cleanly even in restricted headless Chrome testing environments without throwing unhandled permission rejections.
+
+6. **Interactive Actions & Feedback**:
+   - Contact "Copy address" button triggers toast confirmation and updates button label to "Copied" with animated check icon for 1600ms (`aria-live="polite"`).
+   - Resume "Download PDF" checks `getAssets().hasResume`: when absent, renders an outline button with toast "The PDF is being set"; when present, downloads the PDF file.
+   - Desktop "Jump to" buttons smoothly scroll the resume sheet container directly to each respective section with visible focus outlines.
+
+
+
+

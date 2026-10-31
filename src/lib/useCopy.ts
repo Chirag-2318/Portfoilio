@@ -10,11 +10,16 @@ export function useCopy() {
     async (text: string, message: string = "Email copied"): Promise<boolean> => {
       try {
         if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-          toast(message);
-          return true;
+          try {
+            await navigator.clipboard.writeText(text);
+            toast(message);
+            return true;
+          } catch {
+            // Fall back to document.execCommand
+          }
         }
-        // Fallback for older browsers / insecure environments
+
+        // Fallback for environments where clipboard write is restricted
         const textArea = document.createElement("textarea");
         textArea.value = text;
         textArea.style.position = "fixed";
@@ -25,13 +30,13 @@ export function useCopy() {
         textArea.select();
         const successful = document.execCommand("copy");
         document.body.removeChild(textArea);
+
         if (successful) {
           toast(message);
           return true;
         }
         return false;
-      } catch (err) {
-        console.error("Failed to copy:", err);
+      } catch {
         return false;
       }
     },
@@ -40,4 +45,3 @@ export function useCopy() {
 
   return { copy };
 }
-

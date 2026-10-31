@@ -167,3 +167,52 @@
   - About view (`/about`) deferred to Prompt 5 as specified.
 
 
+
+## Prompt 5 of 10 — About View: Profile, Education, Skills, Highlights
+- **What was done**:
+  - Built `useTabHash.ts` in `src/components/about/useTabHash.ts` with `React.useSyncExternalStore` for hydration-safe URL hash synchronization (`#profile`, `#education`, `#skills`, `#highlights`), supporting direct hash arrivals, command-menu deep linking, and Home index links.
+  - Built `Tabs.tsx` in `src/components/about/Tabs.tsx` adhering to the W3C accessible tabs pattern:
+    - Editorial design with 1px `var(--line)` bottom border, mono indices ("01 Profile", "02 Education", "03 Skills", "04 Highlights"), and 2px `var(--accent)` sliding underline (`layoutId="about-tab"`).
+    - Roving tabindex: arrow Left/Right move focus AND activate tabs; Home/End jump to first/last.
+    - Verified fitting on 320px width: all 4 tabs fit on one line with no wrap and no horizontal scroll.
+  - Built `ProfilePane.tsx` in `src/components/about/ProfilePane.tsx`:
+    - Desktop 12-col grid with large Fraunces profile text, ruled facts `<dl>`, and `Portrait` frame with monogram fallback and "Chirag Patil" caption.
+    - Mobile single-column layout stacked under ~1.5 screens.
+  - Built `EducationPane.tsx` in `src/components/about/EducationPane.tsx`:
+    - Ruled entries for PICT and IIT Madras with large mono years, Fraunces institution names, degree + field styling, and quiet note "Both programmes run 2024 — 2028."
+    - Row hover background transition without layout shift.
+  - Built `SkillsPane.tsx` in `src/components/about/SkillsPane.tsx`:
+    - 2×2 grid (desktop/tablet) and single column (mobile) with `.label` group headings.
+    - Inline wrapping list using real `<ul>` and CSS `::after` mid-dot separators for clean screen reader consumption.
+    - 1px accent underline with 4px offset on hover.
+    - Quiet summary note derived from project stacks.
+  - Built `HighlightsPane.tsx` in `src/components/about/HighlightsPane.tsx`:
+    - Ruled list of 5 achievements: Barclays Summer Intern with "Upcoming" mono pill, Hackathons list with 2-column inline grid and 6px accent square for Winner, NDA/SSB, Debate, and CSI.
+  - Built `AboutView.tsx` in `src/components/about/AboutView.tsx` combining ViewFrame, Tabs, and AnimatePresence cross-fading panel container with fixed CSS min-height.
+  - Replaced placeholder at `src/app/about/page.tsx` with `<AboutView />` and metadata.
+  - Verified static export build (`npm run build`) and ESLint (`npm run lint`) with 0 errors and 0 warnings.
+  - Verified zero-scroll fitting at 1366x768 and 1440x900 across all 4 panes.
+  - Ran whole-site smoke test visiting 13 routes and states with zero browser console errors and zero warnings.
+  - Captured verification screenshots for all 4 panes across 390px, 768px, 1366px, and 1440px in light and dark themes.
+- **Files created/modified**:
+  - `src/components/about/useTabHash.ts`
+  - `src/components/about/Tabs.tsx`
+  - `src/components/about/ProfilePane.tsx`
+  - `src/components/about/EducationPane.tsx`
+  - `src/components/about/SkillsPane.tsx`
+  - `src/components/about/HighlightsPane.tsx`
+  - `src/components/about/AboutView.tsx`
+  - `src/app/about/page.tsx`
+  - `scripts/take-screenshots-p5.mjs`
+  - `docs/DECISIONS.md`
+  - `docs/PROGRESS.md`
+- **Deliberate Placeholders Still to Be Replaced**:
+  - Resume view (`/resume`) — to be implemented in Prompt 6.
+  - Contact view (`/contact`) — to be implemented in Prompt 7.
+  - GameSlot popover ("arriving soon" placeholder) — to be implemented in Prompt 8.
+  - RollText CSS link roll effect & icon refinements — to be implemented in Prompt 9.
+  - Lucide icons / final IconSpace verification — to be completed in Prompt 9.
+  - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
+
+

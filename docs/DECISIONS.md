@@ -115,3 +115,33 @@ This document logs decisions, trade-offs, and verification results across all im
    - Direct arrivals to `/work#arthix` smoothly scroll the active item into view.
 
 
+
+## Prompt 5 — About View: Profile, Education, Skills, Highlights
+
+1. **Hydration-Safe Tab Hash Synchronization via `useSyncExternalStore`**:
+   - Implemented `useTabHash.ts` using `React.useSyncExternalStore` for stable SSR matching (`DEFAULT_TAB = "profile"`), listening to `"hashchange"` and custom `"cp:hash"` events.
+   - Tab selection triggers `history.replaceState(null, "", "#id")` without curtain wipes or page scroll jumps.
+   - Invalid hashes cleanly default to `"profile"`.
+
+2. **Accessible Tabs Pattern with Roving Tabindex**:
+   - Implemented `Tabs.tsx` with W3C tabs pattern (`role="tablist"`, `role="tab"`, `aria-selected`, `aria-controls`, `id`, `role="tabpanel"`, `tabIndex={0}`).
+   - Arrow Left/Right navigate both focus and active tab selection automatically; Home/End jump to first/last tabs.
+   - Underline indicator animated across tabs with Motion `layoutId="about-tab"` (`260ms in-out-quart`).
+
+3. **Compact Viewport Fitting at 1366x768 & 768x1024**:
+   - Kept title row compact using `ViewFrame compactHeader` so all 4 panes fit within a single viewport without document or container scrolling (`contentScroll: false`).
+   - Fixed CSS min-height on tabpanel container (`min-h-[380px] lg:min-h-[400px]`) eliminates height jumps during pane switching.
+
+4. **320px Viewport Tabs Fitting**:
+   - Tuned tab typography scale to `text-[9.5px]` on `< 360px`, `text-[11px]` on `360px+`, and `text-xs` on `sm+`, combined with `tracking-tight` and `gap-1 min-[360px]:gap-3`.
+   - Verified that at 320px width, all 4 tabs fit on one line with `fitsWidth: true` and `allSameTop: true` with zero horizontal overflow.
+
+5. **Screen Reader Separation for Skills List**:
+   - Mid-dot separators (`·`) in the Skills inline lists are rendered via CSS `::after` on `<li>` elements, ensuring screen readers hear a clean sequence of terms rather than punctuation symbols.
+
+6. **Highlights Hackathons Two-Column Desktop Grid**:
+   - Rendered the 5 hackathon placements into a 2-column inline grid on desktop/tablet to keep row height <= 110px.
+   - Placed a subtle 6px `var(--accent)` square marker before "Winner" as the single accent focal point in the list.
+
+
+

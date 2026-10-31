@@ -295,3 +295,4 @@ main().catch((err) => {
   console.error("Error during P4 screenshot tests:", err);
   process.exit(1);
 });
+

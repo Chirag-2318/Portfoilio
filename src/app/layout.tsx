@@ -30,7 +30,7 @@ const siteDescription =
 
 export const metadata: Metadata = {
   title: {
-    default: "Chirag Patil — Developer in Pune",
+    default: "Chirag Patil",
     template: "%s — Chirag Patil",
   },
   description: siteDescription,
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: site.name.full,
     locale: "en_IN",
-    title: "Chirag Patil — Developer in Pune",
+    title: "Chirag Patil",
     description: siteDescription,
   },
   twitter: { card: "summary_large_image" },

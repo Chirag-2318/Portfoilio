@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ViewLink } from "@/components/transition/ViewLink";
+import Link from "next/link";
 
 export type ButtonVariant = "primary" | "outline" | "ghost";
 
@@ -43,9 +43,9 @@ export function Button({
     const isInternal = href.startsWith("/") || href.startsWith("#");
     if (isInternal && !target) {
       return (
-        <ViewLink href={href} className={combinedClasses}>
+        <Link href={href} className={combinedClasses}>
           {children}
-        </ViewLink>
+        </Link>
       );
     }
 
@@ -63,4 +63,3 @@ export function Button({
     </button>
   );
 }
-

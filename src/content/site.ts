@@ -37,6 +37,8 @@ export const site = {
     { href: "/contact", label: "Contact", index: "05" },
   ],
   home: {
+    tagline: "Backend and Android developer. Hackathon winner.",
+    githubUsername: "PLACEHOLDER_GITHUB_USERNAME", // PLACEHOLDER
     kicker: "Engineering student & developer — Pune, India",
     taglineA: "I do the task.",
     taglineB: "Then I take it further.",

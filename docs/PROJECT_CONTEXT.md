@@ -63,3 +63,7 @@ Do NOT claim a project won or placed anywhere unless stated above. Specifically 
 2. Resume at /public/Chirag_Patil_Resume.pdf (detected at build time)
 3. Social URLs (GitHub, LinkedIn) and the site URL in src/content/site.ts
 
+
+## Redesign
+The site is now the Blueprint Grid single-page design described in /docs/REDESIGN_SPEC.md.
+All earlier visual decisions in /docs/DESIGN.md are superseded by /docs/REDESIGN_SPEC.md.

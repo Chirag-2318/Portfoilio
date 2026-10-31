@@ -19,7 +19,7 @@ const CommandContext = React.createContext<CommandContextType>({
 });
 
 const DynamicCommandMenu = dynamic(
-  () => import("@/components/command/CommandMenu").then((m) => m.CommandMenu),
+  () => import("@/components/blueprint/CommandMenu").then((m) => m.CommandMenu),
   { ssr: false }
 );
 

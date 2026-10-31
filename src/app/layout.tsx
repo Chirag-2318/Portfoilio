@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Instrument_Sans, JetBrains_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { Caveat } from "next/font/google";
 import { site, isPlaceholder } from "@/content/site";
 import { getSocials } from "@/lib/socials";
 import { getAssets } from "@/lib/assets";
@@ -7,24 +9,10 @@ import { Providers } from "@/components/shell/Providers";
 import { AppShell } from "@/components/shell/AppShell";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const caveat = Caveat({
+  variable: "--font-caveat",
   subsets: ["latin"],
-  axes: ["opsz", "SOFT"],
-  display: "swap",
-});
-
-const instrumentSans = Instrument_Sans({
-  variable: "--font-instrument",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["500"],
   display: "swap",
 });
 
@@ -45,13 +33,8 @@ export const metadata: Metadata = {
     title: "Chirag Patil — Developer in Pune",
     description: siteDescription,
   },
-  twitter: {
-    card: "summary_large_image",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
   authors: [{ name: site.name.full }],
   creator: site.name.full,
   ...(isPlaceholder(site.url) ? {} : { alternates: { canonical: "./" } }),
@@ -59,16 +42,27 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F3F0E8" },
-    { media: "(prefers-color-scheme: dark)", color: "#12110E" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
   ],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+// Anti-flash theme script: runs before React hydration
+const themeScript = `
+(function(){
+  try {
+    var stored = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = stored === 'light' ? 'light' : stored === 'dark' ? 'dark' : (prefersDark ? 'dark' : 'light');
+    document.documentElement.classList.remove('dark','light');
+    document.documentElement.classList.add(theme);
+  } catch(e) {
+    document.documentElement.classList.add('dark');
+  }
+})();
+`;
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const assets = getAssets();
   const visibleSocials = getSocials()
     .filter((s) => !s.placeholder && !isPlaceholder(s.url))
@@ -102,10 +96,10 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${instrumentSans.variable} ${jetbrainsMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${caveat.variable}`}
     >
       <head>
-        <meta name="color-scheme" content="light dark" />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -113,7 +107,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased">
+      <body className="antialiased">
         <Providers assets={assets}>
           <AppShell>{children}</AppShell>
         </Providers>

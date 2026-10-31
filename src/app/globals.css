@@ -196,6 +196,15 @@ body::after {
   }
 }
 
+html.theme-fade,
+html.theme-fade * {
+  transition: background-color 200ms var(--ease-out-expo),
+    color 200ms var(--ease-out-expo),
+    border-color 200ms var(--ease-out-expo),
+    fill 200ms,
+    stroke 200ms !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

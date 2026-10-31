@@ -20,6 +20,14 @@ export function WorkView() {
 
   const selectedProject = site.projects[selectedIndex] || site.projects[0];
 
+  const handleNextProject = React.useCallback(() => {
+    const nextIndex = (selectedIndex + 1) % site.projects.length;
+    const nextProject = site.projects[nextIndex];
+    if (nextProject) {
+      selectProject(nextProject.id);
+    }
+  }, [selectedIndex, selectProject]);
+
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLButtonElement>,
     index: number
@@ -96,6 +104,7 @@ export function WorkView() {
             <ProjectDetail
               project={selectedProject}
               variant="panel"
+              onNextProject={handleNextProject}
               className="min-h-[320px] lg:min-h-[350px]"
             />
           </Reveal>

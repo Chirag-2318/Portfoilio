@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "motion/react";
 import { site } from "@/content/site";
 import { Button } from "@/components/ui/Button";
+import { MagneticArrow } from "@/components/ui/MagneticArrow";
 import { Icon } from "@/components/ui/Icon";
 import { Portrait } from "@/components/home/Portrait";
 import { IndexList } from "@/components/home/IndexList";
@@ -182,7 +183,7 @@ export function HeroContent({ variant, className = "" }: HeroContentProps) {
               data-lens-shrink
             >
               <span>{site.home.ctaPrimary.label}</span>
-              <Icon name="arrow-right" size={15} className="transition-transform group-hover:translate-x-[3px]" />
+              <MagneticArrow variant="primary" />
             </Button>
 
             <Button

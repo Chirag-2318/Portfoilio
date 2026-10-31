@@ -25,18 +25,16 @@ export function Curtain() {
         // Position line for cover wipe (moving upwards from bottom)
         line.style.bottom = "auto";
 
-        await animate(
-          (progress: number) => {
+        await animate(0, 1, {
+          duration: 0.36,
+          ease: EASE_IN_OUT_QUART,
+          onUpdate: (progress: number) => {
             // progress goes 0 -> 1
             const topPercent = (1 - progress) * 100;
             panel.style.clipPath = `inset(${topPercent}% 0 0 0)`;
             line.style.top = `${topPercent}%`;
           },
-          {
-            duration: 0.36,
-            ease: EASE_IN_OUT_QUART,
-          }
-        );
+        });
       },
       uncover: async () => {
         const panel = panelRef.current;
@@ -46,18 +44,16 @@ export function Curtain() {
         // Position line for uncover wipe (bottom moves upwards from bottom to top)
         line.style.top = "auto";
 
-        await animate(
-          (progress: number) => {
+        await animate(0, 1, {
+          duration: 0.38,
+          ease: EASE_IN_OUT_QUART,
+          onUpdate: (progress: number) => {
             // progress goes 0 -> 1
             const bottomPercent = progress * 100;
             panel.style.clipPath = `inset(0 0 ${bottomPercent}% 0)`;
             line.style.bottom = `${bottomPercent}%`;
           },
-          {
-            duration: 0.38,
-            ease: EASE_IN_OUT_QUART,
-          }
-        );
+        });
 
         // Reset to initial state once uncover is finished
         panel.style.clipPath = "inset(100% 0 0 0)";

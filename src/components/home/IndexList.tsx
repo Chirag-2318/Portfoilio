@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { site } from "@/content/site";
 import { ViewLink } from "@/components/transition/ViewLink";
 import { Icon } from "@/components/ui/Icon";
@@ -21,7 +22,7 @@ export function IndexList({ variant, className = "" }: IndexListProps) {
     e.stopPropagation();
     copy(site.email, "Email copied");
     setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
+    setTimeout(() => setCopied(false), 1600);
   };
 
   return (
@@ -58,8 +59,8 @@ export function IndexList({ variant, className = "" }: IndexListProps) {
               </dd>
               <dd className="flex items-center justify-end">
                 {isDraft ? (
-                  <div className="w-7 h-7 flex items-center justify-center text-ink-3">
-                    <Icon name="copy" size={13} />
+                  <div className="w-9 h-9 flex items-center justify-center text-ink-3">
+                    <Icon name="copy" size={14} />
                   </div>
                 ) : (
                   <button
@@ -67,9 +68,24 @@ export function IndexList({ variant, className = "" }: IndexListProps) {
                     onClick={handleCopy}
                     data-lens-shrink
                     aria-label="Copy email address"
-                    className="w-7 h-7 rounded-sm flex items-center justify-center text-ink-2 hover:text-ink hover:bg-paper-2 transition-colors duration-160 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+                    className="relative w-9 h-9 rounded-md flex items-center justify-center text-ink-2 hover:text-ink hover:bg-paper-2 active:scale-[0.96] transition-all duration-160 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent cursor-pointer select-none [@media(pointer:coarse)]:after:content-[''] [@media(pointer:coarse)]:after:absolute [@media(pointer:coarse)]:after:-inset-1"
                   >
-                    <Icon name={copied ? "check" : "copy"} size={13} className={copied ? "text-accent" : ""} />
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.span
+                        key={copied ? "check" : "copy"}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex items-center justify-center"
+                      >
+                        <Icon
+                          name={copied ? "check" : "copy"}
+                          size={14}
+                          className={copied ? "text-accent" : "text-current"}
+                        />
+                      </motion.span>
+                    </AnimatePresence>
                   </button>
                 )}
               </dd>

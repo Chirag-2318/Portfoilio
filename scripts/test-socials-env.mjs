@@ -24,3 +24,4 @@ if (prodVisible.length !== 0) {
 }
 
 console.log("Socials DEV vs PROD test passed successfully!");
+

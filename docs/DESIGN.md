@@ -117,9 +117,9 @@ Title "Chirag Patil — Developer in Pune", meta description from facts, Open Gr
 Static export (`output: "export"`), no env vars. Import repo on Vercel: framework Next.js, defaults. README documents the three hand-supplied items.
 ## 16. Placeholders that later prompts replace
 - [REPLACED in prompt 6] Resume and Contact views
+- [REPLACED in prompt 7] RollText and button hover (replaced with Pixel Perfect FlipText and MagneticArrow)
+- [REPLACED in prompt 7] lucide icons (IconSpace added arrow, email, call; others cleanly routed)
 - GameSlot popover "arriving soon" (prompt 8)
-- RollText and button hover (prompt 7)
-- lucide icons (prompt 7)
 - temporary /dev/tokens page (removed in prompt 10)
 ## 17. Copy rules
 Short lines. Plain, warm, first person. No exclamation marks, no buzzwords, no emojis. All copy lives in src/content/site.ts.

@@ -50,7 +50,7 @@ export function GameSlot() {
         onClick={() => (open ? closeGame() : openGame())}
         aria-label="Play Registration, a small optional game"
         aria-expanded={open}
-        className="group w-9 h-9 flex items-center justify-center rounded-md hover:bg-paper-2 transition-colors duration-160 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3"
+        className="group relative w-9 h-9 flex items-center justify-center rounded-md hover:bg-paper-2 active:scale-[0.96] transition-all duration-160 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 cursor-pointer select-none [@media(pointer:coarse)]:after:content-[''] [@media(pointer:coarse)]:after:absolute [@media(pointer:coarse)]:after:-inset-1"
       >
         <Icon name="registration" size={18} />
       </button>

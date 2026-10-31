@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { site } from "@/content/site";
 import { ViewLink } from "@/components/transition/ViewLink";
-import { RollText } from "@/components/motion/RollText";
+import { FlipText } from "@/components/motion/FlipText";
 import { EASE_IN_OUT_QUART } from "@/components/motion/ease";
 
 export function NavLinks() {
@@ -31,7 +31,7 @@ export function NavLinks() {
             {isActive ? (
               <span>{item.label}</span>
             ) : (
-              <RollText>{item.label}</RollText>
+              <FlipText trigger="parent">{item.label}</FlipText>
             )}
 
             {isActive && (

@@ -81,7 +81,7 @@ export function Header() {
             type="button"
             onClick={toggleCommand}
             aria-label="Open command menu"
-            className="md:hidden w-9 h-9 flex items-center justify-center rounded-md border border-line bg-surface hover:bg-paper-2 transition-colors duration-160 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3"
+            className="md:hidden relative w-9 h-9 flex items-center justify-center rounded-md border border-line bg-surface hover:bg-paper-2 active:scale-[0.96] transition-all duration-160 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 cursor-pointer select-none [@media(pointer:coarse)]:after:content-[''] [@media(pointer:coarse)]:after:absolute [@media(pointer:coarse)]:after:-inset-1"
           >
             <Icon name="search" size={16} />
           </button>

@@ -6,8 +6,6 @@ import {
   Check,
   ArrowUpRight,
   ArrowRight,
-  Mail,
-  Phone,
   Download,
   Search,
   X,
@@ -15,6 +13,8 @@ import {
   ExternalLink,
   Printer,
 } from "lucide-react";
+import { EmailIcon } from "@/components/icons/EmailIcon";
+import { CallIcon } from "@/components/icons/CallIcon";
 
 export type IconName =
   | "sun"
@@ -35,7 +35,7 @@ export type IconName =
   | "external"
   | "registration";
 
-export interface IconProps extends React.SVGProps<SVGSVGElement> {
+export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, "ref"> {
   name: IconName;
   size?: number;
   strokeWidth?: number;
@@ -73,9 +73,9 @@ export function Icon({
     case "arrow-right":
       return <ArrowRight {...commonProps} />;
     case "mail":
-      return <Mail {...commonProps} />;
+      return <EmailIcon {...commonProps} />;
     case "phone":
-      return <Phone {...commonProps} />;
+      return <CallIcon {...commonProps} />;
     case "download":
       return <Download {...commonProps} />;
     case "printer":

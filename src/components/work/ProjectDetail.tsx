@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { site } from "@/content/site";
 import { Chip } from "@/components/ui/Chip";
+import { MagneticArrow } from "@/components/ui/MagneticArrow";
 import { EASE_OUT_EXPO, useMotionOK } from "@/components/motion/ease";
 
 export type ProjectItem = (typeof site.projects)[number];
@@ -11,12 +12,14 @@ export type ProjectItem = (typeof site.projects)[number];
 export interface ProjectDetailProps {
   project: ProjectItem;
   variant?: "panel" | "inline";
+  onNextProject?: () => void;
   className?: string;
 }
 
 export function ProjectDetail({
   project,
   variant = "panel",
+  onNextProject,
   className = "",
 }: ProjectDetailProps) {
   const isInline = variant === "inline";
@@ -111,6 +114,20 @@ export function ProjectDetail({
           {content}
         </motion.div>
       </AnimatePresence>
+
+      {onNextProject && (
+        <div className="hidden lg:flex justify-end pt-3 mt-3 border-t border-line hairline">
+          <button
+            type="button"
+            onClick={onNextProject}
+            aria-label="View next project"
+            className="group inline-flex items-center gap-2.5 h-11 px-4 rounded-full border border-line-strong bg-paper hover:bg-paper-2 text-ink text-xs font-mono uppercase tracking-wider cursor-pointer select-none transition-all duration-160 ease-out-expo focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 active:scale-[0.98]"
+          >
+            <span>Next project</span>
+            <MagneticArrow variant="outline" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

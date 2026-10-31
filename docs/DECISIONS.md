@@ -179,4 +179,33 @@ This document logs decisions, trade-offs, and verification results across all im
 
 
 
+## Prompt 7 — Motion and Micro-interaction Polish, Pixel Perfect Components, IconSpace Icons
+
+1. **IconSpace Registry Testing & Routing**:
+   - Ran `npx iconspace add` with the full candidate set (`sun`, `moon`, `copy`, `check`, `download`, `search`, `x`, `printer`, `arrow`, `email`, `call`).
+   - Confirmed that in version 0.1.1, the registry contains 39 icons; only `arrow`, `email`, and `call` matched our portfolio's needs.
+   - Vendored `ArrowIcon`, `EmailIcon`, and `CallIcon` into `src/components/icons/`.
+   - In `src/components/ui/Icon.tsx`, mapped `mail` -> `EmailIcon`, `phone` -> `CallIcon`, and excluded `ref` from generic SVG props (`Omit<React.SVGProps<SVGSVGElement>, "ref">`) to ensure full TypeScript type-safety with `IconHandle`.
+   - Remaining icon names (`sun`, `moon`, `copy`, `check`, `download`, `search`, `x`, `printer`, `chevron-down`, `external`) fall back cleanly to `lucide-react`, while `github`, `linkedin`, and `registration` use hand-tuned SVGs.
+
+2. **Pixel Perfect UI Integration & Lazy GSAP Loading**:
+   - Vendored two components from Pixel Perfect UI (`vansh-nagar/Pixel-Perfect`):
+     - `FlipTextReveal` in `src/components/pp/FlipTextReveal.tsx`
+     - `InertiaArrowCard` in `src/components/pp/InertiaArrowCard.tsx`
+   - Added full third-party MIT license attribution in `THIRD_PARTY_NOTICES.md` with copyright `Copyright (c) 2026 Vansh Nagar`.
+   - Created accessible adapters: `src/components/motion/FlipText.tsx` and `src/components/ui/MagneticArrow.tsx`.
+   - Replaced `RollText` in `NavLinks.tsx` and plain text in `EmailLink.tsx` with `<FlipText>`.
+   - Replaced plain button arrows with `<MagneticArrow>` on the primary CTA ("See the work"), Contact CTA ("Write an email"), and desktop "Next project" button in `ProjectDetail.tsx`.
+   - **Zero Initial Chunk Overhead for GSAP**: GSAP is loaded dynamically via `await import("gsap")` strictly inside pointer hover handlers (`handleMouseEnter`). As verified by the Next.js production build, GSAP is completely absent from all initial page load bundles.
+
+3. **Motion Budget & Micro-interaction Polish**:
+   - Added `html.theme-fade` 200ms transition class during theme toggles for 240ms, providing smooth paper/ink transition.
+   - Enforced 44px coarse hit targets (`[@media(pointer:coarse)]:-inset-1`) on icon buttons (`ThemeToggle`, `GameSlot`, `Header` command button, `IndexList` copy button).
+   - Created `docs/MOTION_AUDIT.md` verifying 100% compliance across all 25 animated interactions with zero continuous loops, zero idle pulses, and zero audio.
+
+4. **Curtain Motion Syntax Fix**:
+   - Corrected `motion/react` numeric animation syntax in `Curtain.tsx` from `animate((p) => { ... }, opts)` to `animate(0, 1, { duration, ease, onUpdate: (p) => { ... } })`, eliminating unhandled rejection errors during view navigation.
+
+
+
 

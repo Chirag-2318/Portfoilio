@@ -5,6 +5,7 @@ import { ViewFrame } from "@/components/ui/ViewFrame";
 import { EmailLink } from "@/components/contact/EmailLink";
 import { ContactRows } from "@/components/contact/ContactRows";
 import { Button } from "@/components/ui/Button";
+import { MagneticArrow } from "@/components/ui/MagneticArrow";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/motion/Reveal";
 import { useCopy } from "@/lib/useCopy";
@@ -58,7 +59,7 @@ export function ContactView() {
               variant="primary"
             >
               <span>Write an email</span>
-              <Icon name="arrow-right" size={16} />
+              <MagneticArrow variant="primary" />
             </Button>
 
             <Button
@@ -111,7 +112,7 @@ export function ContactView() {
             className="w-full sm:flex-1 h-11"
           >
             <span>Write an email</span>
-            <Icon name="arrow-right" size={16} />
+            <MagneticArrow variant="primary" />
           </Button>
 
           <Button
@@ -148,3 +149,4 @@ export function ContactView() {
     </ViewFrame>
   );
 }
+

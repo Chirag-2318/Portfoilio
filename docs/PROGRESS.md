@@ -206,11 +206,60 @@
   - `scripts/take-screenshots-p5.mjs`
   - `docs/DECISIONS.md`
   - `docs/PROGRESS.md`
+## Prompt 7 of 10 — Motion and Micro-interaction Polish, Pixel Perfect Components, IconSpace Icons
+- **What was done**:
+  - Conducted comprehensive codebase motion audit: created `docs/MOTION_AUDIT.md` cataloguing all 25 motion interactions, verifying 100% adherence to the motion budget in `docs/DESIGN.md` §5 (zero infinite loops, zero idle pulses, zero sound, complete reduced-motion support).
+  - Executed IconSpace CLI tests: `npx iconspace add arrow email call -d src/components/icons -y --no-install`. Vendored `ArrowIcon`, `EmailIcon`, and `CallIcon` into `src/components/icons/`. Updated `src/components/ui/Icon.tsx` with clean `Omit<React.SVGProps<SVGSVGElement>, "ref">` typing, routing `mail` and `phone` to IconSpace icons and gracefully falling back to `lucide-react` for remaining icons (`sun`, `moon`, `copy`, `check`, `download`, `printer`, `search`, `x`, `chevron-down`, `external`).
+  - Vendored Pixel Perfect UI components with third-party MIT license attribution in `THIRD_PARTY_NOTICES.md` (`Copyright (c) 2026 Vansh Nagar`):
+    - `src/components/pp/FlipTextReveal.tsx` (accessible character stream flip with `sr-only` text and CSS `motion-reduce:transform-none` preventing SSR hydration mismatches).
+    - `src/components/pp/InertiaArrowCard.tsx` (spring inertia pointer tracking with clamped displacement).
+  - Built component adapters:
+    - `src/components/motion/FlipText.tsx`: Replaced `RollText` in `NavLinks.tsx` and plain text in `EmailLink.tsx` with `<FlipText>`.
+    - `src/components/ui/MagneticArrow.tsx`: Dynamic lazy GSAP loader (`await import("gsap")`) on first pointer hover, completely excluding GSAP from initial page bundles. Integrated into primary CTA ("See the work"), Contact CTA ("Write an email"), and desktop "Next project" button in `ProjectDetail.tsx`.
+  - Micro-interactions polished:
+    - Added `html.theme-fade` 200ms background/color transition class for 240ms on theme toggle.
+    - Expanded coarse pointer hit target to 44px (`[@media(pointer:coarse)]:-inset-1`) on icon buttons (`ThemeToggle`, `GameSlot`, `Header` command button, `IndexList` copy button).
+    - Added desktop "Next project" button in `ProjectDetail.tsx` with `MagneticArrow` that smoothly cycles URL hash (`#sar` -> `#validedi` -> `#arthix` -> `#sar`).
+    - Fixed `motion/react` numeric animation syntax in `Curtain.tsx` (`animate(0, 1, { duration, ease, onUpdate })`).
+  - Comprehensive verification and test execution:
+    - `docs/MOTION_AUDIT.md` created.
+    - `scripts/take-screenshots-p7.mjs` executed: captured 16 screenshots across 390px, 768px, 1440px in light and dark modes.
+    - `scripts/smoke-test-all.mjs` executed: 0 console errors across all routes and history navigation.
+    - `npm run lint` passes with 0 errors and 0 warnings.
+    - `npm run build` passes with 0 errors (static export).
+- **Files created/modified**:
+  - `THIRD_PARTY_NOTICES.md` (created)
+  - `docs/MOTION_AUDIT.md` (created)
+  - `src/components/icons/ArrowIcon.tsx` (created by iconspace)
+  - `src/components/icons/EmailIcon.tsx` (created by iconspace)
+  - `src/components/icons/CallIcon.tsx` (created by iconspace)
+  - `src/components/icons/scrub.ts` (created by iconspace)
+  - `src/components/icons/types.ts` (created by iconspace)
+  - `src/components/pp/FlipTextReveal.tsx` (created)
+  - `src/components/pp/InertiaArrowCard.tsx` (created)
+  - `src/components/motion/FlipText.tsx` (created)
+  - `src/components/ui/MagneticArrow.tsx` (created)
+  - `scripts/take-screenshots-p7.mjs` (created)
+  - `src/components/shell/NavLinks.tsx` (modified)
+  - `src/components/contact/EmailLink.tsx` (modified)
+  - `src/components/contact/ContactView.tsx` (modified)
+  - `src/components/home/HeroContent.tsx` (modified)
+  - `src/components/home/IndexList.tsx` (modified)
+  - `src/components/work/ProjectDetail.tsx` (modified)
+  - `src/components/work/WorkView.tsx` (modified)
+  - `src/components/ui/Icon.tsx` (modified)
+  - `src/components/transition/Curtain.tsx` (modified)
+  - `src/components/shell/ThemeToggle.tsx` (modified)
+  - `src/components/shell/GameSlot.tsx` (modified)
+  - `src/components/shell/Header.tsx` (modified)
+  - `src/app/globals.css` (modified)
+  - `docs/DESIGN.md` (modified)
+  - `docs/DECISIONS.md` (modified)
+  - `docs/PROGRESS.md` (modified)
 - **Deliberate Placeholders Still to Be Replaced**:
   - GameSlot popover ("arriving soon" placeholder) — to be implemented in Prompt 8.
-  - RollText CSS link roll effect & icon refinements — to be implemented in Prompt 9.
-  - Lucide icons / final IconSpace verification — to be completed in Prompt 9.
   - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
 
 
 
@@ -276,11 +325,60 @@
   - `docs/DESIGN.md` (modified)
   - `docs/DECISIONS.md` (modified)
   - `docs/PROGRESS.md` (modified)
+## Prompt 7 of 10 — Motion and Micro-interaction Polish, Pixel Perfect Components, IconSpace Icons
+- **What was done**:
+  - Conducted comprehensive codebase motion audit: created `docs/MOTION_AUDIT.md` cataloguing all 25 motion interactions, verifying 100% adherence to the motion budget in `docs/DESIGN.md` §5 (zero infinite loops, zero idle pulses, zero sound, complete reduced-motion support).
+  - Executed IconSpace CLI tests: `npx iconspace add arrow email call -d src/components/icons -y --no-install`. Vendored `ArrowIcon`, `EmailIcon`, and `CallIcon` into `src/components/icons/`. Updated `src/components/ui/Icon.tsx` with clean `Omit<React.SVGProps<SVGSVGElement>, "ref">` typing, routing `mail` and `phone` to IconSpace icons and gracefully falling back to `lucide-react` for remaining icons (`sun`, `moon`, `copy`, `check`, `download`, `printer`, `search`, `x`, `chevron-down`, `external`).
+  - Vendored Pixel Perfect UI components with third-party MIT license attribution in `THIRD_PARTY_NOTICES.md` (`Copyright (c) 2026 Vansh Nagar`):
+    - `src/components/pp/FlipTextReveal.tsx` (accessible character stream flip with `sr-only` text and CSS `motion-reduce:transform-none` preventing SSR hydration mismatches).
+    - `src/components/pp/InertiaArrowCard.tsx` (spring inertia pointer tracking with clamped displacement).
+  - Built component adapters:
+    - `src/components/motion/FlipText.tsx`: Replaced `RollText` in `NavLinks.tsx` and plain text in `EmailLink.tsx` with `<FlipText>`.
+    - `src/components/ui/MagneticArrow.tsx`: Dynamic lazy GSAP loader (`await import("gsap")`) on first pointer hover, completely excluding GSAP from initial page bundles. Integrated into primary CTA ("See the work"), Contact CTA ("Write an email"), and desktop "Next project" button in `ProjectDetail.tsx`.
+  - Micro-interactions polished:
+    - Added `html.theme-fade` 200ms background/color transition class for 240ms on theme toggle.
+    - Expanded coarse pointer hit target to 44px (`[@media(pointer:coarse)]:-inset-1`) on icon buttons (`ThemeToggle`, `GameSlot`, `Header` command button, `IndexList` copy button).
+    - Added desktop "Next project" button in `ProjectDetail.tsx` with `MagneticArrow` that smoothly cycles URL hash (`#sar` -> `#validedi` -> `#arthix` -> `#sar`).
+    - Fixed `motion/react` numeric animation syntax in `Curtain.tsx` (`animate(0, 1, { duration, ease, onUpdate })`).
+  - Comprehensive verification and test execution:
+    - `docs/MOTION_AUDIT.md` created.
+    - `scripts/take-screenshots-p7.mjs` executed: captured 16 screenshots across 390px, 768px, 1440px in light and dark modes.
+    - `scripts/smoke-test-all.mjs` executed: 0 console errors across all routes and history navigation.
+    - `npm run lint` passes with 0 errors and 0 warnings.
+    - `npm run build` passes with 0 errors (static export).
+- **Files created/modified**:
+  - `THIRD_PARTY_NOTICES.md` (created)
+  - `docs/MOTION_AUDIT.md` (created)
+  - `src/components/icons/ArrowIcon.tsx` (created by iconspace)
+  - `src/components/icons/EmailIcon.tsx` (created by iconspace)
+  - `src/components/icons/CallIcon.tsx` (created by iconspace)
+  - `src/components/icons/scrub.ts` (created by iconspace)
+  - `src/components/icons/types.ts` (created by iconspace)
+  - `src/components/pp/FlipTextReveal.tsx` (created)
+  - `src/components/pp/InertiaArrowCard.tsx` (created)
+  - `src/components/motion/FlipText.tsx` (created)
+  - `src/components/ui/MagneticArrow.tsx` (created)
+  - `scripts/take-screenshots-p7.mjs` (created)
+  - `src/components/shell/NavLinks.tsx` (modified)
+  - `src/components/contact/EmailLink.tsx` (modified)
+  - `src/components/contact/ContactView.tsx` (modified)
+  - `src/components/home/HeroContent.tsx` (modified)
+  - `src/components/home/IndexList.tsx` (modified)
+  - `src/components/work/ProjectDetail.tsx` (modified)
+  - `src/components/work/WorkView.tsx` (modified)
+  - `src/components/ui/Icon.tsx` (modified)
+  - `src/components/transition/Curtain.tsx` (modified)
+  - `src/components/shell/ThemeToggle.tsx` (modified)
+  - `src/components/shell/GameSlot.tsx` (modified)
+  - `src/components/shell/Header.tsx` (modified)
+  - `src/app/globals.css` (modified)
+  - `docs/DESIGN.md` (modified)
+  - `docs/DECISIONS.md` (modified)
+  - `docs/PROGRESS.md` (modified)
 - **Deliberate Placeholders Still to Be Replaced**:
   - GameSlot popover ("arriving soon" placeholder) — to be implemented in Prompt 8.
-  - RollText CSS link roll effect & icon refinements — to be implemented in Prompt 9.
-  - Lucide icons / final IconSpace verification — to be completed in Prompt 9.
   - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
 
 
 

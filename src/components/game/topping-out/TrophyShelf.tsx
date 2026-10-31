@@ -224,3 +224,4 @@ export function TrophyShelf({ isOpen, onClose, state }: TrophyShelfProps) {
     </div>
   );
 }
+

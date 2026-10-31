@@ -483,3 +483,4 @@ export function nextGoal(state: AchievementState): Achievement | null {
 
   return lockedNonSecrets[0];
 }
+

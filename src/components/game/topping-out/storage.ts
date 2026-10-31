@@ -102,3 +102,4 @@ export function loadInitialState(): AchievementState {
   const lifetime = loadLifetimeStats();
   return createInitialAchievementState(unlocked, lifetime);
 }
+

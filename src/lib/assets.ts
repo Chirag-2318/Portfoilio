@@ -6,7 +6,8 @@ import path from "node:path";
 
 export function getAssets(): { hasPhoto: boolean; hasResume: boolean } {
   const publicDir = path.join(process.cwd(), "public");
-  const hasPhoto = fs.existsSync(path.join(publicDir, "images", "chirag.jpg"));
+  const photoCandidates = ["chirag.jpg", "chirag.jfif", "chirag.jpeg", "chirag.png", "chirag.webp"];
+  const hasPhoto = photoCandidates.some((file) => fs.existsSync(path.join(publicDir, "images", file)));
   const hasResume = fs.existsSync(path.join(publicDir, "Chirag_Patil_Resume.pdf"));
 
   return {

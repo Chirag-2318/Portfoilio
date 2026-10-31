@@ -19,6 +19,18 @@ async function optimize() {
   let totalOrigBytes = 0;
   let totalWebpBytes = 0;
 
+  // Ensure avatar photo is available in standard format if .jfif is provided
+  const avatarJfif = path.resolve("./public/images/chirag.jfif");
+  const avatarJpg = path.resolve("./public/images/chirag.jpg");
+  if (fs.existsSync(avatarJfif) && !fs.existsSync(avatarJpg)) {
+    try {
+      await sharp(avatarJfif).jpeg({ quality: 92 }).toFile(avatarJpg);
+      console.log("✓ Converted public/images/chirag.jfif -> public/images/chirag.jpg");
+    } catch (e) {
+      console.warn("Could not convert avatar:", e);
+    }
+  }
+
   for (const item of PROJECTS) {
     const inputPath = path.join(PUBLIC_DIR, item.file);
     const outputPath = path.join(PUBLIC_DIR, `${item.id}.webp`);

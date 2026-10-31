@@ -208,11 +208,11 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
       onPointerEnter={handlePointerEnter}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative mx-auto max-w-3xl w-full border-x border-[var(--line-soft)] screen-line-bottom overflow-hidden select-none h-[340px] sm:h-[440px] grid grid-cols-[auto_1fr] grid-rows-[1fr_auto] bg-[var(--background)] cursor-crosshair"
+      className="relative mx-auto max-w-3xl w-full border-x border-[var(--line-soft)] screen-line-bottom overflow-hidden select-none h-[291.2px] sm:h-[379.6px] grid grid-cols-[auto_1fr] grid-rows-[1fr_auto] bg-[var(--background)] cursor-crosshair"
     >
       {/* 1. New Hero Artwork: Construction Sheet Monogram CP (upper hero area above name/avatar) */}
       <div
-        className="absolute top-0 left-0 right-0 bottom-[148px] sm:bottom-[160px] flex items-center justify-center pointer-events-none select-none z-0 px-4"
+        className="absolute left-0 right-0 top-[3px] sm:top-[2.1px] flex items-center justify-center pointer-events-none select-none z-0"
         aria-hidden="true"
       >
         <ConstructionMonogram isHeroHovered={isHeroHovered} />

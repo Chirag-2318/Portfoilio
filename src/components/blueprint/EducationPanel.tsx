@@ -5,7 +5,7 @@ import { PanelHeader } from "@/components/blueprint/PanelHeader";
 export function EducationPanel() {
   return (
     <div className="relative">
-      <PanelHeader title="Education" sheet="SHEET 06 / 09" />
+      <PanelHeader title="Education" sheetId="education" />
 
       <div className="divide-y divide-[var(--line)]">
         {/* Entry 1: PICT */}

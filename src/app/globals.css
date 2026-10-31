@@ -17,6 +17,7 @@
   --accent-muted: rgba(255, 255, 255, 0.03);
   --info: var(--accent);
   --ring: #ff5a2c;
+  --pattern-fg: rgba(255, 255, 255, 0.08);
 
   --tile-border: rgba(255, 255, 255, 0.14);
   --tile-bg: #121214;
@@ -53,6 +54,7 @@ html.light {
   --accent-muted: rgba(0, 0, 0, 0.03);
   --info: var(--accent);
   --ring: #e8441a;
+  --pattern-fg: rgba(9, 9, 11, 0.06);
 
   --tile-border: rgba(0, 0, 0, 0.16);
   --tile-bg: #fafafa;

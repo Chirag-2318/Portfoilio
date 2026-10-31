@@ -8,12 +8,19 @@ export type Project = {
   index: string;
   title: string;
   kind: string;          // short meta line
+  category: "Backend" | "Android";
   year?: string;
   context?: string;      // event/track, only when stated in the facts
   summary: string;       // 2–3 punchy lines
   bullets: string[];     // full details, verbatim facts
   techs: TechId[];
   stack?: string[];
+  cover: string;
+  coverAlt: string;
+  links?: {
+    github: string | null;
+    live: string | null;
+  };
 };
 
 export const site = {
@@ -23,6 +30,22 @@ export const site = {
   location: { city: "Pune", region: "Maharashtra", country: "India", timeZone: "Asia/Kolkata" },
   email: "chirag23nzr@gmail.com",
   phone: { display: "+91 80806 45366", href: "tel:+918080645366" },
+  links: {
+    githubUsername: null as string | null, // TODO: set when known
+    linkedinUrl: null as string | null,    // TODO: set when known
+    sarGenerator: {
+      github: null as string | null,       // TODO
+      live: null as string | null,         // TODO
+    },
+    validedi: {
+      github: null as string | null,       // TODO
+      live: null as string | null,         // TODO
+    },
+    arthix: {
+      github: null as string | null,       // TODO
+      live: null as string | null,         // TODO
+    },
+  },
   socials: {
     github: { label: "GitHub", url: `https://${PLACEHOLDER_HOST}/github` },     // PLACEHOLDER
     linkedin: { label: "LinkedIn", url: `https://${PLACEHOLDER_HOST}/linkedin` }, // PLACEHOLDER
@@ -165,6 +188,7 @@ export const site = {
       index: "01",
       title: "SAR Generator with Audit Trails",
       kind: "Hackathon project",
+      category: "Backend",
       summary:
         "A Spring Boot backend that automates Suspicious Activity Report generation. Role-based access for Analyst, Admin and Auditor, with audit logging throughout. A Python AI microservice drafts the narratives.",
       bullets: [
@@ -174,12 +198,19 @@ export const site = {
       ],
       techs: ["spring-boot", "java", "postgresql", "aws-s3", "jwt", "jpa", "python"],
       stack: ["Spring Boot", "Java", "PostgreSQL", "AWS S3", "JWT", "JPA / Hibernate", "Python"],
+      cover: "/projects/sar-generator.svg",
+      coverAlt: "Illustration of the SAR Generator interface",
+      links: {
+        github: null,
+        live: null,
+      },
     },
     {
       id: "validedi",
       index: "02",
       title: "ValidEDI — Healthcare EDI Parser and Validator",
       kind: "Hackathon project",
+      category: "Backend",
       year: "2025",
       summary:
         "An async FastAPI platform that parses and validates X12 HIPAA EDI transactions (837, 835, 834). 50+ validation rules, six access roles, and AI-assisted analysis through Groq Llama 3.3.",
@@ -189,12 +220,19 @@ export const site = {
       ],
       techs: ["fastapi", "postgresql", "sqlalchemy", "firebase", "aws-s3", "groq"],
       stack: ["FastAPI", "PostgreSQL", "SQLAlchemy", "Firebase", "AWS S3", "Groq"],
+      cover: "/projects/validedi.svg",
+      coverAlt: "Illustration of the ValidEDI interface",
+      links: {
+        github: null,
+        live: null,
+      },
     },
     {
       id: "arthix",
       index: "03",
       title: "ARTHIX — Zero-Typing UPI Expense Tracker",
       kind: "Android app",
+      category: "Android",
       year: "2026",
       context: "iQOO Hackathon 2026 · FinTech and Commerce",
       summary:
@@ -206,6 +244,12 @@ export const site = {
       ],
       techs: ["kotlin", "jetpack-compose", "room", "sqlcipher", "hilt", "mlkit", "whisper"],
       stack: ["Kotlin", "Jetpack Compose", "Room", "SQLCipher", "Hilt", "ML Kit", "Whisper (ONNX)"],
+      cover: "/projects/arthix.svg",
+      coverAlt: "Illustration of the ARTHIX app",
+      links: {
+        github: null,
+        live: null,
+      },
     },
   ] as Project[],
 } as const;

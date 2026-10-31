@@ -1,5 +1,6 @@
 export * from "./Panel";
 export * from "./PanelHeader";
+export * from "./SheetContext";
 export * from "./StripeDivider";
 export * from "./HandwrittenNote";
 export * from "./IconTile";
@@ -13,7 +14,6 @@ export * from "./AvatarBadge";
 export * from "./OverviewPanel";
 export * from "./SocialPanel";
 export * from "./AboutPanel";
-export * from "./NumbersPanel";
 export * from "./ExperiencePanel";
 export * from "./ProjectsPanel";
 export * from "./AchievementsPanel";

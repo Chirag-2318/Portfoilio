@@ -106,11 +106,6 @@ export function CommandMenu() {
             onSelect={() => navigate("#about")}
           />
           <CommandRow
-            label="Bill of materials"
-            hint="#numbers"
-            onSelect={() => navigate("#numbers")}
-          />
-          <CommandRow
             label="Experience"
             hint="#experience"
             onSelect={() => navigate("#experience")}

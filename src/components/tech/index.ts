@@ -1,2 +1,1 @@
-export * from "./TechTile";
-export * from "./TechRow";
+export * from "./TechChip";

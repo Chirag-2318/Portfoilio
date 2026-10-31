@@ -3,6 +3,7 @@
 import * as React from "react";
 import { cn } from "@/lib/cn";
 import { site } from "@/content/site";
+import { MosaicReveal } from "@/components/ui/MosaicReveal";
 
 interface AvatarBadgeProps {
   hasPhoto: boolean;
@@ -62,14 +63,17 @@ export function AvatarBadge({ hasPhoto, className }: AvatarBadgeProps) {
           aria-label={`Portrait of ${site.name.full}`}
         >
           {hasPhoto && !imageError ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <MosaicReveal
               src={site.assets.photo}
+              cols={4}
+              rows={4}
+              order="edges"
+              trigger="mount"
+              aspect="1 / 1"
               alt={site.assets.photoAlt}
+              rounded="rounded-[4px]"
+              className="w-full h-full object-cover object-top grayscale contrast-105 dark:contrast-115"
               onError={() => setImageError(true)}
-              className="w-full h-full object-cover object-top grayscale contrast-105 dark:contrast-115 transition-all"
-              loading="eager"
-              decoding="async"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-[var(--muted)] text-muted-foreground select-none">

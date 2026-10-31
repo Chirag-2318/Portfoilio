@@ -28,7 +28,7 @@ export function AboutPanel() {
 
   return (
     <div>
-      <PanelHeader noBottomLine sheet="SHEET 01 / 09">
+      <PanelHeader noBottomLine sheetId="about">
         <h2
           className="font-serif text-[2.25rem] leading-[1.05] font-normal tracking-[-0.005em] text-balance text-foreground min-h-[2.5rem] flex items-baseline gap-2"
           style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}

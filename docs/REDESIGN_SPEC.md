@@ -285,4 +285,77 @@ Following an architectural review to eliminate visual anxiety, reduce grid clutt
   - Dark mode: bg `#18181b`, text `#a1a1aa`, border `#27272a` (contrast ratio $> 5:1$).
 - **Experience Entry De-clutter**: Under Barclays "Summer Intern", removed redundant pill badges ("Hack-O-Hire", "Internship"). Kept only the company title, "Upcoming" status dot, and single bullet point fact.
 
+---
+
+## Polish Pass 3 (Tighter Hero, Mosaic Reveals, Project Covers, Activity Calendar, Compact Chips, Note Alignment, FrameCell)
+
+Documenting the refinements implemented in Polish Pass 3:
+
+### 1. Removal of "The Numbers" & Automatic Sheet Renumbering
+- **Deleted**: `NumbersPanel.tsx` removed from DOM; command menu entry `#numbers` removed.
+- **Dynamic Context**: Created `SheetContext.tsx` with `<SheetProvider>` and `useSheet(panelId)`.
+- Automatically renumbers panels based on active mounting state (e.g., handles conditional mounting of the GitHub activity panel).
+- Renumbered from `SHEET 01 / 08` through `SHEET 08 / 08` cleanly without hardcoded strings.
+- Exactly one 40px `StripeDivider` retained between About and Experience.
+
+### 2. Tighter Hero (40% Gap Reduction with Letter Geometry Preserved)
+- **Monogram Letters Bounding Box**: Kept unchanged within $<0.01\text{px}$ tolerance:
+  - 1440px desktop: $151.18\text{px} \times 105.00\text{px}$ (baseline: $151.19\text{px} \times 105.00\text{px}$).
+  - 390px mobile: $100.79\text{px} \times 70.00\text{px}$ (baseline: $100.79\text{px} \times 70.00\text{px}$).
+- **Gap A (Header bottom to top of monogram letters)**:
+  - 1440px: Reduced from $82.25\text{px}$ to $49.35\text{px}$ (exact $40\%$ reduction, $A' = 0.6A$).
+  - 390px: Reduced from $57.50\text{px}$ to $34.50\text{px}$ (exact $40\%$ reduction, $A' = 0.6A$).
+- **Gap B (Bottom of monogram letters to top of name/avatar row)**:
+  - 1440px: Reduced from $68.75\text{px}$ to $41.25\text{px}$ (exact $40\%$ reduction, $B' = 0.6B$).
+  - 390px: Reduced from $64.50\text{px}$ to $38.69\text{px}$ (exact $40\%$ reduction, $B' = 0.6B$).
+- **Hero Height**:
+  - 1440px: Reduced by $(32.90 + 27.50) = 60.40\text{px}$ from $440.00\text{px}$ to $379.60\text{px}$.
+  - 390px: Reduced by $(23.00 + 25.80) = 48.80\text{px}$ from $340.00\text{px}$ to $291.20\text{px}$.
+
+### 3. MosaicReveal Component
+- **Component**: `src/components/ui/MosaicReveal.tsx`.
+- **Canvas-Based Reveal**: Subdivides image into an $8 \times 8$ grid of cells; animates with GSAP `scale: 0`, `opacity: 0` to full visibility with subtle rotation and randomized stagger.
+- **Trigger**: Triggers at $35\%$ viewport intersection via IntersectionObserver (or on mount if already in view).
+- **Interactivity & A11y**: Click-to-replay animation; instant reveal on `prefers-reduced-motion`; zero-flash preload phase; accessible `role="img"` with descriptive `aria-label`.
+- **Applied to**: Avatar portrait (`AvatarBadge.tsx`) and featured Project covers (`ProjectsPanel.tsx`).
+
+### 4. Projects Panel Upgrade
+- **Category Filter Pills**: Interactive filter pills ("All", "Backend", "Android") with Framer Motion `layoutId="project-filter-pill"` animated sliding indicator.
+- **Original Vector Cover Art**: Created technical blueprint SVGs (`sar-generator.svg`, `validedi.svg`, `arthix.svg`) stored in `/public/projects/`.
+- **Live GitHub Star Counts**: Client-side fetch with 30-minute sessionStorage caching; displays star pill when repository exists.
+- **Conditional Action Buttons**: "Source", "Live", and "Case Study" action buttons appear only when links are defined; hides cleanly when `null`.
+- **Compact Tech Chips**: Integrated `TechChip` (size `sm`) displaying authentic brand icons.
+
+### 5. GitHub Contributions / Activity Panel
+- **Component**: `src/components/blueprint/ContributionsPanel.tsx`.
+- **Conditional Visibility**: Only mounts when `site.links.githubUsername` is a non-null valid string; hides with zero residual gap or layout jump when null.
+- **Calendar Matrix**: 7 rows $\times$ 53 columns rendering contribution intensity levels 0–4 (level 4 uses accent token `#ff5a2c` / `#e8441a`).
+- **Interactive Tooltip**: Solid floating popover on hover/focus displaying date and contribution count; supports keyboard roving tabindex (`ArrowLeft`, `ArrowRight`, `ArrowUp`, `ArrowDown`, `Home`, `End`).
+- **Entrance Animation**: Smooth column-by-column staggered fade.
+
+### 6. Compact TechChips & Stack Panel Height Reduction
+- **Component**: `src/components/tech/TechChip.tsx` replacing previous large tiles.
+- **Design**: Rounded-[6px] compact pill with dashed hairline border, brand icon via Iconify, and crisp mono/sans typography. Available in `sm` ($28\text{px}$) and `md` ($32\text{px}$).
+- **Stack Panel Height**:
+  - Baseline height: $504.30\text{px}$.
+  - Polish Pass 3 height: $309.80\text{px}$.
+  - Reduction: $38.57\%$ ($\ge 35\%$ required target of $\le 327.79\text{px}$).
+
+### 7. Precise Note Alignment
+- **"Find Me Here" Note**:
+  - Arrow tip positioned exactly $8\text{px}$ to the left of the first social button.
+  - Vertically aligned with the button midline ($Y_{\text{tip}} \in [Y_{\text{top}}, Y_{\text{bottom}}]$).
+- **"Say Hi" Note**:
+  - Arrow tip positioned exactly $8\text{px}$ to the left of the email action block.
+  - Vertically aligned with the email block midline.
+- **Responsive Display**: Hidden below $1280\text{px}$ (`hidden xl:flex`) to eliminate overlap on tablet and mobile viewports.
+
+### 8. FrameCell Pattern
+- **Component**: `src/components/ui/FrameCell.tsx`.
+- **Design**: Repeating $45^\circ$ diagonal linear hatch lines (`var(--pattern-fg)`) faded with an organic radial edge mask.
+- **Strict Usage**: Used strictly in two designated locations:
+  1. Contact CTA framing (`py-10 px-4 sm:px-6`).
+  2. 404 Not Found inline game frame (`p-2 sm:p-3`).
+
+
 

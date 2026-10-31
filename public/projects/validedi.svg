@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect width="1280" height="720" fill="#0f0f12" />
+
+  <!-- Outer frame -->
+  <rect x="40" y="40" width="1200" height="640" rx="10" fill="#141418" stroke="#26262b" stroke-width="1" />
+
+  <!-- Header -->
+  <line x1="40" y1="100" x2="1240" y2="100" stroke="#26262b" stroke-width="1" />
+  <circle cx="70" cy="70" r="5" fill="#26262b" />
+  <circle cx="86" cy="70" r="5" fill="#26262b" />
+  <circle cx="102" cy="70" r="5" fill="#26262b" />
+  <text x="130" y="74" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13" font-weight="500">validedi // HIPAA-X12-PARSER</text>
+
+  <!-- Left: Document column with 11 EDI-like lines -->
+  <g transform="translate(80, 130)">
+    <rect x="0" y="0" width="620" height="490" rx="8" fill="#111115" stroke="#26262b" stroke-width="1" />
+    <text x="24" y="36" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="12" font-weight="600">INPUT DOCUMENT: CLAIM_BATCH_837P.EDI</text>
+    <line x1="0" y1="52" x2="620" y2="52" stroke="#26262b" stroke-width="1" />
+
+    <!-- 11 EDI lines -->
+    <!-- Line 1 -->
+    <text x="24" y="85" fill="#a1a1aa" font-family="Geist Mono, ui-monospace, monospace" font-size="13">ISA*00*          *00*          *ZZ*SUBMITTER01    *ZZ*RECEIVER01     *...</text>
+    <!-- Line 2 -->
+    <text x="24" y="118" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13">GS*HC*SENDER*RECEIVER*20250315*1130*1*X*005010X222A1~</text>
+    <!-- Line 3 (highlighted with accent zigzag underline) -->
+    <text x="24" y="151" fill="#e4e4e7" font-family="Geist Mono, ui-monospace, monospace" font-size="13">ST*837*0001*005010X222A1~</text>
+    <path d="M24 161 L32 157 L40 161 L48 157 L56 161 L64 157 L72 161 L80 157 L88 161 L96 157 L104 161 L112 157 L120 161" stroke="#ff5a2c" stroke-width="1.5" fill="none" />
+    
+    <!-- Line 4 -->
+    <text x="24" y="184" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13">BHT*0019*00*BATCH00912*20250315*1130*CH~</text>
+    <!-- Line 5 -->
+    <text x="24" y="217" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13">NM1*41*2*PRIMARY CARE CLINIC*****XX*1982736450~</text>
+    <!-- Line 6 -->
+    <text x="24" y="250" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13">HL*1**20*1~</text>
+    <!-- Line 7 -->
+    <text x="24" y="283" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13">NM1*85*2*METRO BILLING SERVICES*****XX*9876543210~</text>
+    <!-- Line 8 (highlighted with accent zigzag underline) -->
+    <text x="24" y="316" fill="#e4e4e7" font-family="Geist Mono, ui-monospace, monospace" font-size="13">CLM*A98210*1250.00***11:B:1*Y*A*Y*Y~</text>
+    <path d="M24 326 L32 322 L40 326 L48 322 L56 326 L64 322 L72 326 L80 322 L88 326 L96 322 L104 326 L112 322 L120 326" stroke="#ff5a2c" stroke-width="1.5" fill="none" />
+
+    <!-- Line 9 -->
+    <text x="24" y="349" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13">HI*ABK:J45909*ABF:R051~</text>
+    <!-- Line 10 -->
+    <text x="24" y="382" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="13">NM1*IL*1*DOE*JOHN****MI*999887766~</text>
+    <!-- Line 11 -->
+    <text x="24" y="415" fill="#52525b" font-family="Geist Mono, ui-monospace, monospace" font-size="13">SE*28*0001~ GE*1*1~ IEA*1*000000001~</text>
+
+    <!-- Truncation ellipsis -->
+    <rect x="24" y="445" width="6" height="6" rx="1" fill="#3f3f46" />
+    <rect x="36" y="445" width="6" height="6" rx="1" fill="#3f3f46" />
+    <rect x="48" y="445" width="6" height="6" rx="1" fill="#3f3f46" />
+  </g>
+
+  <!-- Right: Validation list (6 rows with check/cross and bar) -->
+  <g transform="translate(740, 130)">
+    <rect x="0" y="0" width="460" height="490" rx="8" fill="#111115" stroke="#26262b" stroke-width="1" />
+    <text x="24" y="36" fill="#a1a1aa" font-family="Geist Mono, ui-monospace, monospace" font-size="13" font-weight="600">Validation Matrix (50+ rules)</text>
+    
+    <!-- Footer chip: 837 / 835 / 834 -->
+    <rect x="300" y="20" width="136" height="26" rx="13" fill="#1c1c22" stroke="#26262b" stroke-width="1" />
+    <text x="368" y="37" fill="#a1a1aa" font-family="Geist Mono, ui-monospace, monospace" font-size="11" font-weight="500" text-anchor="middle">837 / 835 / 834</text>
+
+    <line x1="0" y1="58" x2="460" y2="58" stroke="#26262b" stroke-width="1" />
+
+    <!-- 6 Validation Rows -->
+    <!-- Row 1: Valid -->
+    <g transform="translate(24, 85)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="#18181d" stroke="#26262b" stroke-width="1" />
+      <path d="M5 11 L9 15 L17 7" stroke="#a1a1aa" stroke-width="1.5" fill="none" />
+      <rect x="36" y="7" width="180" height="8" rx="2" fill="#71717a" />
+      <text x="360" y="15" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="11">LOOP 1000A</text>
+    </g>
+
+    <!-- Row 2: Valid -->
+    <g transform="translate(24, 135)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="#18181d" stroke="#26262b" stroke-width="1" />
+      <path d="M5 11 L9 15 L17 7" stroke="#a1a1aa" stroke-width="1.5" fill="none" />
+      <rect x="36" y="7" width="210" height="8" rx="2" fill="#71717a" />
+      <text x="360" y="15" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="11">LOOP 2000A</text>
+    </g>
+
+    <!-- Row 3: Flagged in accent -->
+    <g transform="translate(24, 185)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="#251613" stroke="#ff5a2c" stroke-width="1" />
+      <path d="M6 6 L16 16 M16 6 L6 16" stroke="#ff5a2c" stroke-width="1.5" />
+      <rect x="36" y="7" width="160" height="8" rx="2" fill="#ff5a2c" />
+      <text x="360" y="15" fill="#ff5a2c" font-family="Geist Mono, ui-monospace, monospace" font-size="11">RULE 2300-3</text>
+    </g>
+
+    <!-- Row 4: Valid -->
+    <g transform="translate(24, 235)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="#18181d" stroke="#26262b" stroke-width="1" />
+      <path d="M5 11 L9 15 L17 7" stroke="#a1a1aa" stroke-width="1.5" fill="none" />
+      <rect x="36" y="7" width="195" height="8" rx="2" fill="#71717a" />
+      <text x="360" y="15" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="11">LOOP 2310A</text>
+    </g>
+
+    <!-- Row 5: Valid -->
+    <g transform="translate(24, 285)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="#18181d" stroke="#26262b" stroke-width="1" />
+      <path d="M5 11 L9 15 L17 7" stroke="#a1a1aa" stroke-width="1.5" fill="none" />
+      <rect x="36" y="7" width="140" height="8" rx="2" fill="#71717a" />
+      <text x="360" y="15" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="11">LOOP 2400</text>
+    </g>
+
+    <!-- Row 6: Valid -->
+    <g transform="translate(24, 335)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="#18181d" stroke="#26262b" stroke-width="1" />
+      <path d="M5 11 L9 15 L17 7" stroke="#a1a1aa" stroke-width="1.5" fill="none" />
+      <rect x="36" y="7" width="230" height="8" rx="2" fill="#71717a" />
+      <text x="360" y="15" fill="#71717a" font-family="Geist Mono, ui-monospace, monospace" font-size="11">HI SEGMENT</text>
+    </g>
+
+    <line x1="24" y1="390" x2="436" y2="390" stroke="#26262b" stroke-width="1" />
+
+    <!-- AI inference indicator -->
+    <rect x="24" y="420" width="412" height="42" rx="6" fill="#18181d" stroke="#26262b" stroke-width="1" />
+    <text x="44" y="445" fill="#a1a1aa" font-family="Geist Mono, ui-monospace, monospace" font-size="12">Groq Llama 3.3 // Hierarchical Audit: PASSED</text>
+  </g>
+</svg>

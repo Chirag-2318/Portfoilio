@@ -44,7 +44,7 @@ export function ConstructionMonogram({ isHeroHovered = false }: ConstructionMono
       <svg
         viewBox="0 0 768 400"
         preserveAspectRatio="xMidYMid meet"
-        className="w-full h-full max-h-[140px] sm:max-h-[210px] overflow-visible block"
+        className="w-[268.8px] sm:w-[403.2px] h-[140px] sm:h-[210px] overflow-visible block"
       >
         {/* Whole composition shifted by +4 to center 312px bounding box at x = 384 */}
         <g transform="translate(4, 0)">

@@ -1,11 +1,15 @@
+"use client";
+
 import * as React from "react";
 import { cn } from "@/lib/cn";
+import { useSheet } from "./SheetContext";
 
 interface PanelHeaderProps {
   children?: React.ReactNode;
   title?: React.ReactNode;
   eyebrow?: string;
   sheet?: string;
+  sheetId?: string;
   className?: string;
   noBottomLine?: boolean;
 }
@@ -15,9 +19,13 @@ export function PanelHeader({
   title,
   eyebrow,
   sheet,
+  sheetId,
   className,
   noBottomLine = false,
 }: PanelHeaderProps) {
+  const computedSheet = useSheet(sheetId);
+  const displaySheet = sheet || computedSheet;
+
   return (
     <header
       className={cn(
@@ -44,9 +52,9 @@ export function PanelHeader({
 
         {children}
 
-        {sheet && (
+        {displaySheet && (
           <span className="font-mono text-xs text-[var(--dimension-foreground)] opacity-60 shrink-0 tracking-wider uppercase ml-auto">
-            {sheet}
+            {displaySheet}
           </span>
         )}
       </div>

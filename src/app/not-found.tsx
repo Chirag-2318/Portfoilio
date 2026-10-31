@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Panel } from "@/components/blueprint/Panel";
 import { StripeDivider } from "@/components/blueprint/StripeDivider";
+import { FrameCell } from "@/components/ui/FrameCell";
 import { ToppingOut } from "@/components/game/topping-out";
 
 export const metadata = {
@@ -28,7 +29,9 @@ export default function NotFound() {
             </p>
           </div>
 
-          <ToppingOut mode="inline" autoFocus={false} />
+          <FrameCell contentClassName="p-2 sm:p-3">
+            <ToppingOut mode="inline" autoFocus={false} />
+          </FrameCell>
 
           <div className="text-center pt-2">
             <Link

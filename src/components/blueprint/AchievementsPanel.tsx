@@ -31,7 +31,7 @@ export function AchievementsPanel() {
 
   return (
     <div className="relative">
-      <PanelHeader title="Achievements" sheet="SHEET 05 / 09" />
+      <PanelHeader title="Achievements" sheetId="achievements" />
 
       <div className="divide-y divide-[var(--line)]">
         {visibleItems.map((item) => (

@@ -3,6 +3,7 @@ import path from "node:path";
 
 const nextConfig: NextConfig = {
   output: "export",
+  devIndicators: false,
   images: { unoptimized: true },
   trailingSlash: true,
   reactStrictMode: true,

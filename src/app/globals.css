@@ -421,3 +421,13 @@ html.light {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Hide Next.js dev indicator in development */
+nextjs-portal,
+[data-nextjs-dev-tools-button],
+[data-nextjs-toast],
+div[data-nextjs-toast-wrapper] {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

@@ -166,14 +166,24 @@ export class RegistrationEngine {
 
   private updateColors() {
     try {
-      const style = getComputedStyle(document.documentElement);
-      const paper = style.getPropertyValue("--paper").trim() || "#F3F0E8";
-      const ink = style.getPropertyValue("--ink").trim() || "#15140F";
-      const ink2 = style.getPropertyValue("--ink-2").trim() || "#55514A";
-      const ink3 = style.getPropertyValue("--ink-3").trim() || "#7A756B";
-      const accent = style.getPropertyValue("--accent").trim() || "#C8321A";
       const isDark =
-        document.documentElement.getAttribute("data-theme") === "dark";
+        document.documentElement.classList.contains("dark") ||
+        !document.documentElement.classList.contains("light");
+      const style = getComputedStyle(document.documentElement);
+      const paper =
+        style.getPropertyValue("--background").trim() ||
+        (isDark ? "#09090b" : "#ffffff");
+      const ink =
+        style.getPropertyValue("--foreground").trim() ||
+        (isDark ? "#fafafa" : "#09090b");
+      const ink2 =
+        style.getPropertyValue("--muted-foreground").trim() ||
+        (isDark ? "#a1a1aa" : "#71717a");
+      const ink3 =
+        style.getPropertyValue("--line-strong").trim() ||
+        (isDark ? "#2a2a2f" : "#dcdce0");
+      // Blueprint grid tokens: foreground accents only, no color
+      const accent = ink;
 
       this.colors = { paper, ink, ink2, ink3, accent, isDark };
     } catch {

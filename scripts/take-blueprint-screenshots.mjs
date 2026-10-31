@@ -130,6 +130,18 @@ async function main() {
       await wait(300);
     }
 
+    async function scrollTo(selector) {
+      await cdp.send("Runtime.evaluate", {
+        expression: `
+          (() => {
+            const el = document.querySelector('${selector}');
+            if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+          })()
+        `,
+      });
+      await wait(400);
+    }
+
     async function capture(filename) {
       const screenshot = await cdp.send("Page.captureScreenshot", {
         format: "png",
@@ -141,53 +153,62 @@ async function main() {
       console.log(`Saved screenshot: ${filename}`);
     }
 
-    // 1. 1440px desktop
+    // 1. 1440px desktop - top
     await setViewport(1440, 900, false);
     await setTheme("dark");
-    await capture("blueprint-1440-dark.png");
+    await scrollTo("#top");
+    await capture("blueprint-1440-dark-top.png");
 
     await setTheme("light");
-    await capture("blueprint-1440-light.png");
+    await capture("blueprint-1440-light-top.png");
+
+    // 1b. 1440px desktop - mid (Numbers, Experience, Projects)
+    await setTheme("dark");
+    await scrollTo("#numbers");
+    await capture("blueprint-1440-dark-mid.png");
+
+    // 1c. 1440px desktop - bottom (Achievements, Education, Stack, Resume, Contact)
+    await scrollTo("#achievements");
+    await capture("blueprint-1440-dark-bottom.png");
 
     // 2. 768px tablet
     await setViewport(768, 1024, false);
+    await scrollTo("#top");
     await setTheme("dark");
     await capture("blueprint-768-dark.png");
 
-    await setTheme("light");
-    await capture("blueprint-768-light.png");
+    await scrollTo("#numbers");
+    await capture("blueprint-768-dark-sections.png");
 
     // 3. 390px mobile
     await setViewport(390, 844, true);
+    await scrollTo("#top");
     await setTheme("dark");
-    await capture("blueprint-390-dark.png");
+    await capture("blueprint-390-dark-top.png");
 
-    await setTheme("light");
-    await capture("blueprint-390-light.png");
+    await scrollTo("#numbers");
+    await capture("blueprint-390-dark-sections.png");
+
+    await scrollTo("#contact");
+    await capture("blueprint-390-dark-bottom.png");
 
     // 4. Verify checks via DOM evaluation
     const evalResult = await cdp.send("Runtime.evaluate", {
       returnByValue: true,
       expression: `
         (() => {
-          const hero = document.getElementById('top');
-          const heroRect = hero ? hero.getBoundingClientRect() : null;
-          const dimensions = Array.from(document.querySelectorAll('[aria-hidden="true"]')).filter(el =>
-            ['768', 'Ø160', '32'].some(val => el.textContent?.includes(val))
-          );
+          const sections = ['top', 'overview', 'socials', 'about', 'numbers', 'experience', 'projects', 'achievements', 'education', 'stack', 'resume', 'contact'];
+          const missingSections = sections.filter(id => !document.getElementById(id));
           const handwrittenNotes = Array.from(document.querySelectorAll('span')).filter(s =>
             s.style.fontFamily?.includes('caveat')
           );
-          const overview = document.getElementById('overview');
-          const overviewRect = overview ? overview.getBoundingClientRect() : null;
+          const hasHorizontalOverflow = document.documentElement.scrollWidth > document.documentElement.clientWidth;
 
           return {
-            heroHeight: heroRect ? heroRect.height : 0,
-            heroWidth: heroRect ? heroRect.width : 0,
-            hasOverview: Boolean(overview),
-            dimensionCount: dimensions.length,
+            missingSections,
             handwrittenCount: handwrittenNotes.length,
-            htmlClasses: document.documentElement.className,
+            hasHorizontalOverflow,
+            totalSectionsFound: sections.length - missingSections.length,
           };
         })()
       `,
@@ -195,19 +216,11 @@ async function main() {
 
     console.log("Evaluation Results:", evalResult.result.value);
 
-    // 5. Test Command palette opening
+    // 5. Test 404 page
+    await cdp.send("Page.navigate", { url: `http://localhost:${SERVER_PORT}/_not-found` });
+    await wait(1500);
     await setViewport(1440, 900, false);
-    await setTheme("dark");
-    await cdp.send("Runtime.evaluate", {
-      expression: `
-        (() => {
-          const searchBtn = document.querySelector('button[title*="Search"]');
-          if (searchBtn) searchBtn.click();
-        })()
-      `,
-    });
-    await wait(400);
-    await capture("blueprint-command-palette-dark.png");
+    await capture("blueprint-404-dark.png");
 
     cdp.close();
   } finally {

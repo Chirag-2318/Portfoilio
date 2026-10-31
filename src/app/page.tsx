@@ -1,11 +1,19 @@
 import { getAssets } from "@/lib/assets";
 import { Panel } from "@/components/blueprint/Panel";
-import { PanelHeader } from "@/components/blueprint/PanelHeader";
 import { StripeDivider } from "@/components/blueprint/StripeDivider";
 import { HeroBlueprint } from "@/components/blueprint/HeroBlueprint";
 import { OverviewPanel } from "@/components/blueprint/OverviewPanel";
 import { SocialPanel } from "@/components/blueprint/SocialPanel";
+import { ContributionsPanel } from "@/components/blueprint/ContributionsPanel";
 import { AboutPanel } from "@/components/blueprint/AboutPanel";
+import { NumbersPanel } from "@/components/blueprint/NumbersPanel";
+import { ExperiencePanel } from "@/components/blueprint/ExperiencePanel";
+import { ProjectsPanel } from "@/components/blueprint/ProjectsPanel";
+import { AchievementsPanel } from "@/components/blueprint/AchievementsPanel";
+import { EducationPanel } from "@/components/blueprint/EducationPanel";
+import { StackPanel } from "@/components/blueprint/StackPanel";
+import { ResumePanel } from "@/components/blueprint/ResumePanel";
+import { ContactPanel } from "@/components/blueprint/ContactPanel";
 import { Dimension } from "@/components/blueprint/Dimension";
 
 export default function HomePage() {
@@ -30,47 +38,86 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 4. Overview Panel (sr-only h2 "Overview", screen lines not doubled) */}
+      {/* 4. Overview Panel (id=overview) */}
       <Panel id="overview" noTopLine noBottomLine>
         <OverviewPanel />
       </Panel>
 
-      {/* 5. Social Panel (sr-only h2 "Social links", screen lines suppressed against neighbours) */}
+      {/* 5. Social Panel (id=socials) */}
       <Panel id="socials" noTopLine noBottomLine>
         <SocialPanel />
       </Panel>
 
-      {/* 6. Stripe Divider between Social and About */}
+      {/* 6. GitHub Contributions (conditionally rendered if username configured) */}
+      <ContributionsPanel />
+
+      {/* 7. Stripe Divider before About */}
       <StripeDivider />
 
-      {/* 7. About Panel (time-aware greeting header + resume facts + double rule) */}
+      {/* 8. About Panel (id=about) */}
       <Panel id="about" noTopLine noBottomLine>
         <AboutPanel />
       </Panel>
 
-      {/* 8. Temporary "Coming together" placeholder panel for sections Prompt 2 will build */}
-      <Panel id="projects" noTopLine noBottomLine className="mt-8">
-        <PanelHeader
-          eyebrow="BLUEPRINT GRID · PROMPT 2"
-          title="Experience, Projects &amp; Credentials"
-        />
-        <div className="p-4 py-8 flex flex-col items-center justify-center text-center gap-2">
-          <div className="size-8 rounded-md border border-dashed border-[var(--border)] flex items-center justify-center text-muted-foreground font-mono text-xs">
-            §
-          </div>
-          <p className="font-mono text-xs text-muted-foreground max-w-sm mt-1">
-            Experience timeline, project case studies, credentials and interactive game overlay will be assembled in Prompt 2.
-          </p>
-        </div>
+      {/* 9. Stripe Divider between About / Numbers */}
+      <StripeDivider />
+
+      {/* 10. In Numbers (id=numbers) */}
+      <Panel id="numbers" noTopLine noBottomLine>
+        <NumbersPanel />
       </Panel>
 
-      {/* 9. Footer row: panel-like row with mono text-xs muted "Designed and built by Chirag Patil" and current year */}
-      <div className="mx-auto max-w-3xl border-x border-[var(--line)] screen-line-top screen-line-bottom relative bg-[var(--background)] px-4 py-4 flex items-center justify-between text-xs font-mono text-muted-foreground">
+      {/* 11. Stripe Divider between Numbers / Experience */}
+      <StripeDivider />
+
+      {/* 12. Experience (id=experience) */}
+      <Panel id="experience" noTopLine>
+        <ExperiencePanel />
+      </Panel>
+
+      {/* 13. Projects (id=projects) */}
+      <Panel id="projects" noTopLine noBottomLine>
+        <ProjectsPanel />
+      </Panel>
+
+      {/* 14. Stripe Divider between Projects / Achievements */}
+      <StripeDivider />
+
+      {/* 15. Achievements (id=achievements) */}
+      <Panel id="achievements" noTopLine>
+        <AchievementsPanel />
+      </Panel>
+
+      {/* 16. Education (id=education) */}
+      <Panel id="education" noTopLine>
+        <EducationPanel />
+      </Panel>
+
+      {/* 17. Stack (id=stack) */}
+      <Panel id="stack" noTopLine noBottomLine>
+        <StackPanel />
+      </Panel>
+
+      {/* 18. Stripe Divider between Stack / Resume */}
+      <StripeDivider />
+
+      {/* 19. Resume (id=resume) */}
+      <Panel id="resume" noTopLine>
+        <ResumePanel />
+      </Panel>
+
+      {/* 20. Contact (id=contact) */}
+      <Panel id="contact" noTopLine noBottomLine>
+        <ContactPanel />
+      </Panel>
+
+      {/* 21. Footer row: panel-like row with mono text-xs muted "Designed and built by Chirag Patil" and current year */}
+      <footer className="mx-auto max-w-3xl border-x border-[var(--line)] screen-line-top relative bg-[var(--background)] px-4 py-4 flex items-center justify-between text-xs font-mono text-muted-foreground">
         <span>Designed and built by Chirag Patil</span>
         <span className="tabular-nums">{currentYear}</span>
-      </div>
+      </footer>
 
-      {/* 10. Closing Stripe */}
+      {/* 22. Closing Stripe */}
       <StripeDivider />
     </div>
   );

@@ -4,7 +4,6 @@ import * as React from "react";
 import { createPortal } from "react-dom";
 import { animate } from "motion/react";
 import { Icon } from "@/components/ui/Icon";
-import { Button } from "@/components/ui/Button";
 import { EASE_IN_OUT_QUART } from "@/components/motion/ease";
 import { useReducedMotionFlag } from "./useReducedMotionFlag";
 import {
@@ -136,7 +135,6 @@ export default function GameOverlay({
       );
     };
 
-    // Initial focus: prioritize card buttons, fallback to dialog
     const focusTimer = setTimeout(() => {
       const focusables = getFocusables();
       const primaryBtn = el.querySelector<HTMLElement>(".card-container button");
@@ -215,31 +213,31 @@ export default function GameOverlay({
       aria-labelledby="reg-title"
       tabIndex={-1}
       style={{ clipPath: "circle(0px at 0px 0px)" }}
-      className="fixed inset-0 z-70 flex flex-col bg-paper text-ink overscroll-none select-none outline-none overflow-hidden h-dvh pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] pl-[env(safe-area-inset-left,0px)] pr-[env(safe-area-inset-right,0px)]"
+      className="fixed inset-0 z-70 flex flex-col bg-[var(--background)] text-foreground overscroll-none select-none outline-none overflow-hidden h-dvh pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)] pl-[env(safe-area-inset-left,0px)] pr-[env(safe-area-inset-right,0px)]"
     >
-      {/* Crop mark corners (hidden below 480px) */}
+      {/* Corner hairlines */}
       <div
         aria-hidden="true"
-        className="hidden sm:block absolute top-3 left-3 w-2.5 h-2.5 border-t border-l border-ink-3 pointer-events-none"
+        className="hidden sm:block absolute top-3 left-3 w-3 h-3 border-t border-l border-[var(--line-strong)] pointer-events-none"
       />
       <div
         aria-hidden="true"
-        className="hidden sm:block absolute top-3 right-3 w-2.5 h-2.5 border-t border-r border-ink-3 pointer-events-none"
+        className="hidden sm:block absolute top-3 right-3 w-3 h-3 border-t border-r border-[var(--line-strong)] pointer-events-none"
       />
       <div
         aria-hidden="true"
-        className="hidden sm:block absolute bottom-3 left-3 w-2.5 h-2.5 border-b border-l border-ink-3 pointer-events-none"
+        className="hidden sm:block absolute bottom-3 left-3 w-3 h-3 border-b border-l border-[var(--line-strong)] pointer-events-none"
       />
       <div
         aria-hidden="true"
-        className="hidden sm:block absolute bottom-3 right-3 w-2.5 h-2.5 border-b border-r border-ink-3 pointer-events-none"
+        className="hidden sm:block absolute bottom-3 right-3 w-3 h-3 border-b border-r border-[var(--line-strong)] pointer-events-none"
       />
 
       {/* Top Bar */}
-      <header className="relative z-10 h-[52px] border-b border-line flex items-center justify-between px-4 sm:px-8 shrink-0 bg-paper">
+      <header className="relative z-10 h-13 border-b border-[var(--line)] flex items-center justify-between px-4 sm:px-8 shrink-0 bg-[var(--background)]">
         {/* Title */}
         <div className="flex items-center gap-3">
-          <h2 id="reg-title" className="label text-ink">
+          <h2 id="reg-title" className="font-mono text-xs uppercase tracking-wider text-muted-foreground font-semibold">
             REGISTRATION
           </h2>
         </div>
@@ -248,7 +246,7 @@ export default function GameOverlay({
         <div className="flex items-center gap-4 sm:gap-6 text-xs font-mono">
           {/* Sheets */}
           <div className="flex items-center gap-1.5" aria-label={`${sheets} sheets remaining`}>
-            <span className="hidden min-[420px]:inline text-ink-2 uppercase tracking-wider text-[11px]">
+            <span className="hidden min-[420px]:inline text-muted-foreground uppercase tracking-wider text-[11px]">
               Sheets
             </span>
             <div className="flex items-center gap-1" aria-hidden="true">
@@ -257,10 +255,10 @@ export default function GameOverlay({
                 return (
                   <div
                     key={idx}
-                    className={`w-[14px] h-[18px] rounded-[2px] transition-colors duration-160 ${
+                    className={`w-3.5 h-4.5 rounded-[2px] transition-colors duration-160 ${
                       isAvailable
-                        ? "bg-ink border border-ink"
-                        : "bg-transparent border border-ink-3"
+                        ? "bg-foreground border border-foreground"
+                        : "bg-transparent border border-[var(--line-strong)]"
                     }`}
                   />
                 );
@@ -269,21 +267,21 @@ export default function GameOverlay({
           </div>
 
           {/* Prints */}
-          <div className="flex items-center gap-1.5 tabular">
-            <span className="text-ink-2 uppercase tracking-wider text-[11px]">
+          <div className="flex items-center gap-1.5 tabular-nums">
+            <span className="text-muted-foreground uppercase tracking-wider text-[11px]">
               Prints
             </span>
-            <span className="font-semibold text-ink text-sm sm:text-base">
+            <span className="font-semibold text-foreground text-sm sm:text-base">
               {String(prints).padStart(2, "0")}
             </span>
           </div>
 
           {/* Best */}
-          <div className="flex items-center gap-1.5 tabular">
-            <span className="text-ink-2 uppercase tracking-wider text-[11px]">
+          <div className="flex items-center gap-1.5 tabular-nums">
+            <span className="text-muted-foreground uppercase tracking-wider text-[11px]">
               Best
             </span>
-            <span className="text-ink-2 text-sm sm:text-base">
+            <span className="text-muted-foreground text-sm sm:text-base">
               {String(best).padStart(2, "0")}
             </span>
           </div>
@@ -296,29 +294,29 @@ export default function GameOverlay({
             onClick={handlePauseToggle}
             disabled={gameState === "intro" || gameState === "over"}
             aria-label={gameState === "paused" ? "Resume" : "Pause"}
-            className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-paper-2 active:scale-[0.96] text-ink transition-all disabled:opacity-30 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+            className="size-8 rounded-lg flex items-center justify-center hover:bg-[var(--muted)] active:scale-[0.96] text-muted-foreground hover:text-foreground transition-all disabled:opacity-30 disabled:pointer-events-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Icon
               name={gameState === "paused" ? "play" : "pause"}
-              size={18}
+              size={16}
             />
           </button>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close game"
-            className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-paper-2 active:scale-[0.96] text-ink transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+            className="size-8 rounded-lg flex items-center justify-center hover:bg-[var(--muted)] active:scale-[0.96] text-muted-foreground hover:text-foreground transition-all focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <Icon name="x" size={18} />
+            <Icon name="x" size={16} />
           </button>
         </div>
 
-        {/* 2px timer line under the top bar */}
+        {/* 2px timer line under the top bar - foreground accent only */}
         <div
           ref={timerLineRef}
           aria-hidden="true"
           style={{ transformOrigin: "left", transform: "scaleX(1)" }}
-          className="absolute bottom-0 left-0 right-0 h-[2px] bg-accent will-change-transform"
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground will-change-transform"
         />
       </header>
 
@@ -326,10 +324,10 @@ export default function GameOverlay({
       <div
         role="status"
         aria-live="polite"
-        className="relative z-10 h-5 flex items-center justify-center text-xs font-mono text-ink select-none"
+        className="relative z-10 h-5 flex items-center justify-center text-xs font-mono text-foreground select-none"
       >
         {statusMessage && (
-          <span className="px-2 py-0.5 rounded bg-paper-2 text-accent tracking-wider uppercase text-[11px] font-semibold">
+          <span className="px-2 py-0.5 rounded bg-[var(--muted)] text-foreground tracking-wider uppercase text-[11px] font-semibold border border-[var(--border)]">
             {statusMessage}
           </span>
         )}
@@ -355,57 +353,57 @@ export default function GameOverlay({
 
         {/* Centered Cards */}
         {gameState !== "playing" && (
-          <div className="card-container absolute inset-0 z-20 flex items-center justify-center p-4 bg-paper/40 pointer-events-auto">
+          <div className="card-container absolute inset-0 z-20 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs pointer-events-auto">
             {/* INTRO CARD */}
             {gameState === "intro" && (
-              <div className="w-[min(360px,calc(100%-32px))] bg-surface border border-line-strong rounded-2xl p-6 sm:p-7 shadow-lg flex flex-col gap-4 text-center">
-                <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-ink">
+              <div className="w-[min(360px,calc(100%-32px))] bg-[var(--background)] border border-[var(--line-strong)] rounded-xl p-6 sm:p-7 shadow-2xl flex flex-col gap-4 text-center">
+                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
                   Registration
                 </h3>
-                <p className="text-sm text-ink-2 leading-relaxed">
-                  Steer the red plate onto the outline and hold it there for a
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Steer the plate onto the outline and hold it there for a
                   second. You have three sheets, and each one runs out of time.
                 </p>
                 <div className="pt-2 flex justify-center">
-                  <Button
-                    variant="primary"
+                  <button
+                    type="button"
                     onClick={handleStart}
-                    className="w-full justify-center"
+                    className="w-full h-10 px-4 rounded-lg bg-foreground text-background font-medium text-sm flex items-center justify-center hover:opacity-90 active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     Start
-                  </Button>
+                  </button>
                 </div>
               </div>
             )}
 
             {/* PAUSED CARD */}
             {gameState === "paused" && (
-              <div className="w-[min(360px,calc(100%-32px))] bg-surface border border-line-strong rounded-2xl p-6 sm:p-7 shadow-lg flex flex-col gap-4 text-center">
-                <h3 className="font-serif text-2xl font-medium tracking-tight text-ink">
+              <div className="w-[min(360px,calc(100%-32px))] bg-[var(--background)] border border-[var(--line-strong)] rounded-xl p-6 sm:p-7 shadow-2xl flex flex-col gap-4 text-center">
+                <h3 className="text-2xl font-medium tracking-tight text-foreground">
                   Paused
                 </h3>
                 <div className="flex flex-col gap-2 pt-2">
-                  <Button
-                    variant="primary"
+                  <button
+                    type="button"
                     onClick={handlePauseToggle}
-                    className="w-full justify-center"
+                    className="w-full h-10 px-4 rounded-lg bg-foreground text-background font-medium text-sm flex items-center justify-center hover:opacity-90 active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     Resume
-                  </Button>
-                  <Button
-                    variant="outline"
+                  </button>
+                  <button
+                    type="button"
                     onClick={handleRestart}
-                    className="w-full justify-center"
+                    className="w-full h-10 px-4 rounded-lg border border-[var(--border)] text-foreground font-medium text-sm flex items-center justify-center hover:bg-[var(--muted)] active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     Restart
-                  </Button>
-                  <Button
-                    variant="ghost"
+                  </button>
+                  <button
+                    type="button"
                     onClick={onClose}
-                    className="w-full justify-center"
+                    className="w-full h-9 rounded-lg text-muted-foreground hover:text-foreground font-medium text-sm flex items-center justify-center hover:bg-[var(--muted)] transition-colors"
                   >
                     Close
-                  </Button>
+                  </button>
                 </div>
               </div>
             )}
@@ -415,36 +413,36 @@ export default function GameOverlay({
               <div
                 role="region"
                 aria-live="polite"
-                className="w-[min(360px,calc(100%-32px))] bg-surface border border-line-strong rounded-2xl p-6 sm:p-7 shadow-lg flex flex-col gap-4 text-center"
+                className="w-[min(360px,calc(100%-32px))] bg-[var(--background)] border border-[var(--line-strong)] rounded-xl p-6 sm:p-7 shadow-2xl flex flex-col gap-4 text-center"
               >
-                <h3 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-ink">
+                <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">
                   Out of sheets.
                 </h3>
-                <div className="text-sm font-mono text-ink-2 flex items-center justify-center gap-2">
+                <div className="text-sm font-mono text-muted-foreground flex items-center justify-center gap-2">
                   <span>Prints {String(prints).padStart(2, "0")}</span>
                   <span>·</span>
                   <span>Best {String(best).padStart(2, "0")}</span>
                   {isNewBest && (
-                    <span className="font-semibold text-accent ml-1">
+                    <span className="font-semibold text-foreground ml-1">
                       New best.
                     </span>
                   )}
                 </div>
                 <div className="flex flex-col gap-2 pt-2">
-                  <Button
-                    variant="primary"
+                  <button
+                    type="button"
                     onClick={handleRestart}
-                    className="w-full justify-center"
+                    className="w-full h-10 px-4 rounded-lg bg-foreground text-background font-medium text-sm flex items-center justify-center hover:opacity-90 active:scale-[0.98] transition-all focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     Play again
-                  </Button>
-                  <Button
-                    variant="ghost"
+                  </button>
+                  <button
+                    type="button"
                     onClick={onClose}
-                    className="w-full justify-center"
+                    className="w-full h-9 rounded-lg text-muted-foreground hover:text-foreground font-medium text-sm flex items-center justify-center hover:bg-[var(--muted)] transition-colors"
                   >
                     Close
-                  </Button>
+                  </button>
                 </div>
               </div>
             )}
@@ -454,7 +452,7 @@ export default function GameOverlay({
 
       {/* Bottom Hint Line */}
       {gameState === "playing" && (
-        <footer className="relative z-10 h-9 flex items-center justify-center px-4 text-center text-xs font-mono text-ink-2 select-none bg-paper">
+        <footer className="relative z-10 h-9 flex items-center justify-center px-4 text-center text-xs font-mono text-muted-foreground select-none bg-[var(--background)] border-t border-[var(--line)]">
           <span className="hidden sm:inline">
             Arrows or WASD, or drag · P pause · Esc exit
           </span>

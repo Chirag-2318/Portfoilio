@@ -101,6 +101,16 @@ export function CommandMenu() {
             onSelect={() => navigate("#overview")}
           />
           <CommandRow
+            label="About"
+            hint="#about"
+            onSelect={() => navigate("#about")}
+          />
+          <CommandRow
+            label="In Numbers"
+            hint="#numbers"
+            onSelect={() => navigate("#numbers")}
+          />
+          <CommandRow
             label="Experience"
             hint="#experience"
             onSelect={() => navigate("#experience")}
@@ -111,14 +121,29 @@ export function CommandMenu() {
             onSelect={() => navigate("#projects")}
           />
           <CommandRow
+            label="Achievements"
+            hint="#achievements"
+            onSelect={() => navigate("#achievements")}
+          />
+          <CommandRow
             label="Education"
             hint="#education"
             onSelect={() => navigate("#education")}
           />
           <CommandRow
-            label="About"
-            hint="#about"
-            onSelect={() => navigate("#about")}
+            label="Stack"
+            hint="#stack"
+            onSelect={() => navigate("#stack")}
+          />
+          <CommandRow
+            label="Resume"
+            hint="#resume"
+            onSelect={() => navigate("#resume")}
+          />
+          <CommandRow
+            label="Contact"
+            hint="#contact"
+            onSelect={() => navigate("#contact")}
           />
         </Command.Group>
 

@@ -8,17 +8,17 @@ export const contentType = "image/png";
 export const alt = "Chirag Patil — Developer in Pune";
 
 export default async function OpenGraphImage() {
-  const [frauncesData, monoData] = await Promise.all([
+  const [geistSansData, geistMonoData] = await Promise.all([
     fs.readFile(
       path.join(
         process.cwd(),
-        "node_modules/@fontsource/fraunces/files/fraunces-latin-500-normal.woff"
+        "node_modules/geist/dist/fonts/geist-sans/Geist-Bold.ttf"
       )
     ),
     fs.readFile(
       path.join(
         process.cwd(),
-        "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff"
+        "node_modules/geist/dist/fonts/geist-mono/GeistMono-Regular.ttf"
       )
     ),
   ]);
@@ -29,238 +29,167 @@ export default async function OpenGraphImage() {
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: "#F3F0E8",
+          backgroundColor: "#09090b",
           display: "flex",
           position: "relative",
-          overflow: "hidden",
-          fontFamily: "Fraunces, serif",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "60px 80px",
+          fontFamily: "GeistSans, sans-serif",
+          color: "#fafafa",
         }}
       >
-        {/* Inner border inset 32px */}
+        {/* Full height hairlines at x=60 and x=1140 */}
         <div
           style={{
             position: "absolute",
-            top: 32,
-            left: 32,
-            right: 32,
-            bottom: 32,
-            border: "1px solid #D8D3C6",
+            top: 0,
+            bottom: 0,
+            left: 60,
+            width: 1,
+            backgroundColor: "#27272a",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            right: 60,
+            width: 1,
+            backgroundColor: "#27272a",
+          }}
+        />
+
+        {/* Full width hairlines at y=60 and y=570 */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 60,
+            height: 1,
+            backgroundColor: "#27272a",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 60,
+            height: 1,
+            backgroundColor: "#27272a",
+          }}
+        />
+
+        {/* Top bar with dimensions and drawing metadata */}
+        <div
+          style={{
             display: "flex",
-            flexDirection: "column",
+            alignItems: "center",
             justifyContent: "space-between",
-            padding: "48px 56px",
+            fontFamily: "GeistMono, monospace",
+            fontSize: 13,
+            color: "#71717a",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
           }}
         >
-          {/* Top-left mono label */}
-          <div
-            style={{
-              fontFamily: "JetBrains Mono, monospace",
-              fontSize: 14,
-              letterSpacing: "0.14em",
-              color: "#55514A",
-              textTransform: "uppercase",
-            }}
-          >
-            ENGINEERING STUDENT & DEVELOPER — PUNE, INDIA
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ color: "#fafafa", fontWeight: 700 }}>CP // 01</span>
+            <span>·</span>
+            <span>BLUEPRINT GRID SPEC</span>
           </div>
 
-          {/* Center / Bottom content area */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              position: "relative",
-            }}
-          >
-            {/* Name */}
-            <div
-              style={{
-                fontSize: 144,
-                lineHeight: 0.9,
-                fontWeight: 500,
-                color: "#15140F",
-                letterSpacing: "-0.03em",
-                display: "flex",
-                alignItems: "baseline",
-              }}
-            >
-              <span>Chirag Patil</span>
-              <span style={{ color: "#B82D17" }}>.</span>
-            </div>
-
-            {/* Tagline */}
-            <div
-              style={{
-                fontSize: 38,
-                lineHeight: 1.2,
-                color: "#55514A",
-                marginTop: 28,
-                letterSpacing: "-0.01em",
-              }}
-            >
-              I do the task. Then I take it further.
-            </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span>DIM: 1200 × 630</span>
+            <span>·</span>
+            <span>SCALE 1:1</span>
           </div>
         </div>
 
-        {/* Four corner crop marks (in #7A756B) */}
-        {/* Top-left */}
+        {/* Center / Body Content */}
         <div
           style={{
-            position: "absolute",
-            top: 24,
-            left: 24,
-            width: 16,
-            height: 1,
-            backgroundColor: "#7A756B",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 24,
-            left: 24,
-            width: 1,
-            height: 16,
-            backgroundColor: "#7A756B",
-          }}
-        />
-
-        {/* Top-right */}
-        <div
-          style={{
-            position: "absolute",
-            top: 24,
-            right: 24,
-            width: 16,
-            height: 1,
-            backgroundColor: "#7A756B",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 24,
-            right: 24,
-            width: 1,
-            height: 16,
-            backgroundColor: "#7A756B",
-          }}
-        />
-
-        {/* Bottom-left */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 24,
-            left: 24,
-            width: 16,
-            height: 1,
-            backgroundColor: "#7A756B",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 24,
-            left: 24,
-            width: 1,
-            height: 16,
-            backgroundColor: "#7A756B",
-          }}
-        />
-
-        {/* Bottom-right */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 24,
-            right: 24,
-            width: 16,
-            height: 1,
-            backgroundColor: "#7A756B",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 24,
-            right: 24,
-            width: 1,
-            height: 16,
-            backgroundColor: "#7A756B",
-          }}
-        />
-
-        {/* Accent circle "lens" (~220px) partly overlapping the name at right */}
-        <div
-          style={{
-            position: "absolute",
-            right: 120,
-            top: 200,
-            width: 220,
-            height: 220,
-            borderRadius: "50%",
-            border: "1px solid #B82D17",
             display: "flex",
-            alignItems: "center",
+            flexDirection: "column",
             justifyContent: "center",
+            gap: 16,
           }}
         >
-          {/* Outward ticks (N, S, E, W) */}
+          {/* Eyebrow */}
           <div
             style={{
-              position: "absolute",
-              top: -6,
-              left: 109,
-              width: 1,
-              height: 6,
-              backgroundColor: "#B82D17",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: -6,
-              left: 109,
-              width: 1,
-              height: 6,
-              backgroundColor: "#B82D17",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              left: -6,
-              top: 109,
-              width: 6,
-              height: 1,
-              backgroundColor: "#B82D17",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              right: -6,
-              top: 109,
-              width: 6,
-              height: 1,
-              backgroundColor: "#B82D17",
-            }}
-          />
-          {/* Label under the lens */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: -28,
-              fontFamily: "JetBrains Mono, monospace",
-              fontSize: 12,
-              letterSpacing: "0.1em",
-              color: "#B82D17",
+              fontFamily: "GeistMono, monospace",
+              fontSize: 16,
+              color: "#a1a1aa",
+              letterSpacing: "0.15em",
               textTransform: "uppercase",
             }}
           >
-            1st pass
+            DEVELOPER · PUNE, INDIA
+          </div>
+
+          {/* Name */}
+          <div
+            style={{
+              fontSize: 88,
+              lineHeight: 1.0,
+              fontWeight: 800,
+              color: "#fafafa",
+              letterSpacing: "-0.04em",
+              display: "flex",
+              alignItems: "baseline",
+            }}
+          >
+            CHIRAG PATIL
+          </div>
+
+          {/* Discipline / summary */}
+          <div
+            style={{
+              fontSize: 24,
+              color: "#a1a1aa",
+              maxWidth: 820,
+              lineHeight: 1.4,
+              display: "flex",
+              gap: 12,
+            }}
+          >
+            Backends, Android apps and hackathon builds.
+          </div>
+        </div>
+
+        {/* Bottom bar with technical notations */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontFamily: "GeistMono, monospace",
+            fontSize: 13,
+            color: "#71717a",
+            borderTop: "1px dashed #27272a",
+            paddingTop: 16,
+          }}
+        >
+          <div style={{ display: "flex", gap: 24 }}>
+            <span>COL: 768px</span>
+            <span>AVATAR: Ø160</span>
+            <span>STRIPE: 32px</span>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                backgroundColor: "#3b82f6",
+              }}
+            />
+            <span style={{ color: "#a1a1aa" }}>ACTIVE // 2026</span>
           </div>
         </div>
       </div>
@@ -269,14 +198,14 @@ export default async function OpenGraphImage() {
       ...size,
       fonts: [
         {
-          name: "Fraunces",
-          data: frauncesData,
-          weight: 500,
+          name: "GeistSans",
+          data: geistSansData,
+          weight: 700,
           style: "normal",
         },
         {
-          name: "JetBrains Mono",
-          data: monoData,
+          name: "GeistMono",
+          data: geistMonoData,
           weight: 400,
           style: "normal",
         },
@@ -284,4 +213,3 @@ export default async function OpenGraphImage() {
     }
   );
 }
-

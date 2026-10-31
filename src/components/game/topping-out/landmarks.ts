@@ -46,3 +46,4 @@ export function getMilestoneNote(floors: number): string | null {
       return null;
   }
 }
+

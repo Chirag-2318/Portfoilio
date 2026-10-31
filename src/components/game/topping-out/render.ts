@@ -579,3 +579,4 @@ export class ToppingOutRenderer {
     ctx.restore();
   }
 }
+

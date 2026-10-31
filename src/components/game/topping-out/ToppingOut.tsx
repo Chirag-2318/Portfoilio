@@ -10,7 +10,7 @@ import {
   type ConfettiParticle,
 } from "./render";
 import { ToppingOutAudio } from "./audio";
-import { isSoundMuted, setSoundMuted, SoundToggle } from "@/components/sound/sound-effects";
+import { isSoundMuted, setSoundMuted, SoundToggle, playSound } from "@/components/sound/sound-effects";
 import {
   getLandmarkLine,
   getMilestoneNote,
@@ -22,6 +22,25 @@ import {
   blockColors,
   type PaletteId,
 } from "./palettes";
+import {
+  type Achievement,
+  type AchievementState,
+  type AchievementEvent,
+  ACHIEVEMENTS,
+  reduceAchievements,
+  nextGoal,
+  progressFor,
+} from "./achievements";
+import {
+  loadInitialState,
+  saveAchievements,
+  saveLifetimeStats,
+  hasSeenAchievementHint,
+  markSeenAchievementHint,
+} from "./storage";
+import { AchievementToastContainer } from "./AchievementToast";
+import { TrophyShelf } from "./TrophyShelf";
+import { getAchievementGlyph, TrophyGlyph, TierPips } from "./glyphs";
 
 export interface ToppingOutProps {
   mode?: "overlay" | "inline";
@@ -76,6 +95,16 @@ export function ToppingOut({
   const [shareFeedback, setShareFeedback] = React.useState<string | null>(null);
   const [showHint, setShowHint] = React.useState(true);
 
+  // Achievement system state and refs
+  const [achState, setAchState] = React.useState<AchievementState>(loadInitialState);
+  const achStateRef = React.useRef<AchievementState>(achState);
+  const [showTrophyShelf, setShowTrophyShelf] = React.useState(false);
+  const [activeToasts, setActiveToasts] = React.useState<Achievement[]>([]);
+  const toastQueueRef = React.useRef<Achievement[]>([]);
+  const toastTimerRef = React.useRef<number | null>(null);
+  const unlockedThisRunRef = React.useRef<Achievement[]>([]);
+  const [showAchHint, setShowAchHint] = React.useState(false);
+
   // Initialize best score, top 3, palette, audio, and font ready check
   React.useEffect(() => {
     let initialBest = 0;
@@ -91,7 +120,7 @@ export function ToppingOut({
 
       const storedPalette = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_PALETTE) as PaletteId;
       if (storedPalette && PALETTES.some((p) => p.id === storedPalette)) {
-        if (isPaletteUnlocked(storedPalette, initialBest)) {
+        if (isPaletteUnlocked(storedPalette, initialBest, achStateRef.current.unlocked)) {
           setPalette(storedPalette);
         }
       }
@@ -99,6 +128,14 @@ export function ToppingOut({
       // ignore storage error
     }
     setBest(initialBest);
+
+    if (!hasSeenAchievementHint()) {
+      setShowAchHint(true);
+      const hintTimer = setTimeout(() => {
+        setShowAchHint(false);
+        markSeenAchievementHint();
+      }, 5000);
+    }
 
     const audio = new ToppingOutAudio();
     audioRef.current = audio;
@@ -175,11 +212,11 @@ export function ToppingOut({
     }
   }, [gameState]);
 
-  // Helper to spawn confetti burst (24 solid rectangles)
+  // Helper to spawn confetti burst
   const spawnConfetti = React.useCallback(
-    (x: number, y: number, currentPalette: PaletteId) => {
+    (x: number, y: number, currentPalette: PaletteId, countOverride?: number) => {
       if (reducedMotionRef.current) return;
-      const count = GAME_CONSTANTS.CONFETTI_BURST_COUNT;
+      const count = countOverride ?? GAME_CONSTANTS.CONFETTI_BURST_COUNT;
       const colors = blockColors(floors, currentPalette);
       const paletteColors = [
         colors.top,
@@ -212,6 +249,71 @@ export function ToppingOut({
     [floors]
   );
 
+  // Toast and achievement dispatch helpers
+  const dismissToast = React.useCallback((id: string) => {
+    setActiveToasts((prev) => prev.filter((a) => a.id !== id));
+  }, []);
+
+  const processToastQueue = React.useCallback(() => {
+    if (toastTimerRef.current !== null) return;
+    if (toastQueueRef.current.length === 0) return;
+
+    const next = toastQueueRef.current.shift()!;
+    setActiveToasts((prev) => {
+      if (prev.length >= 4) {
+        return [...prev.slice(1), next];
+      }
+      return [...prev, next];
+    });
+
+    if (next.tier === 3) {
+      playSound("success");
+      const canvas = canvasRef.current;
+      if (canvas) {
+        spawnConfetti(canvas.width / 2, 80, palette, 18);
+      }
+    } else {
+      playSound("notification");
+    }
+
+    toastTimerRef.current = window.setTimeout(() => {
+      toastTimerRef.current = null;
+      processToastQueue();
+    }, 250);
+  }, [palette, spawnConfetti]);
+
+  const enqueueToast = React.useCallback(
+    (ach: Achievement) => {
+      toastQueueRef.current.push(ach);
+      processToastQueue();
+    },
+    [processToastQueue]
+  );
+
+  const dispatchAchievement = React.useCallback(
+    (event: AchievementEvent) => {
+      const { state: next, unlockedNow } = reduceAchievements(achStateRef.current, event);
+      achStateRef.current = next;
+      setAchState(next);
+
+      if (unlockedNow.length > 0) {
+        saveAchievements(next.unlocked);
+        unlockedThisRunRef.current.push(...unlockedNow);
+        const topSlab = engineRef.current?.getTopSlab();
+        for (const ach of unlockedNow) {
+          if (topSlab) {
+            rendererRef.current?.addPlaque(topSlab.id, ach.tier);
+          }
+          enqueueToast(ach);
+        }
+      }
+      if (event.type === "gameover") {
+        saveLifetimeStats(next.lifetime);
+      }
+    },
+    [enqueueToast]
+  );
+
   // Handle Drop trigger
   const handleTrigger = React.useCallback(() => {
     const audio = audioRef.current;
@@ -237,6 +339,8 @@ export function ToppingOut({
       const now = performance.now();
       if (now >= canRestartAtRef.current) {
         engine.reset(engine.best);
+        rendererRef.current?.clearPlaques();
+        unlockedThisRunRef.current = [];
         engine.start();
         setGameState("playing");
         setFloors(0);
@@ -269,6 +373,11 @@ export function ToppingOut({
 
         // Record top 3 scores
         const finalFloors = engine.floors;
+        dispatchAchievement({
+          type: "gameover",
+          floors: finalFloors,
+          hour: new Date().getHours(),
+        });
         let nextTop3: number[] = [];
         try {
           const stored = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_TOP3);
@@ -306,6 +415,27 @@ export function ToppingOut({
       const canvas = canvasRef.current;
       const renderer = rendererRef.current;
       const topSlab = engine.getTopSlab();
+
+      // Dispatch achievement events
+      const kind = dropRes.type === "perfect" ? "perfect" : "trim";
+      const sign = (Math.sign(dropRes.delta) || 0) as -1 | 0 | 1;
+      const axis = newFloors % 2 === 1 ? "x" : "z";
+      const widthAfter = dropRes.newSlab ? (axis === "x" ? dropRes.newSlab.w : dropRes.newSlab.d) : 1;
+      dispatchAchievement({
+        type: "placed",
+        kind,
+        floor: newFloors,
+        widthAfter,
+        sign,
+      });
+
+      if (dropRes.regrew) {
+        dispatchAchievement({ type: "regrow" });
+      }
+
+      if (crossed) {
+        dispatchAchievement({ type: "landmark", id: crossed.id });
+      }
 
       if (canvas && renderer && topSlab) {
         const scale = renderer.getScale(canvas.width / (window.devicePixelRatio || 1));
@@ -383,7 +513,7 @@ export function ToppingOut({
         audio?.playTrim();
       }
     }
-  }, [palette, spawnConfetti]);
+  }, [palette, spawnConfetti, dispatchAchievement]);
 
   // Keyboard navigation & controls
   const handleKeyDown = React.useCallback(
@@ -392,6 +522,13 @@ export function ToppingOut({
         e.preventDefault();
         e.stopPropagation();
         handleTrigger();
+        return;
+      }
+
+      if (e.key === "t" || e.key === "T") {
+        e.preventDefault();
+        e.stopPropagation();
+        setShowTrophyShelf((prev) => !prev);
         return;
       }
 
@@ -424,7 +561,9 @@ export function ToppingOut({
   const cyclePalette = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     const currentBest = best;
-    const unlocked = PALETTES.filter((p) => isPaletteUnlocked(p.id, currentBest));
+    const unlocked = PALETTES.filter((p) =>
+      isPaletteUnlocked(p.id, currentBest, achStateRef.current.unlocked)
+    );
     const currentIndex = unlocked.findIndex((p) => p.id === palette);
     const nextIndex = (currentIndex + 1) % unlocked.length;
     const nextPalette = unlocked[nextIndex].id;
@@ -550,6 +689,22 @@ export function ToppingOut({
             renderer.drawFlag(ctx, slab, now / 1000, displayW, displayH, scale, cameraShift, reducedMotionRef.current);
           }
         }
+
+        // Draw engraved achievement plaque if one exists for this slab
+        const slabPlaque = renderer.plaques.find((p) => p.slabId === slab.id);
+        if (slabPlaque) {
+          renderer.drawPlaque(
+            ctx,
+            slab,
+            slabPlaque,
+            now,
+            displayW,
+            displayH,
+            scale,
+            cameraShift,
+            reducedMotionRef.current
+          );
+        }
       });
 
       // 3. Draw falling debris pieces (solid while falling, fade during last 300ms)
@@ -674,7 +829,11 @@ export function ToppingOut({
   }, [isPaused, palette]);
 
   const isOverlay = mode === "overlay";
-  const nextUnlockMeta = PALETTES.find((p) => !isPaletteUnlocked(p.id, best));
+  const nextUnlockMeta = PALETTES.find(
+    (p) => !isPaletteUnlocked(p.id, best, achState.unlocked)
+  );
+  const nextGoalAch = nextGoal(achState);
+  const unlockedCount = Object.keys(achState.unlocked).length;
 
   return (
     <div
@@ -696,7 +855,7 @@ export function ToppingOut({
 
       {/* ─── HUD: Solid Chips for High Legibility ─── */}
 
-      {/* Top-Left: Floors Counter Chip */}
+      {/* Top-Left: Floors Counter Chip & Next Goal */}
       <div
         onClick={(e) => e.stopPropagation()}
         className="absolute top-4 left-4 z-20 bg-[var(--background)] border border-[var(--line-strong)] rounded-md px-3 py-2 flex flex-col justify-center shadow-xs select-none pointer-events-auto"
@@ -712,6 +871,33 @@ export function ToppingOut({
           <span>·</span>
           <span>BEST {best}</span>
         </div>
+
+        {/* Next Goal Chip */}
+        {nextGoalAch && (
+          <button
+            type="button"
+            data-sound="select"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowTrophyShelf(true);
+            }}
+            className="mt-2 flex items-center gap-1.5 px-2 py-1 rounded border border-[var(--line)] bg-[var(--muted)]/40 hover:bg-[var(--muted)]/80 text-[10px] font-mono text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors text-left cursor-pointer"
+            title={`Next goal: ${nextGoalAch.name}. Click to view Trophy Shelf`}
+          >
+            <span className="uppercase text-[9px] text-[var(--accent)] font-semibold">Goal</span>
+            <span className="truncate max-w-[110px] text-[var(--foreground)] font-sans font-medium">
+              {nextGoalAch.name}
+            </span>
+            {(() => {
+              const p = progressFor(nextGoalAch, achState);
+              return p && p.target > 1 ? (
+                <span className="text-[9px] text-[var(--muted-foreground)] shrink-0 font-mono">
+                  {p.current}/{p.target}
+                </span>
+              ) : null;
+            })()}
+          </button>
+        )}
       </div>
 
       {/* Top-Right: Icon Controls Row */}
@@ -719,6 +905,22 @@ export function ToppingOut({
         onClick={(e) => e.stopPropagation()}
         className="absolute top-4 right-4 z-20 flex items-center gap-2 select-none pointer-events-auto"
       >
+        {/* Trophy Shelf Button */}
+        <button
+          type="button"
+          data-sound="select"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowTrophyShelf(true);
+          }}
+          aria-label={`Trophy Shelf: ${unlockedCount} of 16 unlocked. Click or press T`}
+          title={`Trophy Shelf (${unlockedCount}/16) — Press T`}
+          className="h-9 px-2.5 rounded-md bg-[var(--background)] border border-[var(--line-strong)] text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring font-mono text-xs"
+        >
+          <TrophyGlyph className="size-4 text-[var(--accent)]" />
+          <span>{unlockedCount}/16</span>
+        </button>
+
         {/* Palette Selector Button */}
         <button
           type="button"
@@ -727,7 +929,9 @@ export function ToppingOut({
           aria-label={`Palette: ${palette}. Click to cycle`}
           title={
             nextUnlockMeta
-              ? `Current: ${palette.toUpperCase()}. Reach ${nextUnlockMeta.unlockThreshold} floors to unlock ${nextUnlockMeta.name}`
+              ? nextUnlockMeta.unlockHint
+                ? `Current: ${palette.toUpperCase()}. ${nextUnlockMeta.unlockHint} to unlock ${nextUnlockMeta.name}`
+                : `Current: ${palette.toUpperCase()}. Reach ${nextUnlockMeta.unlockThreshold} floors to unlock ${nextUnlockMeta.name}`
               : `Current: ${palette.toUpperCase()}`
           }
           className="size-9 rounded-md bg-[var(--background)] border border-[var(--line-strong)] text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
@@ -743,10 +947,14 @@ export function ToppingOut({
                     ? "#c084fc"
                     : palette === "mint"
                     ? "#34d399"
-                    : "#a1a1aa",
+                    : palette === "mono"
+                    ? "#a1a1aa"
+                    : palette === "gold"
+                    ? "#eab308"
+                    : "#d97706",
               }}
             />
-            {nextUnlockMeta && best < nextUnlockMeta.unlockThreshold && (
+            {nextUnlockMeta && !isPaletteUnlocked(nextUnlockMeta.id, best, achState.unlocked) && (
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-muted-foreground/60 ml-0.5">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -780,13 +988,28 @@ export function ToppingOut({
         )}
       </div>
 
+      {/* First-time Achievement Hint */}
+      {showAchHint && (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowAchHint(false);
+            markSeenAchievementHint();
+          }}
+          className="absolute top-16 left-1/2 -translate-x-1/2 z-20 bg-[var(--background)] border border-[var(--line-strong)] rounded-md px-3 py-1.5 font-mono text-xs text-muted-foreground shadow-xs pointer-events-auto transition-opacity duration-300 select-none whitespace-nowrap flex items-center gap-2 cursor-pointer hover:text-foreground"
+        >
+          <TrophyGlyph className="size-3.5 text-[var(--accent)]" />
+          <span>Press [T] for Trophy Shelf · 16 achievements to earn</span>
+        </div>
+      )}
+
       {/* Bottom-Center: Hint Chip */}
       {showHint && (
         <div
           onClick={(e) => e.stopPropagation()}
           className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 bg-[var(--background)] border border-[var(--line-strong)] rounded-md px-3 py-1.5 font-mono text-xs text-muted-foreground shadow-xs pointer-events-none transition-opacity duration-500 select-none whitespace-nowrap"
         >
-          <span className="hidden sm:inline">Space / click: drop · P: pause · M: sound · Esc: close</span>
+          <span className="hidden sm:inline">Space / click: drop · T: trophies · P: pause · M: sound · Esc: close</span>
           <span className="sm:hidden">Tap to drop</span>
         </div>
       )}
@@ -826,6 +1049,53 @@ export function ToppingOut({
               </div>
             )}
 
+            {/* Unlocked this run */}
+            {unlockedThisRunRef.current.length > 0 && (
+              <div className="border-t border-[var(--line)] pt-3 text-left">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--accent)] mb-1.5 flex items-center justify-between">
+                  <span>Unlocked this run</span>
+                  <span>+{unlockedThisRunRef.current.length}</span>
+                </div>
+                <div className="space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
+                  {unlockedThisRunRef.current.map((ach) => {
+                    const Glyph = getAchievementGlyph(ach.id);
+                    return (
+                      <div
+                        key={ach.id}
+                        className="flex items-center gap-2 p-1.5 rounded bg-[var(--muted)]/40 border border-[var(--line)]"
+                      >
+                        <Glyph className="size-4 text-[var(--accent)] shrink-0" />
+                        <div className="min-w-0 flex-1 text-left">
+                          <div className="text-xs font-semibold text-foreground truncate">
+                            {ach.name}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground truncate">
+                            {ach.flavour}
+                          </div>
+                        </div>
+                        <TierPips tier={ach.tier} />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Next goal teaser */}
+            {nextGoalAch && (
+              <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground bg-[var(--muted)]/20 px-2.5 py-1.5 rounded border border-[var(--line)] text-left">
+                <span className="truncate mr-2">
+                  Next: <strong className="text-foreground font-sans font-medium">{nextGoalAch.name}</strong>
+                </span>
+                {(() => {
+                  const p = progressFor(nextGoalAch, achState);
+                  return p && p.target > 1 ? (
+                    <span className="shrink-0">{p.current}/{p.target}</span>
+                  ) : null;
+                })()}
+              </div>
+            )}
+
             {/* Top 3 Scores */}
             {top3.length >= 2 && (
               <div className="font-mono text-xs text-muted-foreground tracking-wide">
@@ -845,6 +1115,16 @@ export function ToppingOut({
               </button>
 
               <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  data-sound="select"
+                  onClick={() => setShowTrophyShelf(true)}
+                  className="flex-1 py-1.5 px-3 rounded-md font-mono text-xs bg-[var(--muted)] border border-[var(--line-strong)] text-foreground hover:bg-[var(--line)] transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring flex items-center justify-center gap-1.5"
+                >
+                  <TrophyGlyph className="size-3.5 text-[var(--accent)]" />
+                  <span>Trophies ({unlockedCount}/16)</span>
+                </button>
+
                 <button
                   type="button"
                   data-sound="select"
@@ -868,6 +1148,18 @@ export function ToppingOut({
           </div>
         </div>
       )}
+
+      {/* ─── Overlays: Toasts & Trophy Shelf Modal ─── */}
+      <AchievementToastContainer
+        toasts={activeToasts}
+        onDismiss={dismissToast}
+      />
+
+      <TrophyShelf
+        isOpen={showTrophyShelf}
+        onClose={() => setShowTrophyShelf(false)}
+        state={achState}
+      />
     </div>
   );
 }

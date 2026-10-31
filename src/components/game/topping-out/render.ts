@@ -74,6 +74,12 @@ export interface ActiveMilestone {
   duration: number;
 }
 
+export interface Plaque {
+  slabId: number;
+  tier: 1 | 2 | 3;
+  timestamp: number;
+}
+
 export function readThemeColors(): ThemeColors {
   if (typeof window === "undefined") {
     return {
@@ -105,6 +111,7 @@ export function readThemeColors(): ThemeColors {
 
 export class ToppingOutRenderer {
   public colors: ThemeColors;
+  public plaques: Plaque[] = [];
 
   constructor() {
     this.colors = readThemeColors();
@@ -112,6 +119,17 @@ export class ToppingOutRenderer {
 
   public updateTheme() {
     this.colors = readThemeColors();
+  }
+
+  public addPlaque(slabId: number, tier: 1 | 2 | 3, now: number = Date.now()) {
+    this.plaques.push({ slabId, tier, timestamp: now });
+    if (this.plaques.length > 5) {
+      this.plaques.shift();
+    }
+  }
+
+  public clearPlaques() {
+    this.plaques = [];
   }
 
   public getScale(canvasWidth: number): number {
@@ -564,4 +582,80 @@ export class ToppingOutRenderer {
     }
     ctx.restore();
   }
+
+  /**
+   * Draw engraved achievement plaque on the left face of a slab
+   */
+  public drawPlaque(
+    ctx: CanvasRenderingContext2D,
+    slab: Slab,
+    plaque: Plaque,
+    now: number,
+    width: number,
+    height: number,
+    scale: number,
+    cameraShift: number,
+    reducedMotion: boolean
+  ) {
+    // Center of left face: x = slab.x, yMid = (slab.y0 + slab.y1) / 2, z = slab.z + slab.d / 2
+    const center = this.project(
+      slab.x,
+      (slab.y0 + slab.y1) / 2,
+      slab.z + slab.d / 2,
+      width,
+      height,
+      scale,
+      cameraShift
+    );
+    const elapsed = now - plaque.timestamp;
+    let s = 1.0;
+    if (!reducedMotion && elapsed < 200) {
+      s = 1.4 - 0.4 * (elapsed / 200);
+    }
+
+    const pw = 14 * s;
+    const ph = 10 * s;
+
+    ctx.save();
+    ctx.translate(center.px, center.py);
+
+    // Rounded rectangle 14x10
+    ctx.beginPath();
+    const r = 1.5 * s;
+    const hx = -pw / 2;
+    const hy = -ph / 2;
+    if (typeof (ctx as any).roundRect === "function") {
+      (ctx as any).roundRect(hx, hy, pw, ph, r);
+    } else {
+      ctx.rect(hx, hy, pw, ph);
+    }
+    ctx.fillStyle = this.colors.background;
+    ctx.fill();
+    ctx.strokeStyle = this.colors.foreground;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Tier pips (1-3 dots)
+    ctx.fillStyle = this.colors.accent;
+    const dotR = 1.2 * s;
+    if (plaque.tier === 1) {
+      ctx.beginPath();
+      ctx.arc(0, 0, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (plaque.tier === 2) {
+      ctx.beginPath();
+      ctx.arc(-2.5 * s, 0, dotR, 0, Math.PI * 2);
+      ctx.arc(2.5 * s, 0, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (plaque.tier === 3) {
+      ctx.beginPath();
+      ctx.arc(-3.5 * s, 0, dotR, 0, Math.PI * 2);
+      ctx.arc(0, 0, dotR, 0, Math.PI * 2);
+      ctx.arc(3.5 * s, 0, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
 }
+

@@ -206,62 +206,6 @@
   - `scripts/take-screenshots-p5.mjs`
   - `docs/DECISIONS.md`
   - `docs/PROGRESS.md`
-## Prompt 7 of 10 — Motion and Micro-interaction Polish, Pixel Perfect Components, IconSpace Icons
-- **What was done**:
-  - Conducted comprehensive codebase motion audit: created `docs/MOTION_AUDIT.md` cataloguing all 25 motion interactions, verifying 100% adherence to the motion budget in `docs/DESIGN.md` §5 (zero infinite loops, zero idle pulses, zero sound, complete reduced-motion support).
-  - Executed IconSpace CLI tests: `npx iconspace add arrow email call -d src/components/icons -y --no-install`. Vendored `ArrowIcon`, `EmailIcon`, and `CallIcon` into `src/components/icons/`. Updated `src/components/ui/Icon.tsx` with clean `Omit<React.SVGProps<SVGSVGElement>, "ref">` typing, routing `mail` and `phone` to IconSpace icons and gracefully falling back to `lucide-react` for remaining icons (`sun`, `moon`, `copy`, `check`, `download`, `printer`, `search`, `x`, `chevron-down`, `external`).
-  - Vendored Pixel Perfect UI components with third-party MIT license attribution in `THIRD_PARTY_NOTICES.md` (`Copyright (c) 2026 Vansh Nagar`):
-    - `src/components/pp/FlipTextReveal.tsx` (accessible character stream flip with `sr-only` text and CSS `motion-reduce:transform-none` preventing SSR hydration mismatches).
-    - `src/components/pp/InertiaArrowCard.tsx` (spring inertia pointer tracking with clamped displacement).
-  - Built component adapters:
-    - `src/components/motion/FlipText.tsx`: Replaced `RollText` in `NavLinks.tsx` and plain text in `EmailLink.tsx` with `<FlipText>`.
-    - `src/components/ui/MagneticArrow.tsx`: Dynamic lazy GSAP loader (`await import("gsap")`) on first pointer hover, completely excluding GSAP from initial page bundles. Integrated into primary CTA ("See the work"), Contact CTA ("Write an email"), and desktop "Next project" button in `ProjectDetail.tsx`.
-  - Micro-interactions polished:
-    - Added `html.theme-fade` 200ms background/color transition class for 240ms on theme toggle.
-    - Expanded coarse pointer hit target to 44px (`[@media(pointer:coarse)]:-inset-1`) on icon buttons (`ThemeToggle`, `GameSlot`, `Header` command button, `IndexList` copy button).
-    - Added desktop "Next project" button in `ProjectDetail.tsx` with `MagneticArrow` that smoothly cycles URL hash (`#sar` -> `#validedi` -> `#arthix` -> `#sar`).
-    - Fixed `motion/react` numeric animation syntax in `Curtain.tsx` (`animate(0, 1, { duration, ease, onUpdate })`).
-  - Comprehensive verification and test execution:
-    - `docs/MOTION_AUDIT.md` created.
-    - `scripts/take-screenshots-p7.mjs` executed: captured 16 screenshots across 390px, 768px, 1440px in light and dark modes.
-    - `scripts/smoke-test-all.mjs` executed: 0 console errors across all routes and history navigation.
-    - `npm run lint` passes with 0 errors and 0 warnings.
-    - `npm run build` passes with 0 errors (static export).
-- **Files created/modified**:
-  - `THIRD_PARTY_NOTICES.md` (created)
-  - `docs/MOTION_AUDIT.md` (created)
-  - `src/components/icons/ArrowIcon.tsx` (created by iconspace)
-  - `src/components/icons/EmailIcon.tsx` (created by iconspace)
-  - `src/components/icons/CallIcon.tsx` (created by iconspace)
-  - `src/components/icons/scrub.ts` (created by iconspace)
-  - `src/components/icons/types.ts` (created by iconspace)
-  - `src/components/pp/FlipTextReveal.tsx` (created)
-  - `src/components/pp/InertiaArrowCard.tsx` (created)
-  - `src/components/motion/FlipText.tsx` (created)
-  - `src/components/ui/MagneticArrow.tsx` (created)
-  - `scripts/take-screenshots-p7.mjs` (created)
-  - `src/components/shell/NavLinks.tsx` (modified)
-  - `src/components/contact/EmailLink.tsx` (modified)
-  - `src/components/contact/ContactView.tsx` (modified)
-  - `src/components/home/HeroContent.tsx` (modified)
-  - `src/components/home/IndexList.tsx` (modified)
-  - `src/components/work/ProjectDetail.tsx` (modified)
-  - `src/components/work/WorkView.tsx` (modified)
-  - `src/components/ui/Icon.tsx` (modified)
-  - `src/components/transition/Curtain.tsx` (modified)
-  - `src/components/shell/ThemeToggle.tsx` (modified)
-  - `src/components/shell/GameSlot.tsx` (modified)
-  - `src/components/shell/Header.tsx` (modified)
-  - `src/app/globals.css` (modified)
-  - `docs/DESIGN.md` (modified)
-  - `docs/DECISIONS.md` (modified)
-  - `docs/PROGRESS.md` (modified)
-- **Deliberate Placeholders Still to Be Replaced**:
-  - GameSlot popover ("arriving soon" placeholder) — to be implemented in Prompt 8.
-  - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
-
-
-
 
 ## Prompt 6 of 10 — Resume View and Contact View
 - **What was done**:
@@ -376,8 +320,42 @@
   - `docs/DECISIONS.md` (modified)
   - `docs/PROGRESS.md` (modified)
 - **Deliberate Placeholders Still to Be Replaced**:
-  - GameSlot popover ("arriving soon" placeholder) — to be implemented in Prompt 8.
   - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
+## Prompt 8 of 10 — The Optional Game: "Registration"
+- **What was done**:
+  - Built the optional "Registration" print alignment mini-game:
+    - `src/components/game/shapes.ts`: 8 geometric and typographic shape paths (circle, square, triangle, ring, cross, rounded-rect, glyph C, glyph P) within a 100×100 coordinate box, with `evenodd` fill rule support for rings/glyphs.
+    - `src/components/game/difficulty.ts`: Mathematical difficulty curves for time limit ($7.0s \to 2.4s$), spatial tolerance ($10px \to 3px$), and drift wander ($0 \to 120 px/s^2$) based on prints completed.
+    - `src/components/game/useReducedMotionFlag.ts`: Hydration-safe `useSyncExternalStore` hook for `prefers-reduced-motion: reduce`.
+    - `src/components/game/engine.ts`: High-performance 2D Canvas engine with DPR adaptation, CSS variable theme synchronization (MutationObserver), smooth keyboard & touch/mouse inertia drag tracking, dynamic drift wander, hold-time accumulator (160ms alignment check), snap flash animation, and smooth sheet sliding. Light theme uses `globalCompositeOperation = "multiply"` for authentic ink layering; dark theme uses `"screen"` so the accent plate glows over the dark paper background.
+    - `src/components/game/RegistrationCanvas.tsx`: Canvas wrapper with imperative handle, lifecycle cleanup, and direct DOM timer line animation (no React re-renders during active frame loops).
+    - `src/components/game/GameOverlay.tsx`: Accessible modal dialog (`role="dialog"`, `aria-modal="true"`, `aria-labelledby="reg-title"`) setting `#app-root` inert, locking body scroll, with circular clip-path reveal (fade in reduced motion), live score HUD (Sheets, Prints, Best), pause toggle, and end-of-game card with score persistence to `localStorage["cp:registration:best"]`.
+    - `src/components/shell/GameProvider.tsx`: Code splitting with `next/dynamic` (`ssr: false`) ensuring 0 KB added to initial route bundles; exposed `openGame(origin?)`, `closeGame()`, and `preloadGame()`.
+    - `src/components/shell/GameSlot.tsx`: Replaced temporary popover with interactive launcher button featuring hover/focus preloading.
+    - `src/components/command/CommandMenu.tsx`: Connected "Play Registration" command to open the game overlay.
+    - `src/components/ui/Icon.tsx`: Added Lucide "pause" and "play" icons.
+  - Testing & Verification:
+    - Created `scripts/test-game.mjs` verifying slot button click, Esc closing, command menu invocation, keyboard navigation, drag alignment, pause/resume, all 8 shapes cycling, dark/light theme compositing, and captured screenshots across 390px, 768px, and 1440px viewports.
+    - Build (`npm run build`) passes static export with 0 errors.
+    - ESLint (`npm run lint`) passes with 0 errors and 0 warnings.
+- **Files created/modified**:
+  - `src/components/game/shapes.ts` (created)
+  - `src/components/game/difficulty.ts` (created)
+  - `src/components/game/useReducedMotionFlag.ts` (created)
+  - `src/components/game/engine.ts` (created)
+  - `src/components/game/RegistrationCanvas.tsx` (created)
+  - `src/components/game/GameOverlay.tsx` (created)
+  - `src/components/shell/GameProvider.tsx` (modified)
+  - `src/components/shell/GameSlot.tsx` (modified)
+  - `src/components/command/CommandMenu.tsx` (modified)
+  - `src/components/ui/Icon.tsx` (modified)
+  - `scripts/test-game.mjs` (created)
+  - `docs/DECISIONS.md` (modified)
+  - `docs/PROGRESS.md` (modified)
+- **Deliberate Placeholders Still to Be Replaced**:
+  - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
 
 
 

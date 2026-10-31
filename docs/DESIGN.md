@@ -103,7 +103,7 @@ Groups and items: Go to: Home, Work, About, Education, Skills, Highlights, Resum
 No form. Large email address in Fraunces with Copy (toast "Copied") and "Write an email" (mailto:chirag23nzr@gmail.com?subject=Hello%20Chirag), phone as tel: link, location, GitHub/LinkedIn (hidden if placeholder), local Pune time.
 
 ## 12. Game — "Registration" (prompt 8)
-Idea: a one-screen game of alignment, taken from print registration. Each "sheet" shows an outlined target shape in ink. Your accent-red plate (same shape) wanders; steer it onto the target and hold within tolerance for 1.0s to "print" it (plate snaps, stamp, sheet slides away, +1 print). Plate uses mix-blend-mode multiply, so overlap visibly darkens as you align.
+Idea: a one-screen game of alignment, taken from print registration. Each "sheet" shows an outlined target shape in ink. Your accent-red plate (same shape) wanders; steer it onto the target and hold within tolerance for 1.0s to "print" it (plate snaps, stamp, sheet slides away, +1 print). Plate uses mix-blend-mode multiply in light theme (so overlap visibly darkens as you align) and screen mode in dark theme (so overlap glows cleanly against dark paper).
 - Rules: 3 sheets (lives). Each sheet has a timer (12s, shrinking 0.3s per print to a 7s minimum). Timer out = sheet spoiled, lose one. Tolerance starts 14px, shrinks 0.6px per print to 5px. Wander strength +4% per print. Shapes cycle: circle, square, triangle, ring, cross, rounded-rect, plus a glyph from the name's initials (C, P) as simple SVG paths.
 - Controls: arrows/WASD accelerate the plate; pointer/touch drag moves the plate relative to drag start; P or Space pauses; Esc exits. On-screen Pause and Close buttons. Mobile: full-screen, safe-area padding, no page scroll behind.
 - Visuals: full-screen paper background, crop marks, tokens only (works in both themes), HUD in mono: "Registration", sheets left (3 small rectangles), prints, best (localStorage in try/catch). No sound.
@@ -119,7 +119,7 @@ Static export (`output: "export"`), no env vars. Import repo on Vercel: framewor
 - [REPLACED in prompt 6] Resume and Contact views
 - [REPLACED in prompt 7] RollText and button hover (replaced with Pixel Perfect FlipText and MagneticArrow)
 - [REPLACED in prompt 7] lucide icons (IconSpace added arrow, email, call; others cleanly routed)
-- GameSlot popover "arriving soon" (prompt 8)
+- [REPLACED in prompt 8] GameSlot popover (replaced with full "Registration" canvas game overlay)
 - temporary /dev/tokens page (removed in prompt 10)
 ## 17. Copy rules
 Short lines. Plain, warm, first person. No exclamation marks, no buzzwords, no emojis. All copy lives in src/content/site.ts.

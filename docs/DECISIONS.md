@@ -207,5 +207,33 @@ This document logs decisions, trade-offs, and verification results across all im
    - Corrected `motion/react` numeric animation syntax in `Curtain.tsx` from `animate((p) => { ... }, opts)` to `animate(0, 1, { duration, ease, onUpdate: (p) => { ... } })`, eliminating unhandled rejection errors during view navigation.
 
 
+## Prompt 8 — The Optional Game: "Registration"
+
+1. **Dynamic Code Splitting & Zero-Cost Bundle Strategy**:
+   - `GameOverlay` is lazy-loaded with `next/dynamic(() => import("@/components/game/GameOverlay"), { ssr: false })` within `GameProvider.tsx`.
+   - Next.js webpack splits the canvas engine and overlay into an isolated dynamic chunk (`1o9a072u9-4-e.js`), adding 0 KB to all route initial bundles.
+   - Added hover/focus preloading via `preloadGame()` on the `[data-game-slot]` button to eliminate perceived loading latency.
+
+2. **Accessible Dialog Lifecycle and Focus Management**:
+   - Configured `GameOverlay` as a standard modal dialog (`role="dialog"`, `aria-modal="true"`, `aria-labelledby="reg-title"`).
+   - `#app-root` is set to `inert` and `document.body.style.overflow = "hidden"` locks scrolling.
+   - Roving focus trap with auto-focus on start/play-again buttons and Esc key listener restores focus back to the trigger button on exit.
+
+3. **Composite Blend Modes Across Light and Dark Themes**:
+   - Light Theme: Uses `globalCompositeOperation = "multiply"` to replicate genuine offset lithography printing ink darkening paper.
+   - Dark Theme: On dark paper (`#12110E`), `"multiply"` produces near-black invisibility. The engine dynamically switches to `"screen"` in dark mode, allowing the red accent plate to glow cleanly over the dark target shape.
+
+4. **Performance Isolation via Direct DOM Ref**:
+   - The 60fps game loop and physics updates run decoupled from React's render tree.
+   - The remaining-time line indicator is updated directly via DOM manipulation on `timerLineRef.current.style.transform`, preventing React reconciliation overhead during gameplay.
+   - State notifications (`sheets`, `prints`, `best`, status alerts) only trigger React updates during discrete game state events.
+
+5. **Strict Reduced-Motion Adherence**:
+   - Subscribed to `(prefers-reduced-motion: reduce)` via `useReducedMotionFlag.ts`.
+   - Circular clip-path curtain transitions switch to subtle opacity fades.
+   - Target wander acceleration is set to zero; sheet transitions and snap alignment animations swap instantly without motion.
+
+
+
 
 

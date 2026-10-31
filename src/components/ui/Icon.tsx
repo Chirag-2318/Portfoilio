@@ -12,6 +12,8 @@ import {
   ChevronDown,
   ExternalLink,
   Printer,
+  Pause,
+  Play,
 } from "lucide-react";
 import { EmailIcon } from "@/components/icons/EmailIcon";
 import { CallIcon } from "@/components/icons/CallIcon";
@@ -33,6 +35,8 @@ export type IconName =
   | "x"
   | "chevron-down"
   | "external"
+  | "pause"
+  | "play"
   | "registration";
 
 export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, "ref"> {
@@ -73,9 +77,9 @@ export function Icon({
     case "arrow-right":
       return <ArrowRight {...commonProps} />;
     case "mail":
-      return <EmailIcon {...commonProps} />;
+      return <EmailIcon {...(commonProps as React.ComponentProps<typeof EmailIcon>)} />;
     case "phone":
-      return <CallIcon {...commonProps} />;
+      return <CallIcon {...(commonProps as React.ComponentProps<typeof CallIcon>)} />;
     case "download":
       return <Download {...commonProps} />;
     case "printer":
@@ -88,6 +92,10 @@ export function Icon({
       return <ChevronDown {...commonProps} />;
     case "external":
       return <ExternalLink {...commonProps} />;
+    case "pause":
+      return <Pause {...commonProps} />;
+    case "play":
+      return <Play {...commonProps} />;
 
     case "github":
       return (

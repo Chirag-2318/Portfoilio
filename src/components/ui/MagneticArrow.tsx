@@ -24,12 +24,6 @@ export function MagneticArrow({
     try {
       const gsapModule = await import("gsap");
       const gsapInstance = gsapModule.gsap || gsapModule.default;
-      try {
-        const { InertiaPlugin } = await import("gsap/InertiaPlugin");
-        if (InertiaPlugin) {
-          gsapInstance.registerPlugin(InertiaPlugin);
-        }
-      } catch {}
       gsapRef.current = gsapInstance;
       gsapLoadedRef.current = true;
     } catch {}
@@ -123,3 +117,4 @@ export function MagneticArrow({
     </div>
   );
 }
+

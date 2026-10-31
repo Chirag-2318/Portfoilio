@@ -38,7 +38,9 @@
 | `src/components/shell/MobileTabs.tsx` | Mobile bottom bar active indicator (`layoutId`) | 220ms | `EASE_OUT_EXPO` | Route transition | Instant placement | **Yes** |
 | `src/components/shell/ThemeToggle.tsx` | Theme icon swap (Sun ➔ Moon) | 200ms | `EASE_OUT_EXPO` | Toggle button click | Instant icon swap | **Yes** |
 | `src/app/globals.css` (`html.theme-fade`) | Color & surface crossfade on theme change | 200ms | `EASE_OUT_EXPO` | Theme toggle clicked (active for 240ms) | Skipped via `prefers-reduced-motion` | **Yes** |
-| `src/components/shell/GameSlot.tsx` | Drawer tray slide-in & backdrop fade | 260ms | `EASE_OUT_EXPO` | Game toggle button click / Esc key | Instant modal display / dismiss | **Yes** |
+| `src/components/shell/GameSlot.tsx` / `GameOverlay.tsx` | Game overlay circular clip-path reveal / dismiss | 450ms | `EASE_OUT_EXPO` | Game toggle button click / Command menu / Esc | Instant fade reveal / dismiss | **Yes** |
+| `src/components/game/engine.ts` | Plate inertia drift & snap-to-target alignment | 240ms | Damped spring physics / `EASE_OUT_EXPO` | Drag release or alignment within tolerance | Instant snap without bounce; no drift wander | **Yes** |
+| `src/components/game/engine.ts` | Sheet slide-away between prints | 320ms | `EASE_OUT_EXPO` | Successful print alignment | Instant shape replacement | **Yes** |
 | `src/components/command/CommandMenu.tsx` | Command palette backdrop fade & dialog scale | 220ms | `EASE_OUT_EXPO` | `Cmd+K` / click on command button | Instant modal display / dismiss | **Yes** |
 | `src/components/ui/Toaster.tsx` | Toast notification slide & fade in/out | 240ms | `EASE_OUT_EXPO` | Copy action / trigger toast | Instant fade in and out | **Yes** |
 | `src/components/work/ProjectRow.tsx` | Mobile accordion collapse / expand | 260ms | `EASE_OUT_EXPO` | Mobile accordion tap | Instant expand / collapse | **Yes** |
@@ -58,3 +60,4 @@
 - **Standard UI Transitions**: 160ms (feedback) to 260ms (drawer / accordion).
 - **Forbidden Elements Checked**: No floating circles, no looping canvas animations, no continuous spinners, no audio components.
 - **Budget Status**: **100% IN BUDGET**.
+

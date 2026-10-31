@@ -2,6 +2,7 @@
 "use client";
 
 import * as React from "react";
+import { useMotionOK } from "@/components/motion/ease";
 
 export interface FlipTextRevealProps {
   text: string;
@@ -14,12 +15,17 @@ export function FlipTextReveal({
   className = "",
   trigger = "self",
 }: FlipTextRevealProps) {
+  const motionOK = useMotionOK();
   const chars = React.useMemo(() => Array.from(text), [text]);
+
+  if (!motionOK) {
+    return <span className={className}>{text}</span>;
+  }
 
   const hoverClass =
     trigger === "parent"
-      ? "group-hover:[transform:translateY(-100%)] group-focus-visible:[transform:translateY(-100%)] motion-reduce:group-hover:transform-none motion-reduce:group-focus-visible:transform-none"
-      : "hover:[transform:translateY(-100%)] focus-visible:[transform:translateY(-100%)] motion-reduce:hover:transform-none motion-reduce:focus-visible:transform-none";
+      ? "group-hover:[transform:translateY(-100%)] group-focus-visible:[transform:translateY(-100%)]"
+      : "hover:[transform:translateY(-100%)] focus-visible:[transform:translateY(-100%)]";
 
   return (
     <span
@@ -50,7 +56,7 @@ export function FlipTextReveal({
                 style={{
                   transitionDelay: `${delayMs}ms`,
                 }}
-                className={`flex flex-col transition-transform duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none motion-reduce:transform-none ${hoverClass}`}
+                className={`flex flex-col transition-transform duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${hoverClass}`}
               >
                 {/* Top character */}
                 <span className="inline-block h-[1.15em] leading-[1.15em]">
@@ -68,3 +74,4 @@ export function FlipTextReveal({
     </span>
   );
 }
+

@@ -42,3 +42,4 @@ Source: https://iconspace.dev
 CLI: `iconspace`  
 License: MIT License / Licensed icons
 Icons utilized: ArrowIcon, EmailIcon, CallIcon.
+

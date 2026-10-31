@@ -211,7 +211,12 @@ export function CommandMenu() {
             icon="registration"
             label="Play Registration"
             hint="Mini-game"
-            onSelect={() => handleSelect(openGame)}
+            onSelect={() => {
+              setOpen(false);
+              setTimeout(() => {
+                openGame();
+              }, 150);
+            }}
           />
         </Command.Group>
 
@@ -261,6 +266,8 @@ function CommandItem({
   return (
     <Command.Item
       id={id}
+      data-id={id}
+      data-cmd-id={id}
       value={`${label} ${hint || ""} ${keywords?.join(" ") || ""}`}
       onSelect={onSelect}
       className="relative h-11 px-3 rounded-md flex items-center justify-between text-sm font-medium text-ink cursor-pointer select-none transition-colors duration-160 data-[selected=true]:bg-paper-2 data-[selected=true]:before:content-[''] data-[selected=true]:before:absolute data-[selected=true]:before:left-0 data-[selected=true]:before:top-1.5 data-[selected=true]:before:bottom-1.5 data-[selected=true]:before:w-[2px] data-[selected=true]:before:bg-accent"

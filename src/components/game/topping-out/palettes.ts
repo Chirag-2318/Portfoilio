@@ -103,3 +103,4 @@ export function blockColors(floorIndex: number, palette: PaletteId = "rainbow"):
     }
   }
 }
+

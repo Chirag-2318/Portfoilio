@@ -1,0 +1,35 @@
+# Project Progress
+
+## Prompt 1 of 10 — Scaffold, Docs, Content, Tokens, Fonts
+- **What was done**:
+  - Initialized and scaffolded Next.js App Router project with TypeScript, ESLint, and Tailwind CSS v4.
+  - Installed runtime dependencies: `motion`, `next-themes`, `cmdk`, `clsx`, `tailwind-merge`, and `lucide-react`.
+  - Configured static export in `next.config.ts`.
+  - Created directory structure with `.gitkeep` files in `src/components/{shell,transition,motion,command,home,work,about,ui}`, `src/content`, `src/lib`, `docs`, and `public/images`.
+  - Tested IconSpace CLI availability (`npx iconspace --help`).
+  - Created full project documentation: `docs/PROJECT_CONTEXT.md` and `docs/DESIGN.md`.
+  - Created typed single source of truth in `src/content/site.ts` strictly containing facts from `PROJECT_CONTEXT.md` and removing unstated `place` fields.
+  - Created helper libraries `src/lib/cn.ts` and `src/lib/assets.ts`.
+  - Configured design tokens, paper grain SVG noise, typography utilities, and reduced-motion overrides in `src/app/globals.css`.
+  - Configured Google Fonts (`Fraunces`, `Instrument_Sans`, `JetBrains_Mono`) and root layout with `ThemeProvider` in `src/app/layout.tsx`.
+  - Built token verification page and specimens component at `/` and `/dev/tokens`.
+  - Documented setup and usage in `README.md` and logged decisions in `docs/DECISIONS.md`.
+- **Files created/modified**:
+  - `docs/PROJECT_CONTEXT.md`
+  - `docs/DESIGN.md`
+  - `docs/DECISIONS.md`
+  - `docs/PROGRESS.md`
+  - `README.md`
+  - `package.json`
+  - `next.config.ts`
+  - `src/app/globals.css`
+  - `src/app/layout.tsx`
+  - `src/app/page.tsx`
+  - `src/app/dev/tokens/page.tsx`
+  - `src/components/shell/Providers.tsx`
+  - `src/components/ui/TokenShowcase.tsx`
+  - `src/content/site.ts`
+  - `src/lib/cn.ts`
+  - `src/lib/assets.ts`
+- **Anything deferred**:
+  - Global shell (Header, NavLinks, Clock, MobileTabs, Footer, Curtain) deferred to Prompt 2 as specified.

@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
+import path from "node:path";
 
 const PORT = 9226;
 const CHROME_PATH = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
@@ -78,3 +79,4 @@ async function main() {
 }
 
 main().catch(console.error);
+

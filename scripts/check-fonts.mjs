@@ -7,3 +7,4 @@ for (const link of links) {
     console.log("Preloaded font:", link);
   }
 }
+

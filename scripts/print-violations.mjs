@@ -8,3 +8,4 @@ for (const entry of res.axe.filter((e) => e.theme === "light")) {
     console.log(`  Description: ${v.description}`);
   }
 }
+

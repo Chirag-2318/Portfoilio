@@ -80,3 +80,4 @@ const axeRes = await send("Runtime.evaluate", {
 
 console.log("Violations:", JSON.stringify(axeRes.result.value.violations, null, 2));
 chrome.kill();
+

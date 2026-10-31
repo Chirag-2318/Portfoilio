@@ -187,3 +187,4 @@ Tests executed via Lighthouse v13 against static production export (`out/`):
 - [x] `ImageResponse` social cards render correctly at 1200x630
 - [x] Person JSON-LD schema validated
 - [x] Sitemap and robots.txt prerendered statically
+

@@ -4,3 +4,4 @@ export const contentType = "image/png";
 export const alt = "Chirag Patil — Developer in Pune";
 
 export { default } from "./opengraph-image";
+

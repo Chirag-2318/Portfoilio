@@ -98,3 +98,4 @@ for (const theme of ["light", "dark"]) {
 
 console.log(`\nAll done. Total violations across all 12 combinations: ${totalViolations}`);
 chrome.kill();
+

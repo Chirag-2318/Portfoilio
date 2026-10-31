@@ -134,3 +134,36 @@
 - **Anything deferred**:
   - Work view (`/work`) and case study template deferred to Prompt 4 as specified.
 
+
+
+## Prompt 4 of 10 — The Work View (Projects)
+- **What was done**:
+  - Built `Chip.tsx` component in `src/components/ui/Chip.tsx` with mono xs font, 1px `var(--line-strong)`, radius sm, padding px 8 py 3, background transparent, color `var(--ink-2)`.
+  - Built `useProjectHash.ts` in `src/components/work/useProjectHash.ts` using `React.useSyncExternalStore` for hydration-safe URL hash synchronization across `"hashchange"` and custom `"cp:hash"` events.
+  - Built `ProjectDetail.tsx` in `src/components/work/ProjectDetail.tsx` rendering meta chips (`kind`, `year`, `context`), Fraunces 2xl title, summary paragraph, divider, "What I built" section with 4px accent square markers, and "Stack" chips. Supports both `panel` (desktop/tablet) and `inline` (mobile) variants with cross-fade vertical shift animation and screen reader polite announcement.
+  - Built `ProjectRow.tsx` in `src/components/work/ProjectRow.tsx`:
+    - Desktop/tablet row with sliding 2px accent indicator (`layoutId="work-bar"`), index, title with 2-line clamp, meta line, arrow-up-right icon, and roving tabindex.
+    - Mobile accordion row with chevron-down rotation (180°), expandable `ProjectDetail` region via Motion `height: "auto"`, and auto-scroll into view on hash match.
+  - Updated `ViewFrame.tsx` with `compactHeader?: boolean` to maintain title block height <= 120px.
+  - Built `WorkView.tsx` in `src/components/work/WorkView.tsx` with 12-column grid layout on desktop/tablet (5-col list, 7-col detail panel) and single-column accordion on mobile.
+  - Replaced placeholder at `src/app/work/page.tsx` with `<WorkView />` and metadata.
+  - Updated `ViewTransitionProvider.tsx` to dispatch custom `"cp:hash"` after curtain uncover for cross-page hash deep linking.
+  - Verified static export build (`npm run build`) and ESLint (`npm run lint`) with 0 errors and 0 warnings.
+  - Verified zero-scroll fitting at 1366x768, 768x1024, and 1440x900, zero horizontal overflow at 320px, keyboard ArrowUp/Down roving tabindex, and direct hash arrivals (`/work#sar`, `/work#validedi`, `/work#arthix`).
+  - Captured test screenshots in light and dark themes across 390px, 768px, 1366px, and 1440px viewports.
+- **Files created/modified**:
+  - `src/components/ui/Chip.tsx`
+  - `src/components/ui/ViewFrame.tsx`
+  - `src/components/work/useProjectHash.ts`
+  - `src/components/work/ProjectDetail.tsx`
+  - `src/components/work/ProjectRow.tsx`
+  - `src/components/work/WorkView.tsx`
+  - `src/components/transition/ViewTransitionProvider.tsx`
+  - `src/app/work/page.tsx`
+  - `scripts/take-screenshots-p4.mjs`
+  - `docs/DECISIONS.md`
+  - `docs/PROGRESS.md`
+- **Anything deferred**:
+  - About view (`/about`) deferred to Prompt 5 as specified.
+
+

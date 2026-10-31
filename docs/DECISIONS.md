@@ -89,3 +89,29 @@ This document logs decisions, trade-offs, and verification results across all im
    - On `< 768px`, calibrated `--name-vw: 24vw`, `font-size: clamp(3.25rem, min(var(--name-vw), 18svh), 14rem)`, mobile portrait dimensions to `60x75px`, and container vertical padding to `0.5rem 0`.
    - Verified that viewports from 360x740 up to 1440x900 have `docScroll: false` and `contentScroll: false`.
 
+
+
+## Prompt 4 — The Work View (Projects)
+
+1. **Hydration-Safe Hash Synchronization via `useSyncExternalStore`**:
+   - Implemented `useProjectHash.ts` with `React.useSyncExternalStore` subscribing to `"hashchange"` and custom `"cp:hash"` events.
+   - `getServerSnapshot()` returns `DEFAULT_PROJECT_ID` (`"sar"`), guaranteeing zero hydration mismatch between SSR and client.
+   - `getSnapshot()` dynamically resolves the current valid hash on client, preventing cascading `useEffect` renders.
+   - Selection updates URL hash via `window.history.replaceState(null, "", "#id")` (avoiding scroll jumps and curtain triggers).
+
+2. **Compact Viewport Fitting at 1366x768 & 768x1024**:
+   - Added `compactHeader?: boolean` support to `ViewFrame` to cap the title block height to <= 120px on `/work`.
+   - Tuned `ProjectDetail` padding (`p-4 sm:p-5 lg:p-5 xl:p-8`), typography line-heights, and row min-heights (`84px / 88px`) to ensure the 12-column layout fits within 1366x768 and 768x1024 viewports with `contentScroll: false` and `docScroll: false`.
+
+3. **Roving Tabindex & Native Button Semantics**:
+   - Maintained native `<button>` semantics within a semantic `<ul>` list.
+   - Roving tabindex ensures only the selected row has `tabIndex={0}`, with ArrowUp/Down navigating both selection and focus, and Home/End jumping to first/last projects.
+   - Sliding 2px accent bar rendered with Motion `layoutId="work-bar"` (`260ms in-out-quart`).
+
+4. **Mobile Single-Column Accordion**:
+   - Below 768px, projects render as an accordion with `aria-expanded` and `aria-controls` bindings.
+   - Animated height transitions via Motion `height: "auto"` (300ms `out-expo`), falling back to instant transitions when `prefers-reduced-motion` is active.
+   - Only one row is open at a time; total length at 390x844 measures 1.47 screens (<= ~1.5 screens).
+   - Direct arrivals to `/work#arthix` smoothly scroll the active item into view.
+
+

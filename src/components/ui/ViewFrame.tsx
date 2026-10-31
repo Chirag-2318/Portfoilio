@@ -5,6 +5,7 @@ export interface ViewFrameProps {
   title: string;
   sub?: string;
   kicker?: string;
+  compactHeader?: boolean;
   children: React.ReactNode;
   className?: string;
 }
@@ -13,21 +14,30 @@ export function ViewFrame({
   title,
   sub,
   kicker,
+  compactHeader = false,
   children,
   className = "",
 }: ViewFrameProps) {
   return (
-    <div className={`pt-6 sm:pt-8 ${className}`}>
+    <div className={`${compactHeader ? "pt-1.5 sm:pt-2.5" : "pt-6 sm:pt-8"} ${className}`}>
       {/* Header row */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between pb-8 mb-8 border-b border-line hairline border-t-0 border-x-0 gap-4">
+      <div
+        className={`flex flex-col lg:flex-row lg:items-end justify-between border-b border-line hairline border-t-0 border-x-0 gap-3 ${
+          compactHeader ? "pb-2.5 mb-3 sm:pb-3 sm:mb-4" : "pb-8 mb-8"
+        }`}
+      >
         <div>
-          {kicker && <span className="label block mb-2">{kicker}</span>}
+          {kicker && (
+            <span className={`label block ${compactHeader ? "mb-1" : "mb-2"}`}>
+              {kicker}
+            </span>
+          )}
           <ResolveText as="h1" className="title-2xl font-serif">
             {title}
           </ResolveText>
         </div>
         {sub && (
-          <p className="text-base text-ink-2 max-w-[48ch] leading-relaxed lg:text-right">
+          <p className="text-sm sm:text-base text-ink-2 max-w-[48ch] leading-relaxed lg:text-right">
             {sub}
           </p>
         )}

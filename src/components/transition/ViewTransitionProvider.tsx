@@ -122,6 +122,10 @@ export function ViewTransitionProvider({ children }: { children: React.ReactNode
       setPhase("revealing");
       await curtainActionsRef.current.uncover();
 
+      if (hashPart !== undefined) {
+        window.dispatchEvent(new CustomEvent("cp:hash", { detail: `#${hashPart}` }));
+      }
+
       setPhase("idle");
       setReady(true);
     },

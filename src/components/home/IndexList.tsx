@@ -140,3 +140,4 @@ export function IndexList({ variant, className = "" }: IndexListProps) {
     </dl>
   );
 }
+

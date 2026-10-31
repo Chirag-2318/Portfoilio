@@ -9,6 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@iconify-json/devicon": "^1.2.74",
+    "@iconify-json/logos": "^1.2.18",
+    "@iconify-json/simple-icons": "^1.2.101",
+    "@iconify/react": "^6.0.3",
+    "@iconify/utils": "^3.1.7",
+    "@proj-airi/lobe-icons": "^1.0.19",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "geist": "^1.9.0",

@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import { IconTile } from "@/components/blueprint/IconTile";
-import { Tag } from "@/components/blueprint/Tag";
 import { PanelHeader } from "@/components/blueprint/PanelHeader";
 import { HandwrittenNote } from "@/components/blueprint/HandwrittenNote";
+import { TechRow } from "@/components/tech/TechRow";
+import type { TechId } from "@/lib/tech-icons";
 
 interface ProjectItem {
   id: string;
@@ -13,7 +14,7 @@ interface ProjectItem {
   year?: string;
   oneLine: string;
   bullets: string[];
-  tags: string[];
+  techs: TechId[];
   githubUrl?: string;
 }
 
@@ -28,7 +29,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       "Designed a scalable data ingestion pipeline for CSV and JSON files, integrating AWS S3 for secure storage and managing 15+ relational entities using PostgreSQL and JPA (Hibernate).",
       "Integrated AI-powered analysis via a Python microservice for SAR narrative generation, typology detection and end-to-end compliance workflows; implemented audit logging and a DTO-based architecture for data integrity.",
     ],
-    tags: ["Spring Boot", "Java", "PostgreSQL", "AWS S3", "JWT", "Python"],
+    techs: ["spring-boot", "java", "postgresql", "aws-s3", "jwt", "jpa", "python"],
   },
   {
     id: "validedi",
@@ -40,7 +41,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       "Built an async FastAPI platform to process X12 HIPAA EDI transactions (837/835/834) with custom parsing, loop hierarchy construction and 50+ validation rules.",
       "Implemented Firebase JWT-based RBAC with 6 roles; integrated AWS S3 and PostgreSQL (JSONB, async ORM) for scalable storage and batch processing, with AI-powered EDI analysis via Groq Llama 3.3.",
     ],
-    tags: ["FastAPI", "PostgreSQL", "SQLAlchemy", "Firebase", "AWS S3", "Groq"],
+    techs: ["fastapi", "postgresql", "sqlalchemy", "firebase", "aws-s3", "groq"],
   },
   {
     id: "arthix",
@@ -53,7 +54,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       "Designed a nearest-neighbour reconciliation engine (120 s symmetric window) pairing shakes and notifications in either order; all amounts stored as Long paise to avoid floating-point errors.",
       "Privacy-first design: no backend, AES-256 SQLCipher-encrypted Room DB, bounded accelerometer window for battery; LLM-phrased reports validated against deterministic math, plus offline Whisper voice splitting and ML Kit OCR.",
     ],
-    tags: ["Kotlin", "Jetpack Compose", "Room", "SQLCipher", "Hilt", "ML Kit", "Whisper"],
+    techs: ["kotlin", "jetpack-compose", "room", "sqlcipher", "hilt", "mlkit", "whisper"],
   },
 ];
 
@@ -99,49 +100,34 @@ export function ProjectsPanel() {
                 aria-expanded={isExpanded}
                 className="w-full text-left flex items-center py-4 px-5 gap-4 hover:bg-[var(--accent-muted)] transition-colors duration-150 select-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                {/* Left cell: Plain mono index text */}
-                <span className="font-mono text-xs text-muted-foreground select-none shrink-0 w-8">
+                {/* Clean mono index P-01..P-03 */}
+                <span className="font-mono text-xs text-muted-foreground w-8 shrink-0">
                   P-0{index + 1}
                 </span>
 
-                {/* Right cell: details */}
-                <div className="flex-1 min-w-0 flex items-center justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-baseline gap-2 mb-1">
-                      <span className="font-medium text-foreground text-base tracking-tight truncate">
-                        {project.title}
+                {/* Title & metadata */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-medium text-foreground tracking-tight">
+                      {project.title}
+                    </span>
+                    {project.year && (
+                      <span className="font-mono text-xs text-muted-foreground">
+                        Period: {project.year}
                       </span>
-                      {project.year && (
-                        <span className="font-mono text-xs text-muted-foreground">
-                          Period: {project.year}
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="text-sm text-muted-foreground truncate leading-snug">
-                      {project.oneLine}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-3 shrink-0">
-                    {/* Optional GitHub icon link */}
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label={`GitHub repository for ${project.title}`}
-                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
-                      >
-                        <GithubIcon />
-                      </a>
                     )}
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate mt-0.5 font-sans">
+                    {project.oneLine}
+                  </p>
+                </div>
 
-                    {/* Chevron icon */}
+                {/* Right controls: chevron */}
+                <div className="flex items-center gap-3 shrink-0">
+                  <div className="flex items-center justify-center size-6 rounded-md hover:bg-[var(--muted)] text-muted-foreground hover:text-foreground transition-colors">
                     <svg
-                      width="16"
-                      height="16"
+                      width="14"
+                      height="14"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -163,21 +149,25 @@ export function ProjectsPanel() {
               <div
                 className={`overflow-hidden transition-all duration-200 ease-out ${
                   isExpanded
-                    ? "max-h-[600px] opacity-100 border-t border-[var(--line)]"
+                    ? "max-h-[800px] opacity-100 border-t border-[var(--line)]"
                     : "max-h-0 opacity-0"
                 }`}
               >
-                <div className="p-5 sm:pl-16 space-y-4 bg-[var(--background)]">
+                <div className="p-5 sm:pl-16 space-y-5 bg-[var(--background)]">
                   <ul className="list-disc ps-4 space-y-2 text-sm text-foreground marker:text-muted-foreground leading-relaxed">
                     {project.bullets.map((bullet, i) => (
                       <li key={i}>{bullet}</li>
                     ))}
                   </ul>
 
-                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[var(--line)]/60">
-                    {project.tags.map((tag) => (
-                      <Tag key={tag}>{tag}</Tag>
-                    ))}
+                  {/* Real Technology & Tool Brand Tiles */}
+                  <div className="pt-3 border-t border-[var(--line)]/60">
+                    <TechRow
+                      heading="Technologies & Tools"
+                      techs={project.techs}
+                      size="sm"
+                      layoutId={`project-${project.id}`}
+                    />
                   </div>
                 </div>
               </div>
@@ -186,31 +176,5 @@ export function ProjectsPanel() {
         })}
       </ul>
     </div>
-  );
-}
-
-function CodeFolderIcon({ index }: { index: number }) {
-  return (
-    <span className="font-mono text-xs font-semibold text-muted-foreground">
-      0{index}
-    </span>
-  );
-}
-
-function GithubIcon() {
-  return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
   );
 }

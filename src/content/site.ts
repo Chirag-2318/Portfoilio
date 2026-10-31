@@ -1,3 +1,5 @@
+import type { TechId } from "@/lib/tech-icons";
+
 export const PLACEHOLDER_HOST = "replace-me.invalid";
 export const isPlaceholder = (url: string) => url.includes(PLACEHOLDER_HOST);
 
@@ -10,7 +12,8 @@ export type Project = {
   context?: string;      // event/track, only when stated in the facts
   summary: string;       // 2–3 punchy lines
   bullets: string[];     // full details, verbatim facts
-  stack: string[];
+  techs: TechId[];
+  stack?: string[];
 };
 
 export const site = {
@@ -92,10 +95,26 @@ export const site = {
     },
   ],
   skills: [
-    { group: "Languages", items: ["Java", "Kotlin", "Python", "C++", "SQL"] },
-    { group: "Frameworks", items: ["Spring Boot", "Spring Framework", "Spring Security", "Servlets", "JPA", "FastAPI", "Jetpack Compose", "Hilt"] },
-    { group: "Databases", items: ["MySQL", "PostgreSQL", "Room", "SQLCipher"] },
-    { group: "Cloud & tools", items: ["AWS S3", "AWS RDS", "Git", "GitHub", "Maven", "Gradle", "IntelliJ IDEA", "Android Studio", "Postman"] },
+    {
+      group: "Languages",
+      techs: ["java", "kotlin", "python", "cpp", "sql"] as TechId[],
+      items: ["Java", "Kotlin", "Python", "C++", "SQL"],
+    },
+    {
+      group: "Frameworks",
+      techs: ["spring", "servlets", "jpa", "fastapi", "jetpack-compose", "hilt"] as TechId[],
+      items: ["Spring (Boot, Framework, Security)", "Servlets", "JPA / Hibernate", "FastAPI", "Jetpack Compose", "Hilt"],
+    },
+    {
+      group: "Databases",
+      techs: ["mysql", "postgresql", "room", "sqlcipher"] as TechId[],
+      items: ["MySQL", "PostgreSQL", "Room", "SQLCipher"],
+    },
+    {
+      group: "Cloud and tools",
+      techs: ["aws-s3", "aws-rds", "git", "github", "maven", "gradle", "intellij-idea", "android-studio", "postman"] as TechId[],
+      items: ["AWS S3", "AWS RDS", "Git", "GitHub", "Maven", "Gradle", "IntelliJ IDEA", "Android Studio", "Postman"],
+    },
   ],
   achievements: [
     {
@@ -153,7 +172,8 @@ export const site = {
         "Designed a scalable data ingestion pipeline for CSV and JSON files, integrating AWS S3 for secure storage and managing 15+ relational entities using PostgreSQL and JPA (Hibernate).",
         "Integrated AI-powered analysis via a Python microservice for SAR narrative generation, typology detection and end-to-end compliance workflows; implemented audit logging and a DTO-based architecture for data integrity.",
       ],
-      stack: ["Spring Boot", "Java", "PostgreSQL", "AWS S3", "JWT", "Python"],
+      techs: ["spring-boot", "java", "postgresql", "aws-s3", "jwt", "jpa", "python"],
+      stack: ["Spring Boot", "Java", "PostgreSQL", "AWS S3", "JWT", "JPA / Hibernate", "Python"],
     },
     {
       id: "validedi",
@@ -167,7 +187,8 @@ export const site = {
         "Built an async FastAPI platform to process X12 HIPAA EDI transactions (837/835/834) with custom parsing, loop hierarchy construction and 50+ validation rules.",
         "Implemented Firebase JWT-based RBAC with 6 roles; integrated AWS S3 and PostgreSQL (JSONB, async ORM) for scalable storage and batch processing, with AI-powered EDI analysis via Groq Llama 3.3.",
       ],
-      stack: ["FastAPI", "PostgreSQL", "SQLAlchemy", "Firebase", "AWS S3", "Groq LLM"],
+      techs: ["fastapi", "postgresql", "sqlalchemy", "firebase", "aws-s3", "groq"],
+      stack: ["FastAPI", "PostgreSQL", "SQLAlchemy", "Firebase", "AWS S3", "Groq"],
     },
     {
       id: "arthix",
@@ -183,7 +204,8 @@ export const site = {
         "Designed a nearest-neighbour reconciliation engine (120 s symmetric window) pairing shakes and notifications in either order; all amounts stored as Long paise to avoid floating-point errors.",
         "Privacy-first design: no backend, AES-256 SQLCipher-encrypted Room DB, bounded accelerometer window for battery; LLM-phrased reports validated against deterministic math, plus offline Whisper voice splitting and ML Kit OCR.",
       ],
-      stack: ["Kotlin", "Jetpack Compose", "Room + SQLCipher", "Hilt", "ML Kit", "Whisper (ONNX)"],
+      techs: ["kotlin", "jetpack-compose", "room", "sqlcipher", "hilt", "mlkit", "whisper"],
+      stack: ["Kotlin", "Jetpack Compose", "Room", "SQLCipher", "Hilt", "ML Kit", "Whisper (ONNX)"],
     },
   ] as Project[],
 } as const;

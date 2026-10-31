@@ -18,6 +18,10 @@
   --info: var(--accent);
   --ring: #ff5a2c;
 
+  --tile-border: rgba(255, 255, 255, 0.14);
+  --tile-bg: #121214;
+  --tile-bg-hover: #232326;
+
   --header-height: 3.5rem;   /* 56px */
   --separator-height: 2.5rem;  /* 40px */
 
@@ -49,6 +53,10 @@ html.light {
   --accent-muted: rgba(0, 0, 0, 0.03);
   --info: var(--accent);
   --ring: #e8441a;
+
+  --tile-border: rgba(0, 0, 0, 0.16);
+  --tile-bg: #fafafa;
+  --tile-bg-hover: #efeff1;
 
   color-scheme: light;
 

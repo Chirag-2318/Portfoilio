@@ -81,7 +81,7 @@ All earlier visual decisions in /docs/DESIGN.md are superseded by /docs/REDESIGN
 ### Originality Pass (branch: `design/originality`)
 - Overhauled the Blueprint Grid layout with 11 signature details establishing a distinct identity for Chirag Patil.
 - Added Instrument Serif typography for all titles and headings; Geist Sans and Mono retained for text and meta.
-- Added warm redline `--accent` token (`#ff5a2c` dark, `#e8441a` light, `#ffd166` blueprint) used strictly for drawing marks, pins, crosshairs, active states, and selection.
+- Added warm redline `--accent` token (`#ff5a2c` dark, `#e8441a` light) used strictly for drawing marks, pins, crosshairs, active states, and selection.
 - Built engineer's ruler dividers (32px, 0–768 numerals) replacing diagonal stripe bands.
 - Added 9px registration crosshairs (`RegMark.tsx`) at vertical-horizontal hairline intersections.
 - Added 160px square ID-frame avatar badge with drafting corner crop marks and dimension.
@@ -89,6 +89,20 @@ All earlier visual decisions in /docs/DESIGN.md are superseded by /docs/REDESIGN
 - Converted "In numbers" into a formal technical drawing "Bill of materials" table.
 - Added drawing sheet numbers (`SHEET 01 / 09` through `SHEET 09 / 09`), project indexing (`P-01` to `P-03`), and a fixed left-gutter scroll ruler.
 - Added dynamic header breadcrumb `"/ [section]"` opening cmdk, and redline accent handwritten notes.
-- Added full third theme "Blueprint" (`#0a2b5c` cyanotype background, `#ffd166` gold accent) with 3-state cycling toggle.
-- Formatted greeting as a technical cover note with self-drawing accent underline.
+
+### Calm-Down Pass & Tech Icons
+- Removed noisy diagonal screens and decorative clutter for a calmer, editorial aesthetic.
+- Removed third "Blueprint" theme; retained polished Dark and Light modes.
+- Added real brand technology icons from Iconify datasets with expand-on-hover name labels in the Stack panel.
+
+### Topping Out V2 (branch: `feat/topping-out-v2`)
+- Upgraded the isometric stacking game to play directly OVER the website with a transparent full-viewport canvas and a subtle 30% background dim layer.
+- Implemented solid, 100% opaque blocks (painter's order) with front-top bevel highlights and projected lit windows (~40% illuminated, deterministic per floor).
+- Added overhead swaying crane hook that retracts upward on slab drops.
+- Added horizontal dashed landmark height comparison lines across the viewport (Gateway of India 26 m, Qutub Minar 73 m, Statue of Unity 182 m, Eiffel Tower 330 m, Burj Khalifa 828 m) with confetti celebration on crossing.
+- Added milestone topping-out waving flags at floor 10, 20, 30...
+- Added 2px streak halo on consecutive combos (combo >= 2), haptic vibration on coarse pointers, and "New best!" celebration.
+- Added high-legibility solid HUD chips and floating game-over panel with humorous real-world landmark lines, persistent top 3 scores, and Web Share API / clipboard fallback.
+- Added 4 unlockable color palettes: Rainbow (default), Dusk (10 floors), Mint (20 floors), and Mono (30 floors).
+- Global 'G' shortcut to launch anytime from anywhere on the page, with focus restoration and full keyboard accessibility.
 

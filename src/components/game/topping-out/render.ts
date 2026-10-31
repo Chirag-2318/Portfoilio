@@ -1,10 +1,12 @@
 /**
- * Canvas Isometric Renderer for Topping Out
- * Strictly native to the Blueprint Grid visual aesthetic.
+ * Canvas Isometric Renderer for Topping Out (V2)
+ * Features solid realistic blocks, dynamic crane, landmarks, confetti, and flags.
  */
 
 import { GAME_CONSTANTS } from "./constants";
 import type { Slab, MovingSlab, Debris, FallingSlab } from "./engine";
+import { blockColors, type BlockColors, type PaletteId } from "./palettes";
+import { LANDMARK_LIST, type Landmark } from "./landmarks";
 
 export interface ThemeColors {
   background: string;
@@ -25,6 +27,8 @@ export interface FloatingText {
   alpha: number;
   elapsed: number;
   duration: number;
+  isCaveat?: boolean;
+  color?: string;
 }
 
 export interface Particle {
@@ -34,6 +38,22 @@ export interface Particle {
   vx: number;
   vy: number;
   size: number;
+  alpha: number;
+  elapsed: number;
+  duration: number;
+}
+
+export interface ConfettiParticle {
+  id: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  rot: number;
+  vrot: number;
+  w: number;
+  h: number;
+  color: string;
   alpha: number;
   elapsed: number;
   duration: number;
@@ -85,9 +105,6 @@ export function readThemeColors(): ThemeColors {
 
 export class ToppingOutRenderer {
   public colors: ThemeColors;
-  private hatchPatternCanvas: HTMLCanvasElement | null = null;
-  private hatchPattern: CanvasPattern | null = null;
-  private hatchColor = "";
 
   constructor() {
     this.colors = readThemeColors();
@@ -95,43 +112,6 @@ export class ToppingOutRenderer {
 
   public updateTheme() {
     this.colors = readThemeColors();
-    this.hatchPattern = null; // force pattern rebuild
-  }
-
-  private getHatchPattern(ctx: CanvasRenderingContext2D): CanvasPattern | null {
-    if (this.hatchPattern && this.hatchColor === this.colors.foreground) {
-      return this.hatchPattern;
-    }
-
-    if (typeof document === "undefined") return null;
-
-    if (!this.hatchPatternCanvas) {
-      this.hatchPatternCanvas = document.createElement("canvas");
-    }
-    const size = 10;
-    this.hatchPatternCanvas.width = size;
-    this.hatchPatternCanvas.height = size;
-    const pctx = this.hatchPatternCanvas.getContext("2d");
-    if (!pctx) return null;
-
-    pctx.clearRect(0, 0, size, size);
-    pctx.strokeStyle = this.colors.foreground;
-    pctx.globalAlpha = 0.3;
-    pctx.lineWidth = 1;
-
-    // 45 degree hatching
-    pctx.beginPath();
-    pctx.moveTo(0, size);
-    pctx.lineTo(size, 0);
-    pctx.moveTo(-size / 2, size / 2);
-    pctx.lineTo(size / 2, -size / 2);
-    pctx.moveTo(size / 2, size * 1.5);
-    pctx.lineTo(size * 1.5, size / 2);
-    pctx.stroke();
-
-    this.hatchColor = this.colors.foreground;
-    this.hatchPattern = ctx.createPattern(this.hatchPatternCanvas, "repeat");
-    return this.hatchPattern;
   }
 
   public getScale(canvasWidth: number): number {
@@ -150,7 +130,13 @@ export class ToppingOutRenderer {
     scale: number,
     cameraShift: number
   ): { px: number; py: number } {
-    const originX = width / 2;
+    let originX = width / 2;
+    if (GAME_CONSTANTS.ANCHOR === "gutter" && width >= 1100) {
+      // Place in right gutter outside 768px center column
+      const columnRight = (width + 768) / 2;
+      originX = (columnRight + width) / 2;
+    }
+
     const originY = height * GAME_CONSTANTS.ORIGIN_Y_RATIO + cameraShift;
     const cos30 = 0.86602540378; // Math.cos(Math.PI / 6)
     const sin30 = 0.5; // Math.sin(Math.PI / 6)
@@ -161,35 +147,51 @@ export class ToppingOutRenderer {
   }
 
   /**
-   * Draw isometric dot grid background with subtle camera parallax
+   * Draw solid ground platform (6 x 6 units, height 0.6)
    */
-  public drawDotGrid(
+  public drawGroundPlatform(
     ctx: CanvasRenderingContext2D,
     width: number,
     height: number,
     scale: number,
     cameraShift: number
   ) {
-    const spacing = 28;
-    const parallaxY = (cameraShift * 0.4) % spacing;
+    const halfW = GAME_CONSTANTS.GROUND_WIDTH / 2;
+    const halfD = GAME_CONSTANTS.GROUND_DEPTH / 2;
+    const groundH = GAME_CONSTANTS.GROUND_HEIGHT;
 
-    ctx.save();
-    ctx.fillStyle = this.colors.line;
-    ctx.globalAlpha = 0.5;
-
-    const startY = -spacing + parallaxY;
-    for (let y = startY; y < height + spacing; y += spacing) {
-      for (let x = 0; x < width + spacing; x += spacing) {
-        ctx.fillRect(x, y, 1, 1);
-      }
-    }
-    ctx.restore();
+    this.drawSolidBox(
+      ctx,
+      {
+        x0: -halfW,
+        x1: halfW,
+        z0: -halfD,
+        z1: halfD,
+        y0: -groundH,
+        y1: 0,
+        colors: {
+          top: "#d4d4d8",
+          left: "#a1a1aa",
+          right: "#71717a",
+          edge: "#3f3f46",
+          windowDark: "#a1a1aa",
+          windowLit: "#d4d4d8",
+          highlight: "rgba(255, 255, 255, 0.4)",
+        },
+        hasWindows: false,
+        groundLabel: "GROUND",
+      },
+      width,
+      height,
+      scale,
+      cameraShift
+    );
   }
 
   /**
-   * Draw single isometric box (slab)
+   * Draw solid, opaque isometric box (slab) with windows and bevel
    */
-  public drawBox(
+  public drawSolidBox(
     ctx: CanvasRenderingContext2D,
     box: {
       x0: number;
@@ -198,8 +200,11 @@ export class ToppingOutRenderer {
       z1: number;
       y0: number;
       y1: number;
+      colors: BlockColors;
+      hasWindows?: boolean;
+      floorIndex?: number;
       accentOutline?: boolean;
-      label10F?: string;
+      groundLabel?: string;
     },
     width: number,
     height: number,
@@ -207,7 +212,7 @@ export class ToppingOutRenderer {
     cameraShift: number,
     alpha = 1.0
   ) {
-    const { x0, x1, z0, z1, y0, y1, accentOutline, label10F } = box;
+    const { x0, x1, z0, z1, y0, y1, colors, hasWindows = true, floorIndex = 0, accentOutline, groundLabel } = box;
 
     const proj = (x: number, y: number, z: number) =>
       this.project(x, y, z, width, height, scale, cameraShift);
@@ -226,357 +231,337 @@ export class ToppingOutRenderer {
     // Bounding culling check
     const minY = Math.min(p010.py, p110.py, p011.py, p111.py);
     const maxY = Math.max(p000.py, p100.py, p001.py, p101.py);
-    if (maxY < -50 || minY > height + 50) {
+    if (maxY < -80 || minY > height + 80) {
       return; // culled
     }
 
     ctx.save();
     ctx.lineJoin = "round";
+    ctx.globalAlpha = alpha;
 
     // 1. RIGHT FACE (x = x1)
-    // Points: p100, p101, p111, p110
     ctx.beginPath();
     ctx.moveTo(p100.px, p100.py);
     ctx.lineTo(p101.px, p101.py);
     ctx.lineTo(p111.px, p111.py);
     ctx.lineTo(p110.px, p110.py);
     ctx.closePath();
-
-    ctx.fillStyle = this.colors.foreground;
-    ctx.globalAlpha = 0.03 * alpha;
+    ctx.fillStyle = colors.right;
     ctx.fill();
 
-    ctx.strokeStyle = this.colors.foreground;
-    ctx.globalAlpha = 0.85 * alpha;
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = colors.edge;
+    ctx.lineWidth = 1.25;
     ctx.stroke();
 
     // 2. LEFT FACE (z = z1)
-    // Points: p001, p101, p111, p011
     ctx.beginPath();
     ctx.moveTo(p001.px, p001.py);
     ctx.lineTo(p101.px, p101.py);
     ctx.lineTo(p111.px, p111.py);
     ctx.lineTo(p011.px, p011.py);
     ctx.closePath();
-
-    ctx.fillStyle = this.colors.foreground;
-    ctx.globalAlpha = 0.08 * alpha;
+    ctx.fillStyle = colors.left;
     ctx.fill();
 
-    ctx.strokeStyle = this.colors.foreground;
-    ctx.globalAlpha = 0.85 * alpha;
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = colors.edge;
+    ctx.lineWidth = 1.25;
     ctx.stroke();
 
-    // 3. TOP FACE
-    // Points: p010, p110, p111, p011
+    // Windows on faces (if slab has sufficient width/depth)
+    if (hasWindows) {
+      const faceW = x1 - x0;
+      const faceD = z1 - z0;
+      const yMid = (y0 + y1) / 2;
+      const winW = GAME_CONSTANTS.WINDOW_WIDTH;
+      const winH = GAME_CONSTANTS.WINDOW_HEIGHT;
+      const yBot = yMid - winH / 2;
+      const yTop = yMid + winH / 2;
+
+      // Windows on Left Face (z = z1)
+      if (faceW >= GAME_CONSTANTS.WINDOW_MIN_FACE_WIDTH) {
+        const numWins = faceW >= 1.6 ? 3 : 2;
+        const spacing = faceW / (numWins + 1);
+        for (let k = 0; k < numWins; k++) {
+          const winCenter = x0 + (k + 1) * spacing;
+          const wx0 = winCenter - winW / 2;
+          const wx1 = winCenter + winW / 2;
+          const isLit = ((floorIndex * 17 + k * 19) % 10) < 4;
+
+          const wp0 = proj(wx0, yBot, z1);
+          const wp1 = proj(wx1, yBot, z1);
+          const wp2 = proj(wx1, yTop, z1);
+          const wp3 = proj(wx0, yTop, z1);
+
+          ctx.beginPath();
+          ctx.moveTo(wp0.px, wp0.py);
+          ctx.lineTo(wp1.px, wp1.py);
+          ctx.lineTo(wp2.px, wp2.py);
+          ctx.lineTo(wp3.px, wp3.py);
+          ctx.closePath();
+          ctx.fillStyle = isLit ? colors.windowLit : colors.windowDark;
+          ctx.fill();
+        }
+      }
+
+      // Windows on Right Face (x = x1)
+      if (faceD >= GAME_CONSTANTS.WINDOW_MIN_FACE_WIDTH) {
+        const numWins = faceD >= 1.6 ? 3 : 2;
+        const spacing = faceD / (numWins + 1);
+        for (let k = 0; k < numWins; k++) {
+          const winCenter = z0 + (k + 1) * spacing;
+          const wz0 = winCenter - winW / 2;
+          const wz1 = winCenter + winW / 2;
+          const isLit = ((floorIndex * 23 + k * 31 + 7) % 10) < 4;
+
+          const wp0 = proj(x1, yBot, wz0);
+          const wp1 = proj(x1, yBot, wz1);
+          const wp2 = proj(x1, yTop, wz1);
+          const wp3 = proj(x1, yTop, wz0);
+
+          ctx.beginPath();
+          ctx.moveTo(wp0.px, wp0.py);
+          ctx.lineTo(wp1.px, wp1.py);
+          ctx.lineTo(wp2.px, wp2.py);
+          ctx.lineTo(wp3.px, wp3.py);
+          ctx.closePath();
+          ctx.fillStyle = isLit ? colors.windowLit : colors.windowDark;
+          ctx.fill();
+        }
+      }
+    }
+
+    // Ground label on left face
+    if (groundLabel) {
+      const gMid = proj(0, (y0 + y1) / 2, z1);
+      ctx.save();
+      ctx.font = "500 10px monospace";
+      ctx.fillStyle = "#3f3f46";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(groundLabel, gMid.px, gMid.py);
+      ctx.restore();
+    }
+
+    // 3. TOP FACE (y = y1)
     ctx.beginPath();
     ctx.moveTo(p010.px, p010.py);
     ctx.lineTo(p110.px, p110.py);
     ctx.lineTo(p111.px, p111.py);
     ctx.lineTo(p011.px, p011.py);
     ctx.closePath();
-
-    ctx.fillStyle = this.colors.foreground;
-    ctx.globalAlpha = 0.14 * alpha;
+    ctx.fillStyle = colors.top;
     ctx.fill();
 
-    // Diagonal hatching inside top face
-    const hatch = this.getHatchPattern(ctx);
-    if (hatch) {
-      ctx.save();
-      ctx.clip();
-      ctx.fillStyle = hatch;
-      ctx.globalAlpha = 0.9 * alpha;
-      ctx.fill();
-      ctx.restore();
-    }
-
-    // Top face outline
-    if (accentOutline) {
-      ctx.strokeStyle = this.colors.accent;
-      ctx.lineWidth = 2;
-      ctx.globalAlpha = 1.0 * alpha;
-      ctx.stroke();
-    } else {
-      ctx.strokeStyle = this.colors.foreground;
-      ctx.lineWidth = 1;
-      ctx.globalAlpha = 0.85 * alpha;
-      ctx.stroke();
-    }
-
-    // Optional milestone label for 10F, 20F with leader line
-    if (label10F) {
-      ctx.save();
-      ctx.strokeStyle = this.colors.accent;
-      ctx.fillStyle = this.colors.accent;
-      ctx.lineWidth = 1;
-      ctx.globalAlpha = 1.0 * alpha;
-
-      const rightEdgeX = p111.px;
-      const rightEdgeY = p111.py;
-
-      // Small leader line
-      ctx.beginPath();
-      ctx.moveTo(rightEdgeX + 4, rightEdgeY);
-      ctx.lineTo(rightEdgeX + 20, rightEdgeY);
-      ctx.stroke();
-
-      ctx.font = '10px "Geist Mono", monospace';
-      ctx.textBaseline = "middle";
-      ctx.fillText(label10F, rightEdgeX + 24, rightEdgeY);
-      ctx.restore();
-    }
-
-    ctx.restore();
-  }
-
-  /**
-   * Draw left-edge height gauge with ticks and metre labels
-   */
-  public drawHeightGauge(
-    ctx: CanvasRenderingContext2D,
-    height: number,
-    scale: number,
-    cameraShift: number,
-    floors: number
-  ) {
-    const originY = height * GAME_CONSTANTS.ORIGIN_Y_RATIO + cameraShift;
-    const rulerX = 22;
-
-    ctx.save();
-    ctx.font = '9px "Geist Mono", monospace';
-    ctx.textBaseline = "middle";
-
-    const maxFloorToDraw = floors + 6;
-    for (let f = 1; f <= maxFloorToDraw; f++) {
-      const yWorld = f * GAME_CONSTANTS.SLAB_HEIGHT;
-      const py = originY - yWorld * scale;
-
-      if (py < -30 || py > height + 30) continue;
-
-      const isFive = f % 5 === 0;
-      const tickLength = isFive ? 10 : 4;
-
-      ctx.strokeStyle = isFive ? this.colors.lineStrong : this.colors.dimension;
-      ctx.lineWidth = 1;
-
-      ctx.beginPath();
-      ctx.moveTo(rulerX, py);
-      ctx.lineTo(rulerX + tickLength, py);
-      ctx.stroke();
-
-      if (isFive) {
-        ctx.fillStyle = this.colors.dimensionForeground;
-        ctx.fillText(`${f * GAME_CONSTANTS.METRES_PER_FLOOR} m`, rulerX + tickLength + 4, py);
-      }
-    }
-
-    // Ruler baseline
-    ctx.strokeStyle = this.colors.line;
-    ctx.beginPath();
-    ctx.moveTo(rulerX, 0);
-    ctx.lineTo(rulerX, height);
+    ctx.strokeStyle = colors.edge;
+    ctx.lineWidth = 1.25;
     ctx.stroke();
 
+    // 4. Front-top bevel highlight lines
+    ctx.beginPath();
+    // Edge between Left and Top face (p011 to p111)
+    ctx.moveTo(p011.px, p011.py);
+    ctx.lineTo(p111.px, p111.py);
+    // Edge between Right and Top face (p111 to p110)
+    ctx.lineTo(p110.px, p110.py);
+    ctx.strokeStyle = colors.highlight;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // 5. Streak Halo (2px accent outline on active landing combo)
+    if (accentOutline) {
+      ctx.beginPath();
+      ctx.moveTo(p010.px, p010.py);
+      ctx.lineTo(p110.px, p110.py);
+      ctx.lineTo(p111.px, p111.py);
+      ctx.lineTo(p011.px, p011.py);
+      ctx.closePath();
+      ctx.strokeStyle = this.colors.accent;
+      ctx.lineWidth = 2.0;
+      ctx.stroke();
+    }
+
     ctx.restore();
   }
 
   /**
-   * Draw CAD dimension line above the moving slab
+   * Draw the crane hanging the moving slab
    */
-  public drawDimensionLine(
+  public drawCrane(
     ctx: CanvasRenderingContext2D,
     moving: MovingSlab,
+    retractProgress: number,
+    time: number,
     width: number,
     height: number,
     scale: number,
     cameraShift: number,
-    isAccent: boolean
+    reducedMotion = false
   ) {
-    const x0 = moving.x - moving.w / 2;
-    const x1 = moving.x + moving.w / 2;
-    const z0 = moving.z - moving.d / 2;
-    const z1 = moving.z + moving.d / 2;
-    const dimY = moving.y1 + 0.35; // slightly above
+    const topCenter = this.project(moving.x, moving.y1, moving.z, width, height, scale, cameraShift);
 
-    const proj = (x: number, y: number, z: number) =>
-      this.project(x, y, z, width, height, scale, cameraShift);
-
-    let pStart: { px: number; py: number };
-    let pEnd: { px: number; py: number };
-    const val = moving.axis === "x" ? moving.w : moving.d;
-    const axisLabel = moving.axis === "x" ? "w" : "d";
-    const label = `${axisLabel} ${val.toFixed(2)}`;
-
-    if (moving.axis === "x") {
-      pStart = proj(x0, dimY, moving.z);
-      pEnd = proj(x1, dimY, moving.z);
-    } else {
-      pStart = proj(moving.x, dimY, z0);
-      pEnd = proj(moving.x, dimY, z1);
+    // Retraction shifts the hook upward towards top of viewport
+    let hookY = topCenter.py - 6;
+    if (retractProgress > 0) {
+      hookY = topCenter.py - 6 - retractProgress * (topCenter.py - 6);
     }
 
-    const midX = (pStart.px + pEnd.px) / 2;
-    const midY = (pStart.py + pEnd.py) / 2;
+    const sway = reducedMotion ? 0 : Math.sin(time * 2.5) * GAME_CONSTANTS.CRANE_SWAY_AMOUNT;
+    const hookX = topCenter.px + sway;
 
     ctx.save();
-    const color = isAccent ? this.colors.accent : this.colors.dimension;
-    const textColor = isAccent ? this.colors.accent : this.colors.dimensionForeground;
-
-    ctx.strokeStyle = color;
-    ctx.fillStyle = textColor;
-    ctx.lineWidth = 1;
-    ctx.font = '10px "Geist Mono", monospace';
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-
-    // Extension lines
-    const pStartLow = proj(
-      moving.axis === "x" ? x0 : moving.x,
-      moving.y1 + 0.05,
-      moving.axis === "x" ? moving.z : z0
-    );
-    const pEndLow = proj(
-      moving.axis === "x" ? x1 : moving.x,
-      moving.y1 + 0.05,
-      moving.axis === "x" ? moving.z : z1
-    );
-
+    // 1.5px vertical line from top of viewport
     ctx.beginPath();
-    ctx.moveTo(pStartLow.px, pStartLow.py);
-    ctx.lineTo(pStart.px, pStart.py);
-    ctx.moveTo(pEndLow.px, pEndLow.py);
-    ctx.lineTo(pEnd.px, pEnd.py);
-    ctx.stroke();
-
-    // Dimension line
-    ctx.beginPath();
-    ctx.moveTo(pStart.px, pStart.py);
-    ctx.lineTo(pEnd.px, pEnd.py);
-    ctx.stroke();
-
-    // Label with background cutout
-    const textWidth = ctx.measureText(label).width;
-    ctx.fillStyle = this.colors.background;
-    ctx.fillRect(midX - textWidth / 2 - 3, midY - 6, textWidth + 6, 12);
-
-    ctx.fillStyle = textColor;
-    ctx.fillText(label, midX, midY);
-
-    ctx.restore();
-  }
-
-  /**
-   * Draw expanding diamond ripple for perfect landing
-   */
-  public drawPerfectRipple(ctx: CanvasRenderingContext2D, ripple: PerfectRipple) {
-    const progress = ripple.elapsed / ripple.duration;
-    if (progress >= 1) return;
-
-    const scale = 1.0 + progress * 0.35;
-    const alpha = (1.0 - progress) * 0.8;
-
-    ctx.save();
-    ctx.strokeStyle = this.colors.accent;
+    ctx.moveTo(hookX, 0);
+    ctx.lineTo(hookX, Math.max(0, hookY - 8));
+    ctx.strokeStyle = this.colors.foreground;
+    ctx.globalAlpha = 0.7;
     ctx.lineWidth = 1.5;
-    ctx.globalAlpha = alpha;
-
-    ctx.beginPath();
-    for (let i = 0; i < ripple.points.length; i++) {
-      const pt = ripple.points[i];
-      const rx = ripple.centre.px + (pt.px - ripple.centre.px) * scale;
-      const ry = ripple.centre.py + (pt.py - ripple.centre.py) * scale;
-      if (i === 0) {
-        ctx.moveTo(rx, ry);
-      } else {
-        ctx.lineTo(rx, ry);
-      }
-    }
-    ctx.closePath();
     ctx.stroke();
+
+    // Small solid hook: 10 x 8 px rectangle with 2px darker edge
+    if (hookY > 0) {
+      const hw = 10;
+      const hh = 8;
+      ctx.fillStyle = this.colors.foreground;
+      ctx.globalAlpha = 0.95;
+      ctx.fillRect(hookX - hw / 2, hookY - hh, hw, hh);
+
+      ctx.strokeStyle = this.colors.lineStrong;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(hookX - hw / 2, hookY - hh, hw, hh);
+    }
     ctx.restore();
   }
 
   /**
-   * Draw floating text (e.g. "Perfect!", "Perfect x3", "REGROW!")
+   * Draw landmark horizontal dashed comparison lines
+   */
+  public drawLandmarks(
+    ctx: CanvasRenderingContext2D,
+    towerFloors: number,
+    width: number,
+    height: number,
+    scale: number,
+    cameraShift: number
+  ) {
+    const currentMetres = towerFloors * GAME_CONSTANTS.METRES_PER_FLOOR;
+    const originY = height * GAME_CONSTANTS.ORIGIN_Y_RATIO + cameraShift;
+
+    ctx.save();
+    ctx.font = "500 11px monospace";
+    ctx.textBaseline = "bottom";
+
+    for (const lm of LANDMARK_LIST) {
+      // World Y: height in metres -> world units
+      const worldY = (lm.metres / GAME_CONSTANTS.METRES_PER_FLOOR) * GAME_CONSTANTS.SLAB_HEIGHT;
+      const py = originY - worldY * scale;
+
+      // Only draw if in viewport
+      if (py < -30 || py > height + 30) continue;
+
+      const isCleared = currentMetres >= lm.metres;
+
+      // Horizontal dashed line across full viewport
+      ctx.beginPath();
+      ctx.setLineDash([4, 4]);
+      ctx.moveTo(0, py);
+      ctx.lineTo(width, py);
+      ctx.strokeStyle = isCleared ? this.colors.accent : this.colors.lineStrong;
+      ctx.globalAlpha = isCleared ? 0.65 : 0.35;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Label at left edge
+      ctx.setLineDash([]);
+      ctx.globalAlpha = isCleared ? 1.0 : 0.75;
+      ctx.fillStyle = isCleared ? this.colors.accent : this.colors.mutedForeground;
+      const label = `${isCleared ? "✓ " : ""}${lm.metres} m  ${lm.name}`;
+      ctx.fillText(label, 16, py - 4);
+    }
+    ctx.restore();
+  }
+
+  /**
+   * Draw topping-out flag on milestone slabs (floor 10, 20, 30...)
+   */
+  public drawFlag(
+    ctx: CanvasRenderingContext2D,
+    slab: Slab,
+    time: number,
+    width: number,
+    height: number,
+    scale: number,
+    cameraShift: number,
+    reducedMotion = false
+  ) {
+    const topProj = this.project(slab.x, slab.y1, slab.z, width, height, scale, cameraShift);
+    const poleH = 16;
+    const flagW = 12;
+    const flagH = 8;
+
+    ctx.save();
+    // Pole: 1.5px line
+    ctx.beginPath();
+    ctx.moveTo(topProj.px, topProj.py);
+    ctx.lineTo(topProj.px, topProj.py - poleH);
+    ctx.strokeStyle = this.colors.foreground;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Solid accent flag rectangle with wave
+    const wave = reducedMotion ? 0 : Math.sin(time * 6 + slab.id) * 2;
+    ctx.beginPath();
+    ctx.moveTo(topProj.px, topProj.py - poleH);
+    ctx.lineTo(topProj.px + flagW, topProj.py - poleH + wave);
+    ctx.lineTo(topProj.px + flagW, topProj.py - poleH + flagH + wave);
+    ctx.lineTo(topProj.px, topProj.py - poleH + flagH);
+    ctx.closePath();
+    ctx.fillStyle = this.colors.accent;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /**
+   * Draw confetti burst particles
+   */
+  public drawConfetti(ctx: CanvasRenderingContext2D, confetti: ConfettiParticle[]) {
+    ctx.save();
+    for (const c of confetti) {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.rot);
+      ctx.fillStyle = c.color;
+      ctx.globalAlpha = c.alpha;
+      ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  /**
+   * Draw floating score/status texts and Caveat celebration notes
    */
   public drawFloatingTexts(ctx: CanvasRenderingContext2D, texts: FloatingText[]) {
     ctx.save();
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    for (const t of texts) {
+      ctx.save();
+      ctx.globalAlpha = t.alpha;
 
-    for (const item of texts) {
-      const progress = item.elapsed / item.duration;
-      const currentY = item.y - progress * 36;
-      const alpha = (1 - progress) * item.alpha;
-
-      ctx.font = '28px "Caveat", cursive';
-      ctx.fillStyle = this.colors.accent;
-      ctx.globalAlpha = alpha;
-      ctx.fillText(item.text, item.x, currentY);
+      if (t.isCaveat) {
+        ctx.font = "600 22px var(--font-caveat), cursive";
+        ctx.fillStyle = t.color || this.colors.accent;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(t.text, t.x, t.y);
+      } else {
+        ctx.font = "500 13px monospace";
+        ctx.fillStyle = t.color || this.colors.foreground;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(t.text, t.x, t.y);
+      }
+      ctx.restore();
     }
-    ctx.restore();
-  }
-
-  /**
-   * Draw landing dust particles
-   */
-  public drawParticles(ctx: CanvasRenderingContext2D, particles: Particle[]) {
-    ctx.save();
-    ctx.fillStyle = this.colors.foreground;
-
-    for (const p of particles) {
-      const progress = p.elapsed / p.duration;
-      const alpha = (1 - progress) * 0.6;
-      ctx.globalAlpha = alpha;
-      ctx.fillRect(p.x, p.y, p.size, p.size);
-    }
-    ctx.restore();
-  }
-
-  /**
-   * Draw milestone note in Caveat with hand-drawn SVG-like arrow
-   */
-  public drawMilestoneNote(
-    ctx: CanvasRenderingContext2D,
-    note: ActiveMilestone,
-    width: number
-  ) {
-    const progress = note.elapsed / note.duration;
-    if (progress >= 1) return;
-
-    const alpha = progress < 0.2 ? progress / 0.2 : progress > 0.8 ? (1 - progress) / 0.2 : 1.0;
-
-    const noteX = width - 40;
-    const noteY = Math.max(80, note.targetY - 20);
-
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.font = '22px "Caveat", cursive';
-    ctx.fillStyle = this.colors.accent;
-    ctx.strokeStyle = this.colors.accent;
-    ctx.textAlign = "right";
-
-    ctx.fillText(note.text, noteX, noteY);
-
-    // Hand-drawn arrow curving to the left towards the tower
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(noteX - ctx.measureText(note.text).width - 8, noteY - 2);
-    ctx.quadraticCurveTo(noteX - 140, noteY + 10, noteX - 160, noteY + 24);
-    ctx.stroke();
-
-    // Arrowhead
-    ctx.beginPath();
-    ctx.moveTo(noteX - 160, noteY + 24);
-    ctx.lineTo(noteX - 150, noteY + 20);
-    ctx.moveTo(noteX - 160, noteY + 24);
-    ctx.lineTo(noteX - 154, noteY + 32);
-    ctx.stroke();
-
     ctx.restore();
   }
 }
-

@@ -93,10 +93,15 @@ All content is cleanly centralized in `src/content/site.ts` and `public/`. To pe
 │   │   │   ├── ResumePanel.tsx      # View / download with dynamic status check
 │   │   │   ├── ContactPanel.tsx     # Email copy button + direct mail + socials
 │   │   │   └── CommandMenu.tsx      # cmdk search palette for sections & actions
-│   │   └── game/                    # "Registration" alignment mini-game
-│   │       ├── RegistrationCanvas.tsx # Canvas game loop
-│   │       ├── GameOverlay.tsx      # Modal game overlay
-│   │       └── InlineGame.tsx       # Inline playable canvas for 404 page
+│   │   └── game/topping-out/        # "Topping Out V2" isometric stacking game
+│   │       ├── engine.ts            # Slicing physics, combos, regrowth, state machine
+│   │       ├── render.ts            # Isometric canvas renderer (solid blocks, windows, crane, landmarks)
+│   │       ├── palettes.ts          # Color palettes (Rainbow, Dusk, Mint, Mono) & unlock thresholds
+│   │       ├── landmarks.ts         # Real-world landmark heights & humorous lines
+│   │       ├── audio.ts             # Web Audio API sound synthesizer (tones, whoosh, chords)
+│   │       ├── constants.ts         # Physics, dimensions, timings, storage keys
+│   │       ├── ToppingOutOverlay.tsx# Full-screen overlay playing over website with 30% dim layer
+│   │       └── ToppingOut.tsx       # Game component, solid HUD chips, game over card, Web Share
 │   └── content/
 │       └── site.ts                  # Typed site configuration and resume facts
 ```
@@ -109,9 +114,11 @@ All content is cleanly centralized in `src/content/site.ts` and `public/`. To pe
 | :--- | :--- |
 | `⌘ K` or `Ctrl + K` | Open the command palette |
 | `/` | Quick-search sections and actions |
-| `G` | Toggle the Registration mini-game |
-| `W A S D` / `Arrow Keys` | Steer plate in Registration game |
-| `ESC` | Close modal dialogs / command palette |
+| `G` | Toggle "Topping Out" isometric stacking game |
+| `Space` / `Click` | Drop slab in Topping Out |
+| `P` | Pause / Resume game |
+| `M` | Toggle game audio mute |
+| `ESC` | Close overlay dialogs / command palette |
 
 ---
 

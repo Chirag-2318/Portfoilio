@@ -213,6 +213,7 @@ export function CommandMenu() {
           <CommandRow
             label="Play Topping Out"
             hint="Isometric stacking game"
+            kbd="G"
             onSelect={() => handleAction(() => openGame())}
           />
         </Command.Group>
@@ -230,10 +231,12 @@ export function CommandMenu() {
 function CommandRow({
   label,
   hint,
+  kbd,
   onSelect,
 }: {
   label: string;
   hint?: string;
+  kbd?: string;
   onSelect: () => void;
 }) {
   return (
@@ -243,11 +246,14 @@ function CommandRow({
       className="relative h-9 px-3 rounded-md flex items-center justify-between text-sm font-medium text-foreground cursor-pointer select-none transition-colors data-[selected=true]:bg-[var(--muted)] data-[selected=true]:text-foreground data-[selected=true]:before:content-[''] data-[selected=true]:before:absolute data-[selected=true]:before:left-0 data-[selected=true]:before:top-1.5 data-[selected=true]:before:bottom-1.5 data-[selected=true]:before:w-0.5 data-[selected=true]:before:bg-[var(--accent)] data-[selected=true]:before:rounded-full"
     >
       <span className="truncate">{label}</span>
-      {hint && (
-        <span className="font-mono text-xs text-muted-foreground ml-2 shrink-0">
-          {hint}
-        </span>
-      )}
+      <div className="flex items-center gap-2 shrink-0 ml-2">
+        {hint && (
+          <span className="font-mono text-xs text-muted-foreground">
+            {hint}
+          </span>
+        )}
+        {kbd && <kbd className="kbd shrink-0 text-[10px]">{kbd}</kbd>}
+      </div>
     </Command.Item>
   );
 }

@@ -2,16 +2,25 @@
 
 import * as React from "react";
 import { GAME_CONSTANTS } from "./constants";
-import { ToppingOutEngine, type DropResult } from "./engine";
+import { ToppingOutEngine, type DropResult, type Slab, type MovingSlab } from "./engine";
 import {
   ToppingOutRenderer,
   type FloatingText,
   type Particle,
-  type PerfectRipple,
-  type ActiveMilestone,
+  type ConfettiParticle,
 } from "./render";
 import { ToppingOutAudio } from "./audio";
-import { getLandmarkLine, getMilestoneNote } from "./landmarks";
+import {
+  getLandmarkLine,
+  getMilestoneNote,
+  landmarkCrossed,
+} from "./landmarks";
+import {
+  PALETTES,
+  isPaletteUnlocked,
+  blockColors,
+  type PaletteId,
+} from "./palettes";
 
 export interface ToppingOutProps {
   mode?: "overlay" | "inline";
@@ -34,37 +43,58 @@ export function ToppingOut({
   const engineRef = React.useRef<ToppingOutEngine | null>(null);
   const rendererRef = React.useRef<ToppingOutRenderer | null>(null);
 
-  // Visual effects and animations in refs (zero React re-renders per frame)
+  // Visual effects and animations in refs
   const floatingTextsRef = React.useRef<FloatingText[]>([]);
   const particlesRef = React.useRef<Particle[]>([]);
-  const ripplesRef = React.useRef<PerfectRipple[]>([]);
-  const activeMilestoneRef = React.useRef<ActiveMilestone | null>(null);
+  const confettiRef = React.useRef<ConfettiParticle[]>([]);
 
-  const dimensionAccentUntilRef = React.useRef<number>(0);
-  const screenShakeUntilRef = React.useRef<number>(0);
-  const gameOverDelayUntilRef = React.useRef<number>(0);
+  // Animation timers & state in refs
+  const streakHaloFloorRef = React.useRef<number | null>(null);
+  const streakHaloUntilRef = React.useRef<number>(0);
+
+  const craneDropTimeRef = React.useRef<number>(0);
   const canRestartAtRef = React.useRef<number>(0);
+  const screenShakeUntilRef = React.useRef<number>(0);
+  const playStartTimeRef = React.useRef<number | null>(null);
 
   const reducedMotionRef = React.useRef(false);
+  const isCoarsePointerRef = React.useRef(false);
   const nextEffectIdRef = React.useRef(1);
-  const isHoveredRef = React.useRef(false);
+  const fontsReadyRef = React.useRef(false);
 
   // React state for HUD and UI overlays
   const [gameState, setGameState] = React.useState<"ready" | "playing" | "paused" | "over">("ready");
   const [floors, setFloors] = React.useState(0);
   const [perfects, setPerfects] = React.useState(0);
   const [best, setBest] = React.useState(0);
+  const [top3, setTop3] = React.useState<number[]>([]);
   const [isNewBest, setIsNewBest] = React.useState(false);
   const [isMuted, setIsMuted] = React.useState(false);
   const [showGameOverCard, setShowGameOverCard] = React.useState(false);
   const [isPaused, setIsPaused] = React.useState(false);
+  const [palette, setPalette] = React.useState<PaletteId>("rainbow");
+  const [shareFeedback, setShareFeedback] = React.useState<string | null>(null);
+  const [showHint, setShowHint] = React.useState(true);
 
-  // Initialize best score and audio
+  // Initialize best score, top 3, palette, audio, and font ready check
   React.useEffect(() => {
     let initialBest = 0;
     try {
-      const stored = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_BEST);
-      if (stored) initialBest = parseInt(stored, 10) || 0;
+      const storedBest = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_BEST);
+      if (storedBest) initialBest = parseInt(storedBest, 10) || 0;
+
+      const storedTop3 = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_TOP3);
+      if (storedTop3) {
+        const parsed = JSON.parse(storedTop3);
+        if (Array.isArray(parsed)) setTop3(parsed);
+      }
+
+      const storedPalette = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_PALETTE) as PaletteId;
+      if (storedPalette && PALETTES.some((p) => p.id === storedPalette)) {
+        if (isPaletteUnlocked(storedPalette, initialBest)) {
+          setPalette(storedPalette);
+        }
+      }
     } catch {
       // ignore storage error
     }
@@ -85,26 +115,34 @@ export function ToppingOut({
       (window as unknown as { __toppingOut?: unknown }).__toppingOut = {
         getEngine: () => engineRef.current,
         getAudio: () => audioRef.current,
+        getRenderer: () => rendererRef.current,
+        getCanvas: () => canvasRef.current,
         trigger: () => handleTrigger(),
       };
-    }
 
-    // Reduced motion preference
-    if (typeof window !== "undefined") {
       const media = window.matchMedia("(prefers-reduced-motion: reduce)");
       reducedMotionRef.current = media.matches;
       const listener = (e: MediaQueryListEvent) => {
         reducedMotionRef.current = e.matches;
       };
       media.addEventListener("change", listener);
+
+      const coarse = window.matchMedia("(pointer: coarse)");
+      isCoarsePointerRef.current = coarse.matches;
+
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          fontsReadyRef.current = true;
+        });
+      } else {
+        fontsReadyRef.current = true;
+      }
+
       return () => {
         media.removeEventListener("change", listener);
         delete (window as unknown as { __toppingOut?: unknown }).__toppingOut;
       };
     }
-    return () => {
-      delete (window as unknown as { __toppingOut?: unknown }).__toppingOut;
-    };
   }, []);
 
   // Listen for theme changes to refresh renderer colors
@@ -120,12 +158,60 @@ export function ToppingOut({
     return () => observer.disconnect();
   }, []);
 
-  // Auto-focus container if requested
+  // Auto-focus container
   React.useEffect(() => {
     if (autoFocus && containerRef.current) {
       containerRef.current.focus();
     }
   }, [autoFocus]);
+
+  // Hint chip fade-out timer (fades out 6 seconds after play starts)
+  React.useEffect(() => {
+    if (gameState === "playing" && playStartTimeRef.current === null) {
+      playStartTimeRef.current = performance.now();
+      const timer = setTimeout(() => {
+        setShowHint(false);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [gameState]);
+
+  // Helper to spawn confetti burst (24 solid rectangles)
+  const spawnConfetti = React.useCallback(
+    (x: number, y: number, currentPalette: PaletteId) => {
+      if (reducedMotionRef.current) return;
+      const count = GAME_CONSTANTS.CONFETTI_BURST_COUNT;
+      const colors = blockColors(floors, currentPalette);
+      const paletteColors = [
+        colors.top,
+        colors.left,
+        colors.right,
+        colors.windowLit,
+        rendererRef.current?.colors.accent || "#ff5a2c",
+      ];
+
+      for (let i = 0; i < count; i++) {
+        if (confettiRef.current.length >= GAME_CONSTANTS.MAX_CONFETTI) break;
+        const color = paletteColors[Math.floor(Math.random() * paletteColors.length)];
+        confettiRef.current.push({
+          id: nextEffectIdRef.current++,
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 160,
+          vy: -Math.random() * 120 - 40,
+          rot: Math.random() * Math.PI * 2,
+          vrot: (Math.random() - 0.5) * 8,
+          w: 4,
+          h: 7,
+          color,
+          alpha: 1.0,
+          elapsed: 0,
+          duration: GAME_CONSTANTS.CONFETTI_DURATION_MS / 1000,
+        });
+      }
+    },
+    [floors]
+  );
 
   // Handle Drop trigger
   const handleTrigger = React.useCallback(() => {
@@ -158,226 +244,245 @@ export function ToppingOut({
         setPerfects(0);
         setIsNewBest(false);
         setShowGameOverCard(false);
+        setShowHint(true);
+        playStartTimeRef.current = performance.now();
       }
       return;
     }
 
     if (engine.state === "playing") {
+      const prevMetres = engine.floors * GAME_CONSTANTS.METRES_PER_FLOOR;
       const dropRes: DropResult | null = engine.drop();
       if (!dropRes) return;
 
       const now = performance.now();
+      craneDropTimeRef.current = now;
 
       if (dropRes.type === "miss") {
         audio?.playGameOver();
+        if (isCoarsePointerRef.current && !reducedMotionRef.current) {
+          navigator.vibrate?.(GAME_CONSTANTS.HAPTIC_GAMEOVER_MS);
+        }
         if (!reducedMotionRef.current) {
           screenShakeUntilRef.current = now + GAME_CONSTANTS.SCREEN_SHAKE_DURATION_MS;
         }
         canRestartAtRef.current = now + GAME_CONSTANTS.MISS_DURATION_MS + GAME_CONSTANTS.RESTART_DELAY_MS;
-        gameOverDelayUntilRef.current = now + GAME_CONSTANTS.MISS_DURATION_MS + 500;
+
+        // Record top 3 scores
+        const finalFloors = engine.floors;
+        let nextTop3: number[] = [];
+        try {
+          const stored = localStorage.getItem(GAME_CONSTANTS.STORAGE_KEY_TOP3);
+          if (stored) nextTop3 = JSON.parse(stored);
+        } catch {}
+        if (!Array.isArray(nextTop3)) nextTop3 = [];
+        nextTop3.push(finalFloors);
+        nextTop3.sort((a, b) => b - a);
+        nextTop3 = Array.from(new Set(nextTop3)).slice(0, 3);
+        setTop3(nextTop3);
+        try {
+          localStorage.setItem(GAME_CONSTANTS.STORAGE_KEY_TOP3, JSON.stringify(nextTop3));
+        } catch {}
+
+        setTimeout(() => {
+          setShowGameOverCard(true);
+          setGameState("over");
+        }, GAME_CONSTANTS.MISS_DURATION_MS);
         return;
       }
 
-      setFloors(dropRes.floors);
+      const newFloors = dropRes.floors;
+      const newMetres = newFloors * GAME_CONSTANTS.METRES_PER_FLOOR;
+      setFloors(newFloors);
       setPerfects(engine.perfects);
 
-      // Save best score if beaten
-      if (dropRes.floors > engine.best) {
-        setBest(dropRes.floors);
-        try {
-          localStorage.setItem(GAME_CONSTANTS.STORAGE_KEY_BEST, String(dropRes.floors));
-        } catch {
-          // ignore
-        }
+      // Streak halo for combo >= 2
+      if (dropRes.combo >= 2) {
+        streakHaloFloorRef.current = newFloors;
+        streakHaloUntilRef.current = now + GAME_CONSTANTS.STREAK_HALO_DURATION_MS;
       }
 
+      // Check landmark crossed
+      const crossed = landmarkCrossed(prevMetres, newMetres);
       const canvas = canvasRef.current;
       const renderer = rendererRef.current;
-      const top = engine.getTopSlab();
+      const topSlab = engine.getTopSlab();
 
-      if (canvas && renderer && top) {
+      if (canvas && renderer && topSlab) {
         const scale = renderer.getScale(canvas.width / (window.devicePixelRatio || 1));
         const proj = renderer.project(
-          top.x,
-          top.y1,
-          top.z,
+          topSlab.x,
+          topSlab.y1,
+          topSlab.z,
           canvas.width / (window.devicePixelRatio || 1),
           canvas.height / (window.devicePixelRatio || 1),
           scale,
           engine.cameraShift
         );
 
-        if (dropRes.type === "perfect") {
-          audio?.playPerfect(dropRes.combo);
-          dimensionAccentUntilRef.current = now + GAME_CONSTANTS.DIMENSION_ACCENT_DURATION_MS;
-
-          // Expanding diamond ripple
-          if (!reducedMotionRef.current) {
-            const p010 = renderer.project(
-              top.x - top.w / 2,
-              top.y1,
-              top.z - top.d / 2,
-              canvas.width / (window.devicePixelRatio || 1),
-              canvas.height / (window.devicePixelRatio || 1),
-              scale,
-              engine.cameraShift
-            );
-            const p110 = renderer.project(
-              top.x + top.w / 2,
-              top.y1,
-              top.z - top.d / 2,
-              canvas.width / (window.devicePixelRatio || 1),
-              canvas.height / (window.devicePixelRatio || 1),
-              scale,
-              engine.cameraShift
-            );
-            const p111 = renderer.project(
-              top.x + top.w / 2,
-              top.y1,
-              top.z + top.d / 2,
-              canvas.width / (window.devicePixelRatio || 1),
-              canvas.height / (window.devicePixelRatio || 1),
-              scale,
-              engine.cameraShift
-            );
-            const p011 = renderer.project(
-              top.x - top.w / 2,
-              top.y1,
-              top.z + top.d / 2,
-              canvas.width / (window.devicePixelRatio || 1),
-              canvas.height / (window.devicePixelRatio || 1),
-              scale,
-              engine.cameraShift
-            );
-
-            ripplesRef.current.push({
-              id: nextEffectIdRef.current++,
-              points: [p010, p110, p111, p011],
-              centre: proj,
-              elapsed: 0,
-              duration: GAME_CONSTANTS.PERFECT_EXPAND_DURATION_MS / 1000,
-            });
-          }
-
-          // Floating text: "Perfect!" or "Perfect x3" or "REGROW!"
-          let text = dropRes.combo > 1 ? `Perfect x${dropRes.combo}` : "Perfect!";
-          if (dropRes.regrew) {
-            text = "REGROW!";
-          }
+        if (crossed) {
+          audio?.playPerfect(4); // celebration chord
           floatingTextsRef.current.push({
             id: nextEffectIdRef.current++,
-            text,
+            text: `${crossed.name}: cleared!`,
             x: proj.px,
-            y: proj.py - 10,
+            y: proj.py - 40,
             alpha: 1.0,
             elapsed: 0,
-            duration: GAME_CONSTANTS.FLOATING_TEXT_DURATION_MS / 1000,
+            duration: GAME_CONSTANTS.LANDMARK_NOTE_DURATION_MS / 1000,
+            isCaveat: true,
           });
-          if (floatingTextsRef.current.length > GAME_CONSTANTS.MAX_FLOATING_TEXTS) {
-            floatingTextsRef.current.shift();
-          }
-        } else {
-          // Trim landing
-          audio?.playTrim();
+          spawnConfetti(proj.px, proj.py - 20, palette);
         }
 
-        // Spawn dust particles on landing
-        if (!reducedMotionRef.current) {
-          for (let i = 0; i < GAME_CONSTANTS.PARTICLE_COUNT; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const spd = 20 + Math.random() * 40;
-            particlesRef.current.push({
+        // New best check
+        if (newFloors > engine.best) {
+          setIsNewBest(true);
+          setBest(newFloors);
+          try {
+            localStorage.setItem(GAME_CONSTANTS.STORAGE_KEY_BEST, String(newFloors));
+          } catch {}
+
+          if (!crossed) {
+            floatingTextsRef.current.push({
               id: nextEffectIdRef.current++,
+              text: "New best!",
               x: proj.px,
-              y: proj.py,
-              vx: Math.cos(angle) * spd,
-              vy: Math.sin(angle) * spd * 0.6,
-              size: Math.random() > 0.5 ? 2 : 3,
+              y: proj.py - 35,
               alpha: 1.0,
               elapsed: 0,
-              duration: GAME_CONSTANTS.PARTICLE_LIFETIME_MS / 1000,
+              duration: GAME_CONSTANTS.LANDMARK_NOTE_DURATION_MS / 1000,
+              isCaveat: true,
             });
-          }
-          if (particlesRef.current.length > GAME_CONSTANTS.MAX_PARTICLES) {
-            particlesRef.current.splice(0, particlesRef.current.length - GAME_CONSTANTS.MAX_PARTICLES);
+            spawnConfetti(proj.px, proj.py - 20, palette);
           }
         }
 
-        // Milestone notes
-        const milestone = getMilestoneNote(dropRes.floors);
-        if (milestone) {
-          activeMilestoneRef.current = {
-            text: milestone,
-            targetY: proj.py,
+        // Milestone note
+        const milestoneNote = getMilestoneNote(newFloors);
+        if (milestoneNote && !crossed) {
+          floatingTextsRef.current.push({
+            id: nextEffectIdRef.current++,
+            text: milestoneNote,
+            x: proj.px,
+            y: proj.py - 30,
+            alpha: 1.0,
             elapsed: 0,
             duration: GAME_CONSTANTS.MILESTONE_NOTE_DURATION_MS / 1000,
-          };
+            isCaveat: true,
+          });
         }
       }
+
+      // Audio & Haptic feedback
+      if (dropRes.type === "perfect") {
+        audio?.playPerfect(dropRes.combo);
+        if (isCoarsePointerRef.current && !reducedMotionRef.current) {
+          navigator.vibrate?.(GAME_CONSTANTS.HAPTIC_PERFECT_MS);
+        }
+      } else {
+        audio?.playTrim();
+      }
     }
-  }, [isPaused]);
+  }, [palette, spawnConfetti]);
 
   // Keyboard navigation & controls
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
-      // In inline mode, only handle space if focused or hovered
-      if (mode === "inline" && !isHoveredRef.current && document.activeElement !== containerRef.current) {
+      if (e.key === " " || e.key === "Enter" || e.key === "ArrowDown") {
+        e.preventDefault();
+        e.stopPropagation();
+        handleTrigger();
         return;
       }
 
-      if (e.key === " " || e.key === "Enter" || e.key === "ArrowDown") {
+      if (e.key === "p" || e.key === "P") {
         e.preventDefault();
-        handleTrigger();
-      } else if (e.key === "p" || e.key === "P") {
-        e.preventDefault();
-        if (engineRef.current?.state === "playing") {
+        e.stopPropagation();
+        if (gameState === "playing") {
           setIsPaused((prev) => !prev);
         }
-      } else if (e.key === "m" || e.key === "M") {
+        return;
+      }
+
+      if (e.key === "m" || e.key === "M") {
         e.preventDefault();
-        if (audioRef.current) {
-          const next = audioRef.current.toggleMute();
-          setIsMuted(next);
+        e.stopPropagation();
+        const audio = audioRef.current;
+        if (audio) {
+          audio.toggleMute();
+          setIsMuted(audio.muted);
         }
-      } else if (e.key === "Escape") {
+        return;
+      }
+
+      if (e.key === "Escape") {
         e.preventDefault();
+        e.stopPropagation();
         onClose?.();
       }
     },
-    [handleTrigger, mode, onClose]
+    [gameState, handleTrigger, onClose]
   );
 
-  // Auto-pause when window loses focus or page hidden
-  React.useEffect(() => {
-    const handleBlur = () => {
-      if (engineRef.current?.state === "playing") {
-        setIsPaused(true);
-      }
-    };
-    const handleVisibility = () => {
-      if (document.hidden && engineRef.current?.state === "playing") {
-        setIsPaused(true);
-      }
-    };
+  // Cycle palette through unlocked choices
+  const cyclePalette = React.useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const currentBest = best;
+    const unlocked = PALETTES.filter((p) => isPaletteUnlocked(p.id, currentBest));
+    const currentIndex = unlocked.findIndex((p) => p.id === palette);
+    const nextIndex = (currentIndex + 1) % unlocked.length;
+    const nextPalette = unlocked[nextIndex].id;
+    setPalette(nextPalette);
+    try {
+      localStorage.setItem(GAME_CONSTANTS.STORAGE_KEY_PALETTE, nextPalette);
+    } catch {}
+  }, [best, palette]);
 
-    window.addEventListener("blur", handleBlur);
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () => {
-      window.removeEventListener("blur", handleBlur);
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
-  }, []);
+  // Share score handler
+  const handleShare = React.useCallback(async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const metres = floors * GAME_CONSTANTS.METRES_PER_FLOOR;
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const text = `I topped out at ${floors} floors (${metres} m) on Chirag Patil's portfolio. Think you can beat me?`;
 
-  // Main RAF loop
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: "Topping Out",
+          text,
+          url: origin,
+        });
+        return;
+      } catch {
+        // Fallback to clipboard
+      }
+    }
+
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(`${text} ${origin}`);
+        setShareFeedback("Copied!");
+        setTimeout(() => setShareFeedback(null), 1500);
+      } catch {
+        // ignore
+      }
+    }
+  }, [floors]);
+
+  // Game loop
   React.useEffect(() => {
-    let rafId: number;
+    let animId: number;
     let lastTime = performance.now();
 
-    const loop = (currentTime: number) => {
-      rafId = requestAnimationFrame(loop);
+    const loop = (now: number) => {
+      animId = requestAnimationFrame(loop);
 
-      const dt = Math.min((currentTime - lastTime) / 1000, 1 / 30);
-      lastTime = currentTime;
+      if (!fontsReadyRef.current) return;
+
+      const rawDt = (now - lastTime) / 1000;
+      lastTime = now;
+      const dt = Math.min(rawDt, 1 / 30); // clamp dt to 1/30s
 
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
@@ -387,64 +492,44 @@ export function ToppingOut({
       if (!canvas || !ctx || !engine || !renderer) return;
 
       const dpr = window.devicePixelRatio || 1;
-      const logicalWidth = canvas.width / dpr;
-      const logicalHeight = canvas.height / dpr;
-      const scale = renderer.getScale(logicalWidth);
+      const displayW = canvas.clientWidth;
+      const displayH = canvas.clientHeight;
 
-      // Update engine physics if not paused
-      if (!isPaused) {
-        engine.update(dt, scale, logicalHeight);
+      if (canvas.width !== Math.round(displayW * dpr) || canvas.height !== Math.round(displayH * dpr)) {
+        canvas.width = Math.round(displayW * dpr);
+        canvas.height = Math.round(displayH * dpr);
       }
 
-      // Check game over transition
-      if (engine.state === "over" && gameState !== "over") {
-        setGameState("over");
-      }
-      if (
-        engine.state === "over" &&
-        !showGameOverCard &&
-        currentTime >= gameOverDelayUntilRef.current
-      ) {
-        setShowGameOverCard(true);
-        setIsNewBest(engine.floors > best);
-      }
-
-      // Clear frame
       ctx.save();
       ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, displayW, displayH);
 
-      // Screen shake (disabled under reduced motion)
-      let shakeX = 0;
-      let shakeY = 0;
-      if (currentTime < screenShakeUntilRef.current && !reducedMotionRef.current) {
-        shakeX = (Math.random() - 0.5) * GAME_CONSTANTS.SCREEN_SHAKE_AMOUNT;
-        shakeY = (Math.random() - 0.5) * GAME_CONSTANTS.SCREEN_SHAKE_AMOUNT;
+      // Screen shake on miss
+      if (now < screenShakeUntilRef.current) {
+        const shake = (Math.random() - 0.5) * GAME_CONSTANTS.SCREEN_SHAKE_AMOUNT;
+        ctx.translate(shake, shake);
       }
-      ctx.translate(shakeX, shakeY);
 
-      // Background fill
-      ctx.fillStyle = renderer.colors.background;
-      ctx.fillRect(0, 0, logicalWidth, logicalHeight);
+      // Update engine physics
+      if (!isPaused) {
+        engine.update(dt);
+      }
 
-      // Dot grid
-      renderer.drawDotGrid(ctx, logicalWidth, logicalHeight, scale, engine.cameraShift);
+      const scale = renderer.getScale(displayW);
+      const cameraShift = engine.cameraShift;
 
-      // Height gauge
-      renderer.drawHeightGauge(ctx, logicalHeight, scale, engine.cameraShift, engine.floors);
+      // 1. Draw solid ground platform
+      renderer.drawGroundPlatform(ctx, displayW, displayH, scale, cameraShift);
 
-      // Tower opacity when game over
-      const towerAlpha = engine.state === "over" ? 0.7 : 1.0;
+      // 2. Draw placed slabs in painter's order (bottom to top)
+      const currentHaloActive = now < streakHaloUntilRef.current;
+      const highestFlagFloor = Math.max(...engine.slabs.map((s) => s.id).filter((id) => id % 10 === 0), 0);
 
-      // Draw all placed slabs from bottom up
-      for (let i = 0; i < engine.slabs.length; i++) {
-        const slab = engine.slabs[i];
-        const isTenth = i > 0 && i % 10 === 0;
-        const currentTopY =
-          slab.squashScale !== undefined
-            ? slab.y0 + (slab.y1 - slab.y0) * slab.squashScale
-            : slab.y1;
+      engine.slabs.forEach((slab, idx) => {
+        const slabColors = blockColors(idx, palette);
+        const isHalo = currentHaloActive && streakHaloFloorRef.current === slab.id;
 
-        renderer.drawBox(
+        renderer.drawSolidBox(
           ctx,
           {
             x0: slab.x - slab.w / 2,
@@ -452,21 +537,35 @@ export function ToppingOut({
             z0: slab.z - slab.d / 2,
             z1: slab.z + slab.d / 2,
             y0: slab.y0,
-            y1: currentTopY,
-            accentOutline: isTenth,
-            label10F: isTenth ? `${i}F` : undefined,
+            y1: slab.y1,
+            colors: slabColors,
+            hasWindows: !slab.isBase,
+            floorIndex: idx,
+            accentOutline: isHalo,
           },
-          logicalWidth,
-          logicalHeight,
+          displayW,
+          displayH,
           scale,
-          engine.cameraShift,
-          towerAlpha
+          cameraShift
         );
-      }
 
-      // Draw active debris pieces
-      for (const d of engine.debrisList) {
-        renderer.drawBox(
+        // Draw flag on floor 10, 20, 30... (only highest flag after floor 30)
+        if (slab.id > 0 && slab.id % 10 === 0) {
+          if (slab.id <= 30 || slab.id === highestFlagFloor) {
+            renderer.drawFlag(ctx, slab, now / 1000, displayW, displayH, scale, cameraShift, reducedMotionRef.current);
+          }
+        }
+      });
+
+      // 3. Draw falling debris pieces (solid while falling, fade during last 300ms)
+      engine.debrisList.forEach((d) => {
+        let alpha = 1.0;
+        if (d.lifetime <= 0.3) {
+          alpha = Math.max(0, d.lifetime / 0.3);
+        }
+        const dColors = blockColors(d.id, palette);
+
+        renderer.drawSolidBox(
           ctx,
           {
             x0: d.x - d.w / 2,
@@ -475,346 +574,317 @@ export function ToppingOut({
             z1: d.z + d.d / 2,
             y0: d.y0,
             y1: d.y1,
+            colors: dColors,
+            hasWindows: false,
           },
-          logicalWidth,
-          logicalHeight,
+          displayW,
+          displayH,
           scale,
-          engine.cameraShift,
-          d.alpha
+          cameraShift,
+          alpha
         );
-      }
+      });
 
-      // Draw falling slab on miss
-      if (engine.fallingSlab) {
-        const f = engine.fallingSlab;
-        renderer.drawBox(
-          ctx,
-          {
-            x0: f.x - f.w / 2,
-            x1: f.x + f.w / 2,
-            z0: f.z - f.d / 2,
-            z1: f.z + f.d / 2,
-            y0: f.y0,
-            y1: f.y1,
-          },
-          logicalWidth,
-          logicalHeight,
-          scale,
-          engine.cameraShift,
-          1.0
-        );
-      }
-
-      // Draw moving slab and live CAD dimension line
+      // 4. Draw moving slab with crane
       if (engine.state === "playing" && engine.movingSlab) {
-        renderer.drawBox(
+        const moving = engine.movingSlab;
+        const currentFloor = engine.floors + 1;
+        const movingColors = blockColors(currentFloor, palette);
+
+        // Calculate crane retraction progress (0 to 1 over 150ms on drop)
+        let craneRetract = 0;
+        if (craneDropTimeRef.current > 0) {
+          const elapsedCrane = now - craneDropTimeRef.current;
+          if (elapsedCrane < GAME_CONSTANTS.CRANE_RETRACT_DURATION_MS) {
+            craneRetract = elapsedCrane / GAME_CONSTANTS.CRANE_RETRACT_DURATION_MS;
+          }
+        }
+
+        // Draw crane line & hook
+        renderer.drawCrane(
+          ctx,
+          moving,
+          craneRetract,
+          now / 1000,
+          displayW,
+          displayH,
+          scale,
+          cameraShift,
+          reducedMotionRef.current
+        );
+
+        // Draw moving slab
+        renderer.drawSolidBox(
           ctx,
           {
-            x0: engine.movingSlab.x - engine.movingSlab.w / 2,
-            x1: engine.movingSlab.x + engine.movingSlab.w / 2,
-            z0: engine.movingSlab.z - engine.movingSlab.d / 2,
-            z1: engine.movingSlab.z + engine.movingSlab.d / 2,
-            y0: engine.movingSlab.y0,
-            y1: engine.movingSlab.y1,
+            x0: moving.x - moving.w / 2,
+            x1: moving.x + moving.w / 2,
+            z0: moving.z - moving.d / 2,
+            z1: moving.z + moving.d / 2,
+            y0: moving.y0,
+            y1: moving.y1,
+            colors: movingColors,
+            hasWindows: true,
+            floorIndex: currentFloor,
           },
-          logicalWidth,
-          logicalHeight,
+          displayW,
+          displayH,
           scale,
-          engine.cameraShift,
-          1.0
-        );
-
-        const isDimAccent = currentTime < dimensionAccentUntilRef.current;
-        renderer.drawDimensionLine(
-          ctx,
-          engine.movingSlab,
-          logicalWidth,
-          logicalHeight,
-          scale,
-          engine.cameraShift,
-          isDimAccent
+          cameraShift
         );
       }
 
-      // Perfect ripples
-      for (let i = ripplesRef.current.length - 1; i >= 0; i--) {
-        const r = ripplesRef.current[i];
-        r.elapsed += dt;
-        renderer.drawPerfectRipple(ctx, r);
-        if (r.elapsed >= r.duration) {
-          ripplesRef.current.splice(i, 1);
+      // 5. Draw landmark dashed comparison lines across viewport
+      renderer.drawLandmarks(ctx, engine.floors, displayW, displayH, scale, cameraShift);
+
+      // 6. Update and draw confetti particles
+      if (!isPaused && confettiRef.current.length > 0) {
+        for (let i = confettiRef.current.length - 1; i >= 0; i--) {
+          const c = confettiRef.current[i];
+          c.elapsed += dt;
+          if (c.elapsed >= c.duration) {
+            confettiRef.current.splice(i, 1);
+            continue;
+          }
+          c.vy += 180 * dt; // gravity
+          c.vx += Math.sin(now / 300 + c.id) * 20 * dt; // drift
+          c.x += c.vx * dt;
+          c.y += c.vy * dt;
+          c.rot += c.vrot * dt;
+          c.alpha = 1 - c.elapsed / c.duration;
         }
+        renderer.drawConfetti(ctx, confettiRef.current);
       }
 
-      // Floating texts
-      for (let i = floatingTextsRef.current.length - 1; i >= 0; i--) {
-        const ft = floatingTextsRef.current[i];
-        ft.elapsed += dt;
-        if (ft.elapsed >= ft.duration) {
-          floatingTextsRef.current.splice(i, 1);
+      // 7. Update and draw floating texts
+      if (!isPaused && floatingTextsRef.current.length > 0) {
+        for (let i = floatingTextsRef.current.length - 1; i >= 0; i--) {
+          const t = floatingTextsRef.current[i];
+          t.elapsed += dt;
+          if (t.elapsed >= t.duration) {
+            floatingTextsRef.current.splice(i, 1);
+            continue;
+          }
+          t.y -= 25 * dt;
+          t.alpha = 1 - t.elapsed / t.duration;
         }
-      }
-      renderer.drawFloatingTexts(ctx, floatingTextsRef.current);
-
-      // Dust particles
-      for (let i = particlesRef.current.length - 1; i >= 0; i--) {
-        const p = particlesRef.current[i];
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.elapsed += dt;
-        if (p.elapsed >= p.duration) {
-          particlesRef.current.splice(i, 1);
-        }
-      }
-      renderer.drawParticles(ctx, particlesRef.current);
-
-      // Active milestone note
-      if (activeMilestoneRef.current) {
-        const m = activeMilestoneRef.current;
-        m.elapsed += dt;
-        renderer.drawMilestoneNote(ctx, m, logicalWidth);
-        if (m.elapsed >= m.duration) {
-          activeMilestoneRef.current = null;
-        }
-      }
-
-      // Paused badge
-      if (isPaused) {
-        ctx.fillStyle = renderer.colors.background;
-        ctx.globalAlpha = 0.85;
-        ctx.fillRect(0, 0, logicalWidth, logicalHeight);
-
-        ctx.globalAlpha = 1.0;
-        ctx.font = '14px "Geist Mono", monospace';
-        ctx.fillStyle = renderer.colors.foreground;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("Paused. Press P to resume", logicalWidth / 2, logicalHeight / 2);
+        renderer.drawFloatingTexts(ctx, floatingTextsRef.current);
       }
 
       ctx.restore();
     };
 
-    rafId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafId);
-  }, [best, gameState, isPaused, showGameOverCard]);
+    animId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animId);
+  }, [isPaused, palette]);
 
-  // Handle ResizeObserver
-  React.useEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-
-    const updateSize = () => {
-      const rect = container.getBoundingClientRect();
-      const headerH = 40; // header height
-      const footerH = 32; // footer height
-      const targetW = rect.width;
-      const targetH = Math.max(300, rect.height - headerH - footerH);
-
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.round(targetW * dpr);
-      canvas.height = Math.round(targetH * dpr);
-      canvas.style.width = `${targetW}px`;
-      canvas.style.height = `${targetH}px`;
-    };
-
-    updateSize();
-
-    if (typeof ResizeObserver !== "undefined") {
-      const ro = new ResizeObserver(updateSize);
-      ro.observe(container);
-      return () => ro.disconnect();
-    }
-  }, []);
-
-  const toggleSound = () => {
-    if (audioRef.current) {
-      const next = audioRef.current.toggleMute();
-      setIsMuted(next);
-    }
-  };
-
-  const restartGame = () => {
-    const engine = engineRef.current;
-    if (!engine) return;
-    engine.reset(engine.best);
-    engine.start();
-    setGameState("playing");
-    setFloors(0);
-    setPerfects(0);
-    setIsNewBest(false);
-    setShowGameOverCard(false);
-    setIsPaused(false);
-    containerRef.current?.focus();
-  };
-
-  const metres = floors * GAME_CONSTANTS.METRES_PER_FLOOR;
-  const landmarkText = getLandmarkLine(floors);
+  const isOverlay = mode === "overlay";
+  const nextUnlockMeta = PALETTES.find((p) => !isPaletteUnlocked(p.id, best));
 
   return (
     <div
       ref={containerRef}
       tabIndex={0}
-      role={mode === "overlay" ? "dialog" : "region"}
-      aria-modal={mode === "overlay" ? "true" : undefined}
-      aria-label="Topping Out game"
+      role="application"
+      aria-label="Topping Out game canvas"
       onKeyDown={handleKeyDown}
-      onMouseEnter={() => {
-        isHoveredRef.current = true;
-      }}
-      onMouseLeave={() => {
-        isHoveredRef.current = false;
-      }}
-      className={`relative flex flex-col bg-[var(--background)] border border-[var(--line-strong)] rounded-[6px] overflow-hidden select-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
-        mode === "overlay"
-          ? "w-full max-w-[480px] h-[min(88vh,760px)] shadow-2xl"
-          : "w-full max-w-[480px] h-[560px] mx-auto"
-      } ${className}`}
+      onClick={handleTrigger}
+      className={`relative select-none outline-none ${
+        isOverlay ? "w-full h-full cursor-pointer" : `w-full h-[400px] border border-[var(--line-strong)] rounded-lg overflow-hidden bg-[var(--background)] cursor-pointer ${className}`
+      }`}
     >
-      {/* 4 Corner Registration Crosshairs (+ marks) */}
-      <div className="absolute top-1.5 left-1.5 text-[var(--dimension)] font-mono text-[10px] leading-none pointer-events-none z-20">
-        +
-      </div>
-      <div className="absolute top-1.5 right-1.5 text-[var(--dimension)] font-mono text-[10px] leading-none pointer-events-none z-20">
-        +
-      </div>
-      <div className="absolute bottom-1.5 left-1.5 text-[var(--dimension)] font-mono text-[10px] leading-none pointer-events-none z-20">
-        +
-      </div>
-      <div className="absolute bottom-1.5 right-1.5 text-[var(--dimension)] font-mono text-[10px] leading-none pointer-events-none z-20">
-        +
-      </div>
+      {/* Game Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none block"
+      />
 
-      {/* Card Header Row */}
-      <header className="h-10 shrink-0 border-b border-[var(--line)] px-3 flex items-center justify-between z-10 bg-[var(--background)]">
-        <div className="flex items-center gap-2">
-          <span className="font-serif text-lg font-normal tracking-tight text-foreground">
-            Topping Out
-          </span>
+      {/* ─── HUD: Solid Chips for High Legibility ─── */}
+
+      {/* Top-Left: Floors Counter Chip */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="absolute top-4 left-4 z-20 bg-[var(--background)] border border-[var(--line-strong)] rounded-md px-3 py-2 flex flex-col justify-center shadow-xs select-none pointer-events-auto"
+      >
+        <span
+          className="font-serif text-[2rem] leading-none font-normal tracking-tight text-foreground"
+          style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
+        >
+          {floors}
+        </span>
+        <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground mt-0.5 tracking-wider">
+          <span className="uppercase">FLOORS</span>
+          <span>·</span>
+          <span>BEST {best}</span>
         </div>
+      </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 font-mono text-xs tabular-nums">
-            <span className="text-foreground">FLOORS {floors}</span>
-            <span className="text-muted-foreground">BEST {best}</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={toggleSound}
-            aria-label={isMuted ? "Unmute sound" : "Mute sound"}
-            title={isMuted ? "Unmute (M)" : "Mute (M)"}
-            className="size-8 rounded-[6px] text-muted-foreground hover:text-foreground hover:bg-[var(--muted)] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
-          >
-            {isMuted ? (
-              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                <line x1="23" y1="9" x2="17" y2="15" />
-                <line x1="17" y1="9" x2="23" y2="15" />
-              </svg>
-            ) : (
-              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+      {/* Top-Right: Icon Controls Row */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="absolute top-4 right-4 z-20 flex items-center gap-2 select-none pointer-events-auto"
+      >
+        {/* Palette Selector Button */}
+        <button
+          type="button"
+          onClick={cyclePalette}
+          aria-label={`Palette: ${palette}. Click to cycle`}
+          title={
+            nextUnlockMeta
+              ? `Current: ${palette.toUpperCase()}. Reach ${nextUnlockMeta.unlockThreshold} floors to unlock ${nextUnlockMeta.name}`
+              : `Current: ${palette.toUpperCase()}`
+          }
+          className="size-9 rounded-md bg-[var(--background)] border border-[var(--line-strong)] text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <div className="flex items-center gap-0.5">
+            <span
+              className="size-2 rounded-full"
+              style={{
+                backgroundColor:
+                  palette === "rainbow"
+                    ? "#ff5a2c"
+                    : palette === "dusk"
+                    ? "#c084fc"
+                    : palette === "mint"
+                    ? "#34d399"
+                    : "#a1a1aa",
+              }}
+            />
+            {nextUnlockMeta && best < nextUnlockMeta.unlockThreshold && (
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-muted-foreground/60 ml-0.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
             )}
-          </button>
-
-          {mode === "overlay" && onClose && (
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close game (Esc)"
-              title="Close (Esc)"
-              className="size-8 rounded-[6px] text-muted-foreground hover:text-foreground hover:bg-[var(--muted)] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent)]"
-            >
-              <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          )}
-        </div>
-      </header>
-
-      {/* Main Interactive Canvas Area */}
-      <div
-        className="relative flex-1 cursor-pointer overflow-hidden"
-        style={{ touchAction: "none" }}
-        onPointerDown={(e) => {
-          e.preventDefault();
-          handleTrigger();
-        }}
-      >
-        <canvas ref={canvasRef} className="block w-full h-full" />
-
-        {/* Ready Screen Overlay */}
-        {gameState === "ready" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-between py-12 px-4 pointer-events-none">
-            <div className="text-center space-y-1">
-              <p className="font-mono text-sm text-foreground flex items-center justify-center gap-1">
-                <span>Tap, click or press Space to drop the slab</span>
-                <span className="inline-block w-1.5 h-3.5 bg-[var(--accent)] animate-pulse" />
-              </p>
-              <p className="font-caveat text-xl text-[var(--accent)] -rotate-3">
-                stack them straight
-              </p>
-            </div>
-
-            <div className="font-mono text-xs text-muted-foreground">
-              1 floor = 3 m
-            </div>
           </div>
+        </button>
+
+        {/* Audio Mute Toggle Button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            const audio = audioRef.current;
+            if (audio) {
+              audio.toggleMute();
+              setIsMuted(audio.muted);
+            }
+          }}
+          aria-label={isMuted ? "Unmute game audio" : "Mute game audio"}
+          title={isMuted ? "Unmute sound (M)" : "Mute sound (M)"}
+          className="size-9 rounded-md bg-[var(--background)] border border-[var(--line-strong)] text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {isMuted ? (
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          ) : (
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+            </svg>
+          )}
+        </button>
+
+        {/* Close Button (Overlay mode only) */}
+        {onClose && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            aria-label="Close game"
+            title="Close game (Esc)"
+            className="size-9 rounded-md bg-[var(--background)] border border-[var(--line-strong)] text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
         )}
+      </div>
 
-        {/* Game Over Card */}
-        {showGameOverCard && (
-          <div className="absolute inset-0 flex items-center justify-center p-4 bg-background/50 backdrop-blur-[1px] z-30">
-            <div
-              className="w-full max-w-[340px] bg-[var(--background)] border border-[var(--line-strong)] rounded-[6px] p-5 shadow-2xl space-y-4 text-center cursor-default animate-in fade-in zoom-in-95 duration-200"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="space-y-1">
-                <h3 className="font-serif text-2xl font-normal tracking-tight text-foreground">
-                  You topped out at {floors} {floors === 1 ? "floor" : "floors"}
-                </h3>
-                <p className="font-mono text-xs text-muted-foreground">
-                  {metres} m. {landmarkText}
-                </p>
+      {/* Bottom-Center: Hint Chip */}
+      {showHint && (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 bg-[var(--background)] border border-[var(--line-strong)] rounded-md px-3 py-1.5 font-mono text-xs text-muted-foreground shadow-xs pointer-events-none transition-opacity duration-500 select-none whitespace-nowrap"
+        >
+          <span className="hidden sm:inline">Space / click: drop · P: pause · M: sound · Esc: close</span>
+          <span className="sm:hidden">Tap to drop</span>
+        </div>
+      )}
+
+      {/* ─── Floating Solid Game-Over Panel ─── */}
+      {showGameOverCard && (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="absolute inset-0 z-30 flex items-center justify-center p-4 pointer-events-auto"
+        >
+          <div className="relative bg-[var(--background)] border border-[var(--line-strong)] rounded-lg p-5 max-w-[340px] w-full shadow-lg text-center space-y-4">
+            {/* Landmark humorous line */}
+            <p className="text-sm font-sans text-foreground leading-snug">
+              {getLandmarkLine(floors)}
+            </p>
+
+            {/* Score Display */}
+            <div>
+              <div
+                className="font-serif text-3xl font-normal text-foreground leading-none"
+                style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
+              >
+                {floors} floors
               </div>
-
-              <div className="py-2 px-3 border border-[var(--line)] rounded-[4px] bg-[var(--muted)] flex items-center justify-around font-mono text-xs">
-                <div>
-                  <span className="text-muted-foreground block text-[10px]">PERFECTS</span>
-                  <span className="text-foreground font-medium text-sm tabular-nums">{perfects}</span>
-                </div>
-                <div className="w-px h-6 bg-[var(--line)]" />
-                <div>
-                  <span className="text-muted-foreground block text-[10px]">BEST</span>
-                  <span className="text-foreground font-medium text-sm tabular-nums">{best}</span>
-                </div>
+              <div className="font-mono text-xs text-muted-foreground mt-1">
+                {floors * GAME_CONSTANTS.METRES_PER_FLOOR} m · {perfects} perfects
               </div>
+            </div>
 
-              {isNewBest && (
-                <p className="font-caveat text-xl text-[var(--accent)] -rotate-3 font-medium">
-                  New best!
-                </p>
-              )}
+            {/* New best celebration */}
+            {isNewBest && (
+              <div
+                className="font-serif text-lg text-[var(--accent)] font-semibold"
+                style={{ fontFamily: "var(--font-caveat), cursive" }}
+              >
+                New best!
+              </div>
+            )}
 
-              <div className="flex items-center gap-2 pt-1">
+            {/* Top 3 Scores */}
+            {top3.length >= 2 && (
+              <div className="font-mono text-xs text-muted-foreground tracking-wide">
+                Your top 3: {top3.join(" / ")}
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleTrigger}
+                className="w-full py-2 px-4 rounded-md font-mono text-xs font-medium bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-95 transition-opacity cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Play again
+              </button>
+
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={restartGame}
-                  className="flex-1 h-9 rounded-md bg-foreground text-background font-mono text-xs font-medium hover:opacity-90 active:scale-[0.98] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  onClick={handleShare}
+                  className="flex-1 py-1.5 px-3 rounded-md font-mono text-xs bg-[var(--muted)] border border-[var(--line-strong)] text-foreground hover:bg-[var(--line)] transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  Play again
+                  {shareFeedback || "Share score"}
                 </button>
-                {mode === "overlay" && onClose && (
+
+                {onClose && (
                   <button
                     type="button"
                     onClick={onClose}
-                    className="px-4 h-9 rounded-md border border-[var(--border)] text-muted-foreground hover:text-foreground hover:bg-[var(--muted)] font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                    className="flex-1 py-1.5 px-3 rounded-md font-mono text-xs bg-[var(--muted)] border border-[var(--line-strong)] text-muted-foreground hover:text-foreground transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     Close
                   </button>
@@ -822,18 +892,8 @@ export function ToppingOut({
               </div>
             </div>
           </div>
-        )}
-      </div>
-
-      {/* Footer Hint Row */}
-      <footer className="h-8 shrink-0 border-t border-[var(--line)] px-3 flex items-center justify-center font-mono text-xs text-muted-foreground bg-[var(--background)]">
-        <span className="hidden sm:inline">
-          Space / click: drop · P: pause · M: sound · Esc: close
-        </span>
-        <span className="sm:hidden">
-          Tap to drop · P: pause · M: sound
-        </span>
-      </footer>
+        </div>
+      )}
     </div>
   );
 }

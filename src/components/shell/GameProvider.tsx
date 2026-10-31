@@ -69,6 +69,31 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setOpen(false);
   }, []);
 
+  // Global 'G' key shortcut to open game when not focusing inputs
+  React.useEffect(() => {
+    function handleGlobalKeyDown(e: KeyboardEvent) {
+      if (e.key === "g" || e.key === "G") {
+        const target = e.target as HTMLElement | null;
+        if (
+          target &&
+          (target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.isContentEditable)
+        ) {
+          return;
+        }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (!open) {
+          e.preventDefault();
+          openGame();
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [open, openGame]);
+
   const handleExited = React.useCallback(() => {
     setMounted(false);
     // Restore focus

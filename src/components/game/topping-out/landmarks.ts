@@ -2,6 +2,32 @@
  * Landmark comparison lines based on building height in metres (floors * 3)
  */
 
+export interface Landmark {
+  metres: number;
+  name: string;
+}
+
+export const LANDMARK_LIST: Landmark[] = [
+  { metres: 26, name: "Gateway of India" },
+  { metres: 73, name: "Qutub Minar" },
+  { metres: 182, name: "Statue of Unity" },
+  { metres: 330, name: "Eiffel Tower" },
+  { metres: 828, name: "Burj Khalifa" },
+];
+
+/**
+ * Pure function to check if a landmark height was crossed between previous and new heights.
+ * Returns the crossed Landmark object or null if none was crossed.
+ */
+export function landmarkCrossed(prevMetres: number, newMetres: number): Landmark | null {
+  for (const lm of LANDMARK_LIST) {
+    if (prevMetres < lm.metres && newMetres >= lm.metres) {
+      return lm;
+    }
+  }
+  return null;
+}
+
 export function getLandmarkLine(floors: number): string {
   if (floors <= 2) {
     return "A garden shed. Everyone starts somewhere.";
@@ -46,4 +72,3 @@ export function getMilestoneNote(floors: number): string | null {
       return null;
   }
 }
-

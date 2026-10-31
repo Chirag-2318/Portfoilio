@@ -17,31 +17,56 @@ export default function ToppingOutOverlay({
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const previouslyFocusedElementRef = React.useRef<HTMLElement | null>(null);
 
-  // Lock body scroll and remember active element
+  // Lock body scroll with scrollbar compensation, preserve scroll position, set inert on main content
   React.useEffect(() => {
-    if (open) {
-      if (typeof document !== "undefined") {
-        previouslyFocusedElementRef.current = document.activeElement as HTMLElement | null;
-        document.body.style.overflow = "hidden";
-      }
-    } else {
-      if (typeof document !== "undefined") {
-        document.body.style.overflow = "";
-      }
+    if (!open) {
       onExited?.();
-      if (previouslyFocusedElementRef.current?.focus) {
-        previouslyFocusedElementRef.current.focus();
-      }
+      return;
     }
 
+    if (typeof document === "undefined") return;
+
+    previouslyFocusedElementRef.current = document.activeElement as HTMLElement | null;
+
+    // Save scroll position
+    const scrollY = window.scrollY;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    const originalOverflow = document.documentElement.style.overflow;
+    const originalPaddingRight = document.documentElement.style.paddingRight;
+
+    document.documentElement.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.documentElement.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    // Set inert on main content so Tab cannot escape the overlay
+    const mainEl = document.querySelector("main") || document.getElementById("app-shell");
+    if (mainEl) {
+      mainEl.setAttribute("inert", "");
+    }
+
+    // Move focus to overlay
+    requestAnimationFrame(() => {
+      overlayRef.current?.focus();
+    });
+
     return () => {
-      if (typeof document !== "undefined") {
-        document.body.style.overflow = "";
+      document.documentElement.style.overflow = originalOverflow;
+      document.documentElement.style.paddingRight = originalPaddingRight;
+      window.scrollTo(0, scrollY);
+
+      if (mainEl) {
+        mainEl.removeAttribute("inert");
+      }
+
+      if (previouslyFocusedElementRef.current?.focus) {
+        previouslyFocusedElementRef.current.focus();
       }
     };
   }, [open, onExited]);
 
-  // Handle focus trap & Escape key
+  // Handle Escape key
   React.useEffect(() => {
     if (!open) return;
 
@@ -49,32 +74,6 @@ export default function ToppingOutOverlay({
       if (e.key === "Escape") {
         e.stopPropagation();
         onClose();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        const overlay = overlayRef.current;
-        if (!overlay) return;
-
-        const focusable = overlay.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusable.length === 0) return;
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
       }
     };
 
@@ -87,16 +86,20 @@ export default function ToppingOutOverlay({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[var(--background)]/80 animate-in fade-in duration-200"
-      onClick={(e) => {
-        // Close on clicking backdrop
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Topping Out game"
+      tabIndex={-1}
+      className="fixed inset-0 z-[90] overflow-hidden select-none outline-none"
     >
+      {/* Dim layer behind canvas: 30% background mix, no blur, fades in over 200ms */}
+      <div
+        className="absolute inset-0 bg-[color-mix(in_srgb,var(--background)_30%,transparent)] transition-opacity duration-200 pointer-events-none"
+        aria-hidden="true"
+      />
+
+      {/* Transparent full-viewport game layer */}
       <ToppingOut mode="overlay" onClose={onClose} autoFocus />
     </div>
   );
 }
-

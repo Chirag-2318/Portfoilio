@@ -6,6 +6,8 @@
 import assert from "node:assert/strict";
 import { ToppingOutEngine } from "../src/components/game/topping-out/engine.ts";
 import { GAME_CONSTANTS } from "../src/components/game/topping-out/constants.ts";
+import { landmarkCrossed } from "../src/components/game/topping-out/landmarks.ts";
+import { isPaletteUnlocked, blockColors, PALETTES } from "../src/components/game/topping-out/palettes.ts";
 
 console.log("=== RUNNING TOPPING OUT ENGINE TESTS ===");
 
@@ -200,6 +202,103 @@ console.log("=== RUNNING TOPPING OUT ENGINE TESTS ===");
   assert.equal(engine.floors, 2, "Floors count must NOT increment on miss");
 
   console.log("✓ PASS: Floors count incremented only on success (1 -> 2 -> 2).");
+}
+
+// -------------------------------------------------------------
+// Test 6: landmarkCrossed returns landmark on crossing and null when within range
+// -------------------------------------------------------------
+{
+  console.log("\n[Test 6] landmarkCrossed detection on height thresholds...");
+  // Key landmark thresholds: 26 (Gateway of India), 73 (Qutub Minar), 182 (Statue of Unity), 330 (Eiffel Tower), 828 (Burj Khalifa)
+  const lm26 = landmarkCrossed(24, 27);
+  assert.ok(lm26 !== null, "Should detect crossing 26m");
+  assert.equal(lm26.metres, 26);
+  assert.equal(lm26.name, "Gateway of India");
+
+  const lm73 = landmarkCrossed(72, 75);
+  assert.ok(lm73 !== null, "Should detect crossing 73m");
+  assert.equal(lm73.metres, 73);
+
+  const lm182 = landmarkCrossed(180, 183);
+  assert.ok(lm182 !== null, "Should detect crossing 182m");
+  assert.equal(lm182.metres, 182);
+
+  const lm330 = landmarkCrossed(327, 333);
+  assert.ok(lm330 !== null, "Should detect crossing 330m");
+  assert.equal(lm330.metres, 330);
+
+  const lm828 = landmarkCrossed(825, 831);
+  assert.ok(lm828 !== null, "Should detect crossing 828m");
+  assert.equal(lm828.metres, 828);
+
+  // When within range (no threshold crossed)
+  assert.equal(landmarkCrossed(10, 20), null, "10m to 20m crosses no landmark");
+  assert.equal(landmarkCrossed(26, 30), null, "26m to 30m should not re-trigger 26m");
+  assert.equal(landmarkCrossed(50, 60), null, "50m to 60m crosses no landmark");
+
+  console.log("✓ PASS: landmarkCrossed correctly identifies crossed landmarks (26, 73, 182, 330, 828) and returns null when within range.");
+}
+
+// -------------------------------------------------------------
+// Test 7: isPaletteUnlocked checks
+// -------------------------------------------------------------
+{
+  console.log("\n[Test 7] isPaletteUnlocked thresholds (dusk: 10, mint: 20, mono: 30)...");
+  // Rainbow is unlocked at 0
+  assert.equal(isPaletteUnlocked("rainbow", 0), true);
+  assert.equal(isPaletteUnlocked("rainbow", 5), true);
+
+  // Dusk unlocks at 10
+  assert.equal(isPaletteUnlocked("dusk", 0), false);
+  assert.equal(isPaletteUnlocked("dusk", 9), false);
+  assert.equal(isPaletteUnlocked("dusk", 10), true);
+  assert.equal(isPaletteUnlocked("dusk", 15), true);
+
+  // Mint unlocks at 20
+  assert.equal(isPaletteUnlocked("mint", 10), false);
+  assert.equal(isPaletteUnlocked("mint", 19), false);
+  assert.equal(isPaletteUnlocked("mint", 20), true);
+  assert.equal(isPaletteUnlocked("mint", 25), true);
+
+  // Mono unlocks at 30
+  assert.equal(isPaletteUnlocked("mono", 20), false);
+  assert.equal(isPaletteUnlocked("mono", 29), false);
+  assert.equal(isPaletteUnlocked("mono", 30), true);
+  assert.equal(isPaletteUnlocked("mono", 50), true);
+
+  console.log("✓ PASS: isPaletteUnlocked accurately enforces unlock thresholds for Rainbow (0), Dusk (10), Mint (20), and Mono (30).");
+}
+
+// -------------------------------------------------------------
+// Test 8: blockColors determinism and solid values
+// -------------------------------------------------------------
+{
+  console.log("\n[Test 8] blockColors determinism and solid opaque color properties...");
+  const palettes = ["rainbow", "dusk", "mint", "mono"];
+
+  for (const pal of palettes) {
+    const c1 = blockColors(12, pal);
+    const c2 = blockColors(12, pal);
+
+    // Deterministic: same floor + palette gives identical results
+    assert.deepEqual(c1, c2, `Palette ${pal} must produce deterministic colors`);
+
+    // Verify all faces exist and are non-empty
+    assert.ok(c1.top && c1.left && c1.right && c1.edge && c1.windowDark && c1.windowLit, `Palette ${pal} should provide all required face colors`);
+
+    // Verify solid opaque fills for main slab faces (top, left, right should start with hsl/rgb/# and not have alpha < 1.0)
+    assert.ok(c1.top.startsWith("hsl(") || c1.top.startsWith("#"), `top face should use solid hsl or hex in ${pal}`);
+    assert.ok(c1.left.startsWith("hsl(") || c1.left.startsWith("#"), `left face should use solid hsl or hex in ${pal}`);
+    assert.ok(c1.right.startsWith("hsl(") || c1.right.startsWith("#"), `right face should use solid hsl or hex in ${pal}`);
+    assert.ok(c1.edge.startsWith("hsl(") || c1.edge.startsWith("#"), `edge line should use solid hsl or hex in ${pal}`);
+  }
+
+  // Different floors should generally produce different hues (at least in rainbow)
+  const floor1 = blockColors(1, "rainbow");
+  const floor2 = blockColors(2, "rainbow");
+  assert.notEqual(floor1.top, floor2.top, "Different floors in rainbow palette should produce distinct colors");
+
+  console.log("✓ PASS: blockColors is deterministic, provides solid opaque faces across all palettes, and produces varied hues.");
 }
 
 console.log("\n=========================================");

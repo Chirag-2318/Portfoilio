@@ -21,7 +21,7 @@ function useMounted() {
 }
 
 export function Header() {
-  const { toggle: toggleCommand } = useCommand();
+  const { toggle: toggleCommand, preloadMenu } = useCommand();
   const isMac = useIsMac();
   const mounted = useMounted();
 
@@ -34,15 +34,17 @@ export function Header() {
         <div className="flex items-center">
           <ViewLink
             href="/"
-            aria-label="Chirag Patil, home"
             className="group flex items-center gap-2.5 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 rounded-sm"
           >
             {/* 28px Circle with CP in Fraunces 13px/500 */}
-            <div className="w-7 h-7 rounded-full border border-ink flex items-center justify-center font-serif text-[13px] font-medium leading-none transition-colors group-hover:bg-paper-2">
+            <div
+              aria-hidden="true"
+              className="w-7 h-7 rounded-full border border-ink flex items-center justify-center font-serif text-[13px] font-medium leading-none transition-colors group-hover:bg-paper-2"
+            >
               CP
             </div>
-            {/* "Chirag Patil" in Fraunces 18px/500 (≥ md) */}
-            <span className="hidden md:inline font-serif text-[18px] font-medium tracking-tight">
+            {/* "Chirag Patil" in Fraunces 18px/500 */}
+            <span className="sr-only md:not-sr-only md:inline font-serif text-[18px] font-medium tracking-tight">
               Chirag Patil
             </span>
           </ViewLink>
@@ -69,18 +71,21 @@ export function Header() {
           <button
             type="button"
             onClick={toggleCommand}
-            aria-label="Open command menu"
+            onPointerEnter={preloadMenu}
+            onFocus={preloadMenu}
             className="hidden md:flex items-center gap-1.5 lg:gap-2 h-9 px-2.5 lg:px-3 rounded-md border border-line bg-surface hover:bg-paper-2 transition-colors duration-160 text-sm font-medium text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3"
           >
             <Icon name="search" size={14} className="text-ink-2" />
-            <span className="text-xs hidden lg:inline">Search</span>
-            <Kbd>{kbdText}</Kbd>
+            <span className="text-xs">Search</span>
+            <Kbd aria-hidden="true">{kbdText}</Kbd>
           </button>
 
           <button
             type="button"
             onClick={toggleCommand}
-            aria-label="Open command menu"
+            onPointerEnter={preloadMenu}
+            onFocus={preloadMenu}
+            aria-label="Search"
             className="md:hidden relative w-9 h-9 flex items-center justify-center rounded-md border border-line bg-surface hover:bg-paper-2 active:scale-[0.96] transition-all duration-160 text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-3 cursor-pointer select-none [@media(pointer:coarse)]:after:content-[''] [@media(pointer:coarse)]:after:absolute [@media(pointer:coarse)]:after:-inset-1"
           >
             <Icon name="search" size={16} />

@@ -356,6 +356,92 @@
 - **Deliberate Placeholders Still to Be Replaced**:
   - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
 
+## Prompt 9 of 10 — Responsive Polish, Accessibility, Performance, SEO
+- **What was done**:
+  - **Part A: Responsive Audit**:
+    - Tested all 13 routes and states across 12 viewport configurations (320x568, 360x740, 390x844, 768x1024, 1024x768, 1280x720, 1366x768, 1440x900, 1920x1080, 2560x1440, 844x390 landscape, and 1280x720 with 200% zoom).
+    - Verified 156 / 156 responsive combinations with zero horizontal overflow, clean typography scaling, and proper container clamping (max 1760px).
+    - Fixed Home vertical constraint at 360x740: calibrated mobile `--name-vw: 22vw`, clamped font-size to `16svh`, and reduced `IndexList` top padding, ensuring zero page scroll on Home at heights $\ge 640$px.
+    - Captured 61 visual verification screenshots in `screenshots/` across breakpoints in both light and dark themes.
+  - **Part B: Accessibility (WCAG 2.1 AA)**:
+    - Built `scripts/contrast.mjs` verifying relative luminance contrast for all token pairs.
+    - Adjusted light `--accent` token in `src/app/globals.css` from `#C8321A` to `#B82D17`, lifting contrast on `--paper-2` from 4.29:1 to 4.92:1 (PASS), on `--paper` to 5.38:1, on `--surface` to 5.78:1, and for `--accent-ink` to 6.13:1.
+    - Switched all real text elements from `--ink-3` to `--ink-2` across `HighlightsPane.tsx`, `ProfilePane.tsx`, `SkillsPane.tsx`, `Tabs.tsx`, `ContactRows.tsx`, `ContactView.tsx`, `ResumeSheet.tsx`, `ResumeActions.tsx`, `NavLinks.tsx`, `MobileTabs.tsx`, `ProjectRow.tsx`, `WorkView.tsx`, `CommandMenu.tsx`, and `GameOverlay.tsx`.
+    - Single `<h1>` per view: adjusted `ResumeSheet.tsx` masthead name to `<p className="font-serif text-3xl sm:text-[36px] font-medium ...">`, ensuring exactly 1 `<h1>` per view (`ViewFrame`'s `Resume`).
+    - Resolved WCAG 2.5.3 (Label in Name) mismatches in `Header.tsx`: marked monogram badge `aria-hidden="true"` and updated the search trigger button to present visible "Search" text directly with `<Kbd aria-hidden="true">`.
+    - Corrected `<dl>` content models in `IndexList.tsx` and `ContactRows.tsx` so all children are strictly `<div>` containing `<dt>` and `<dd>`.
+    - Converted `WorkView.tsx` desktop container to `role="list"` and `ProjectRow.tsx` desktop wrapper to `role="listitem"`.
+    - Executed automated `axe-core` v4.14 audit via `scripts/check-axe-all.mjs`: **0 violations across all 12 combinations** (6 routes $\times$ 2 themes).
+  - **Part C: Performance Optimization**:
+    - Removed `WONK` axis from `Fraunces` font definition in `src/app/layout.tsx`, `globals.css`, and `home.css`.
+    - Dynamically lazy-loaded `CommandMenu` in `CommandProvider.tsx` via `next/dynamic` (`ssr: false`) upon idle callback (`requestIdleCallback` with 2s timeout) or keyboard shortcut / click trigger, removing its bundle from the initial rendering path.
+    - Enhanced `useLens.ts` with RAF dormancy check (`curR < 0.5 && prevR < 0.5`) and cached SVG child elements, eliminating idle CPU consumption and continuous `querySelector` calls.
+    - Implemented high-performance gzip compression in the preview static server (`scripts/static-server.mjs`).
+    - Verified zero layout shift (CLS = 0.00 across all routes).
+    - Verified bundle size: all routes have First Load JS $\le 157$ kB (gzip ~48 kB), well below the 170 kB budget.
+  - **Part D: SEO, JSON-LD, Social Cards & Sitemap**:
+    - Built dynamic OpenGraph and Twitter cards in `src/app/opengraph-image.tsx` and `src/app/twitter-image.tsx` using `@vercel/og` `ImageResponse` with exact paper design, 32px border, corner crop marks, Fraunces serif text, accent dot, and overlapping registration ring.
+    - Prerendered static `src/app/icon.tsx` (32x32) and `src/app/apple-icon.tsx` (180x180).
+    - Created static `src/app/sitemap.ts` and `src/app/robots.ts` (`force-static`).
+    - Configured comprehensive metadata and Person JSON-LD schema in `src/app/layout.tsx` with dynamic canonical handling.
+    - Configured child route metadata in `work/page.tsx`, `about/page.tsx`, `resume/page.tsx`, and `contact/page.tsx`.
+  - **Part E: Lighthouse Audit**:
+    - Ran full Lighthouse v13 audit suite via `scripts/run-lh.mjs` across all views:
+      - **Home (Desktop)**: **100** Performance / **100** Accessibility / **96** Best Practices / **100** SEO
+      - **Work (Desktop)**: **99** Performance / **100** Accessibility / **96** Best Practices / **100** SEO
+      - **About (Desktop)**: **99** Performance / **100** Accessibility / **96** Best Practices / **100** SEO
+      - **Resume (Desktop)**: **100** Performance / **100** Accessibility / **96** Best Practices / **100** SEO
+      - **Contact (Desktop)**: **100** Performance / **100** Accessibility / **96** Best Practices / **100** SEO
+      - **Home (Mobile - 4G Throttled)**: **84** Performance / **100** Accessibility / **96** Best Practices / **100** SEO
+    - Authored comprehensive audit report in `docs/AUDIT.md`.
+- **Files created/modified**:
+  - `docs/AUDIT.md` (created)
+  - `src/app/opengraph-image.tsx` (created)
+  - `src/app/twitter-image.tsx` (created)
+  - `src/app/icon.tsx` (created)
+  - `src/app/apple-icon.tsx` (created)
+  - `src/app/sitemap.ts` (created)
+  - `src/app/robots.ts` (created)
+  - `scripts/static-server.mjs` (created)
+  - `scripts/contrast.mjs` (created)
+  - `scripts/audit-all.mjs` (created)
+  - `scripts/check-axe-all.mjs` (created)
+  - `scripts/run-lh.mjs` (created)
+  - `scripts/diagnose-lh.mjs` (created)
+  - `src/app/layout.tsx` (modified)
+  - `src/app/page.tsx` (modified)
+  - `src/app/work/page.tsx` (modified)
+  - `src/app/about/page.tsx` (modified)
+  - `src/app/resume/page.tsx` (modified)
+  - `src/app/contact/page.tsx` (modified)
+  - `src/app/globals.css` (modified)
+  - `src/components/home/home.css` (modified)
+  - `src/components/home/HeroContent.tsx` (modified)
+  - `src/components/home/IndexList.tsx` (modified)
+  - `src/components/home/useLens.ts` (modified)
+  - `src/components/shell/Header.tsx` (modified)
+  - `src/components/shell/NavLinks.tsx` (modified)
+  - `src/components/shell/MobileTabs.tsx` (modified)
+  - `src/components/shell/Providers.tsx` (modified)
+  - `src/components/command/CommandProvider.tsx` (modified)
+  - `src/components/work/WorkView.tsx` (modified)
+  - `src/components/work/ProjectRow.tsx` (modified)
+  - `src/components/about/ProfilePane.tsx` (modified)
+  - `src/components/about/EducationPane.tsx` (modified)
+  - `src/components/about/SkillsPane.tsx` (modified)
+  - `src/components/about/HighlightsPane.tsx` (modified)
+  - `src/components/about/Tabs.tsx` (modified)
+  - `src/components/contact/ContactRows.tsx` (modified)
+  - `src/components/contact/ContactView.tsx` (modified)
+  - `src/components/resume/ResumeSheet.tsx` (modified)
+  - `src/components/resume/ResumeActions.tsx` (modified)
+  - `src/components/ui/Kbd.tsx` (modified)
+  - `docs/DECISIONS.md` (modified)
+  - `docs/PROGRESS.md` (modified)
+- **Deliberate Placeholders Still to Be Replaced**:
+  - `/dev/tokens` test page cleanup & production polish — to be completed in Prompt 10.
+
+
 
 
 

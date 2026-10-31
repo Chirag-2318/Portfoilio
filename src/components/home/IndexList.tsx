@@ -94,17 +94,27 @@ export function IndexList({ variant, className = "" }: IndexListProps) {
         }
 
         if (isInteractive && row.href) {
-          const content = (
-            <>
+          return (
+            <div key={row.key} className={`group ${rowGridClasses}`}>
               <dt className="label">{row.label}</dt>
-              <dd
-                className={`text-sm font-medium transition-colors duration-160 pr-2 ${
-                  isDraft
-                    ? "text-ink-2"
-                    : "text-ink group-hover:underline underline-offset-4 decoration-accent"
-                } ${isDraft && isWon ? "line-through decoration-ink-3 decoration-1" : ""}`}
-              >
-                {row.value}
+              <dd className="truncate pr-2">
+                {isDraft ? (
+                  <span
+                    className={`text-sm font-medium transition-colors duration-160 block truncate text-ink-2 ${
+                      isWon ? "line-through decoration-ink-2 decoration-1" : ""
+                    }`}
+                  >
+                    {row.value}
+                  </span>
+                ) : (
+                  <ViewLink
+                    href={row.href}
+                    data-lens-shrink
+                    className="text-sm font-medium transition-colors duration-160 block truncate text-ink group-hover:underline underline-offset-4 decoration-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent rounded-xs"
+                  >
+                    {row.value}
+                  </ViewLink>
+                )}
               </dd>
               <dd className="flex items-center justify-end w-5">
                 <Icon
@@ -115,26 +125,7 @@ export function IndexList({ variant, className = "" }: IndexListProps) {
                   }`}
                 />
               </dd>
-            </>
-          );
-
-          if (isDraft) {
-            return (
-              <div key={row.key} className={rowGridClasses}>
-                {content}
-              </div>
-            );
-          }
-
-          return (
-            <ViewLink
-              key={row.key}
-              href={row.href}
-              data-lens-shrink
-              className={`group border-t-0 ${rowGridClasses} focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent rounded-xs`}
-            >
-              {content}
-            </ViewLink>
+            </div>
           );
         }
 

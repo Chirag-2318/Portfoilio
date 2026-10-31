@@ -53,3 +53,4 @@ export const SHAPES: GameShape[] = [
 export function getShapeForPrints(prints: number): GameShape {
   return SHAPES[prints % SHAPES.length];
 }
+

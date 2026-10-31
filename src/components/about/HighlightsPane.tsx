@@ -22,7 +22,7 @@ export function HighlightsPane() {
               <div className="hidden sm:grid grid-cols-12 gap-4 lg:gap-6 items-start">
                 {/* Col 1-2 (span 2): Category label */}
                 <div className="col-span-3 lg:col-span-2 pt-1">
-                  <span className="label text-ink-3 block">{item.label}</span>
+                  <span className="label text-ink-2 block">{item.label}</span>
                 </div>
 
                 {/* Col 3-7 (span 5): Title + Status */}
@@ -58,7 +58,7 @@ export function HighlightsPane() {
                             <span className="font-mono text-xs text-ink uppercase mr-1.5 font-medium">
                               {res.rank}
                             </span>
-                            <span className="text-ink-3 mr-1.5">·</span>
+                            <span className="text-ink-2 mr-1.5" aria-hidden="true">·</span>
                             <span className="text-ink-2 truncate">{res.where}</span>
                           </li>
                         );
@@ -74,7 +74,7 @@ export function HighlightsPane() {
 
               {/* Mobile layout (< 768px) */}
               <div className="flex flex-col gap-2 sm:hidden py-1">
-                <span className="label text-ink-3">{item.label}</span>
+                <span className="label text-ink-2">{item.label}</span>
 
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-serif font-medium text-lg text-ink leading-snug">
@@ -106,7 +106,7 @@ export function HighlightsPane() {
                           <span className="font-mono text-xs text-ink uppercase mr-1.5 font-medium">
                             {res.rank}
                           </span>
-                          <span className="text-ink-3 mr-1.5">·</span>
+                          <span className="text-ink-2 mr-1.5" aria-hidden="true">·</span>
                           <span className="text-ink-2">{res.where}</span>
                         </li>
                       );

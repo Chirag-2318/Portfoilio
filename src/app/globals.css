@@ -11,7 +11,7 @@
   --ink-3: #7A756B;
   --line: #D8D3C6;
   --line-strong: #B9B3A4;
-  --accent: #C8321A;
+  --accent: #B82D17;
   --accent-ink: #FFFFFF;
 
   color-scheme: light;
@@ -168,7 +168,7 @@ body::after {
 
   .display {
     font-family: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
     font-weight: 500;
     letter-spacing: -0.03em;
     line-height: 0.86;

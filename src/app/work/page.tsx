@@ -1,12 +1,14 @@
+import type { Metadata } from "next";
+import { site, isPlaceholder } from "@/content/site";
 import { WorkView } from "@/components/work/WorkView";
 
-export const metadata = {
-  title: "Work — Chirag Patil",
+export const metadata: Metadata = {
+  title: "Work",
   description:
-    "Three builds, mostly from hackathons: SAR Generator with Audit Trails, ValidEDI HIPAA parser, and ARTHIX zero-typing UPI expense tracker.",
+    "Three builds: a Spring Boot reporting backend, a FastAPI EDI validator and an offline Android expense tracker.",
+  ...(isPlaceholder(site.url) ? {} : { alternates: { canonical: "./" } }),
 };
 
 export default function WorkPage() {
   return <WorkView />;
 }
-

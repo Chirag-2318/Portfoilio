@@ -1,0 +1,44 @@
+[
+  {
+    "target": "Home (Mobile)",
+    "performance": 65,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "seo": 100
+  },
+  {
+    "target": "Home (Desktop)",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "seo": 100
+  },
+  {
+    "target": "Work (Desktop)",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "seo": 100
+  },
+  {
+    "target": "About (Desktop)",
+    "performance": 99,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "seo": 100
+  },
+  {
+    "target": "Resume (Desktop)",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "seo": 100
+  },
+  {
+    "target": "Contact (Desktop)",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "seo": 100
+  }
+]

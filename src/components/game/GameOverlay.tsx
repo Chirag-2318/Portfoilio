@@ -280,7 +280,7 @@ export default function GameOverlay({
 
           {/* Best */}
           <div className="flex items-center gap-1.5 tabular">
-            <span className="text-ink-3 uppercase tracking-wider text-[11px]">
+            <span className="text-ink-2 uppercase tracking-wider text-[11px]">
               Best
             </span>
             <span className="text-ink-2 text-sm sm:text-base">

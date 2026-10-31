@@ -19,12 +19,22 @@ export interface HeroContentProps {
 
 let homeIntroPlayed = false;
 
+const emptySubscribe = () => () => {};
+function useMounted() {
+  return React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+}
+
 export function HeroContent({ variant, className = "" }: HeroContentProps) {
   const isDraft = variant === "draft";
   const { ready } = useViewTransition();
   const motionOK = useMotionOK();
+  const mounted = useMounted();
 
-  const isFirstIntro = !isDraft && !homeIntroPlayed && motionOK;
+  const isFirstIntro = mounted && !isDraft && !homeIntroPlayed && motionOK;
 
   React.useEffect(() => {
     if (ready && isFirstIntro && !isDraft) {
@@ -121,21 +131,21 @@ export function HeroContent({ variant, className = "" }: HeroContentProps) {
             </div>
           ) : (
             <h1 className="display-name text-ink select-none" aria-label={site.name.full}>
-              <div className="display-line overflow-hidden">
+              <div className="display-line">
                 <motion.span
                   className="block"
-                  initial={isFirstIntro ? { y: "105%" } : false}
-                  animate={animateIntro ? { y: "0%" } : undefined}
+                  initial={isFirstIntro ? { y: 24, opacity: 0 } : false}
+                  animate={animateIntro ? { y: 0, opacity: 1 } : undefined}
                   transition={{ duration: 0.7, delay: isFirstIntro ? 0.15 : 0, ease: EASE_OUT_EXPO }}
                 >
                   {site.name.first}
                 </motion.span>
               </div>
-              <div className="display-line overflow-hidden">
+              <div className="display-line">
                 <motion.span
                   className="block"
-                  initial={isFirstIntro ? { y: "105%" } : false}
-                  animate={animateIntro ? { y: "0%" } : undefined}
+                  initial={isFirstIntro ? { y: 24, opacity: 0 } : false}
+                  animate={animateIntro ? { y: 0, opacity: 1 } : undefined}
                   transition={{ duration: 0.7, delay: isFirstIntro ? 0.24 : 0.05, ease: EASE_OUT_EXPO }}
                 >
                   {site.name.last}
@@ -229,7 +239,7 @@ export function HeroContent({ variant, className = "" }: HeroContentProps) {
       </div>
 
       {/* ===================== RIGHT COLUMN ===================== */}
-      <div className="flex flex-col justify-end gap-6 md:col-span-5 lg:col-span-4 z-10 pt-4 md:pt-0">
+      <div className="flex flex-col justify-end gap-3 sm:gap-6 md:col-span-5 lg:col-span-4 z-10 pt-1 md:pt-0">
         {/* Desktop & Tablet Portrait (≥ 768px) */}
         <motion.div
           data-portrait

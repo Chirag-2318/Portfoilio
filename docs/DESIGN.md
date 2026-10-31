@@ -42,7 +42,7 @@ Light (paper):
 - --ink-3 #7A756B [ink-3] decorative only (guides, crop marks), never body text
 - --line #D8D3C6 [line] hairlines
 - --line-strong #B9B3A4 [line-strong]
-- --accent #C8321A [accent] proof-red (AA on paper)
+- --accent #B82D17 [accent] proof-red (WCAG AA on paper, paper-2, and surface; darkened from #C8321A in prompt 9)
 - --accent-ink #FFFFFF [accent-ink]
 Dark ("night proof", warm black, designed not inverted):
 - --paper #12110E, --paper-2 #0C0B09, --surface #1A1914, --ink #EEEADF, --ink-2 #A9A395, --ink-3 #6F6A5F, --line #2C2A23, --line-strong #444137, --accent #FF6B4A, --accent-ink #12110E

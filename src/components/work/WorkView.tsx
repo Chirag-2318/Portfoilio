@@ -67,7 +67,7 @@ export function WorkView() {
       <div className="hidden md:grid grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* Left Column: Project Rows list (Col 1-5) */}
         <div className="col-span-5 flex flex-col">
-          <ul className="w-full flex flex-col" role="list">
+          <div className="w-full flex flex-col" role="list">
             <Stagger baseDelay={0.06} staggerInterval={0.06}>
               {site.projects.map((project, idx) => {
                 const isSelected = project.id === selectedProject.id;
@@ -90,10 +90,10 @@ export function WorkView() {
                 );
               })}
             </Stagger>
-          </ul>
+          </div>
 
           {/* Keyboard hint */}
-          <span className="hidden [@media(hover:hover)_and_(pointer:fine)]:inline-block font-mono text-[11px] text-ink-3 pt-3 pl-1 select-none">
+          <span className="hidden [@media(hover:hover)_and_(pointer:fine)]:inline-block font-mono text-[11px] text-ink-2 pt-3 pl-1 select-none">
             ↑ ↓ to browse
           </span>
         </div>

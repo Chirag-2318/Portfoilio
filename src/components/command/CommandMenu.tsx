@@ -45,13 +45,13 @@ export function CommandMenu() {
         <Icon name="search" size={16} className="text-ink-2 shrink-0 mr-3" />
         <Command.Input
           placeholder="Type a command or search…"
-          className="w-full h-[52px] bg-transparent text-sm text-ink placeholder:text-ink-3 focus:outline-none"
+          className="w-full h-[52px] bg-transparent text-sm text-ink placeholder:text-ink-2 focus:outline-none"
         />
         <Kbd className="shrink-0 text-[10px]">ESC</Kbd>
       </div>
 
       <Command.List className="max-h-[360px] overflow-y-auto p-2 space-y-1 focus:outline-none">
-        <Command.Empty className="py-6 text-center text-xs font-mono text-ink-3">
+        <Command.Empty className="py-6 text-center text-xs font-mono text-ink-2">
           No results found.
         </Command.Empty>
 
@@ -277,7 +277,7 @@ function CommandItem({
         <span className="truncate">{label}</span>
       </div>
       {hint && (
-        <span className="font-mono text-[11px] text-ink-3 ml-2 shrink-0">
+        <span className="font-mono text-[11px] text-ink-2 ml-2 shrink-0">
           {hint}
         </span>
       )}

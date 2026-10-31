@@ -44,6 +44,18 @@ export function useLens({
     }
   }, [stageRef]);
 
+  // Cache SVG ring children to eliminate querySelector during animation frames
+  const ringElementsRef = React.useRef<{
+    circle: Element | null;
+    tickN: Element | null;
+    tickS: Element | null;
+    tickW: Element | null;
+    tickE: Element | null;
+    label: Element | null;
+  } | null>(null);
+
+  const prevRRef = React.useRef<number>(0);
+
   // Update overlay clipPath and SVG ring on frame
   React.useEffect(() => {
     let animId: number;
@@ -52,6 +64,13 @@ export function useLens({
       const curX = x.get();
       const curY = y.get();
       const curR = r.get();
+
+      // If lens is closed and remained closed, skip DOM operations
+      if (curR < 0.5 && prevRRef.current < 0.5 && !draft) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+      prevRRef.current = curR;
 
       if (stageRectRef.current && draftRef.current) {
         const localX = curX - stageRectRef.current.left;
@@ -69,34 +88,38 @@ export function useLens({
           ringRef.current.style.opacity = "1";
           ringRef.current.style.transform = `translate3d(${localX}px, ${localY}px, 0)`;
 
-          // Direct SVG attribute updates for 1px crisp geometry
-          const circle = ringRef.current.querySelector(".loupe-circle");
-          if (circle) circle.setAttribute("r", `${curR}`);
-
-          const tickN = ringRef.current.querySelector(".tick-n");
-          if (tickN) {
-            tickN.setAttribute("y1", `${-curR}`);
-            tickN.setAttribute("y2", `${-curR - 6}`);
-          }
-          const tickS = ringRef.current.querySelector(".tick-s");
-          if (tickS) {
-            tickS.setAttribute("y1", `${curR}`);
-            tickS.setAttribute("y2", `${curR + 6}`);
-          }
-          const tickW = ringRef.current.querySelector(".tick-w");
-          if (tickW) {
-            tickW.setAttribute("x1", `${-curR}`);
-            tickW.setAttribute("x2", `${-curR - 6}`);
-          }
-          const tickE = ringRef.current.querySelector(".tick-e");
-          if (tickE) {
-            tickE.setAttribute("x1", `${curR}`);
-            tickE.setAttribute("x2", `${curR + 6}`);
+          // Initialize cached child references once
+          if (!ringElementsRef.current) {
+            ringElementsRef.current = {
+              circle: ringRef.current.querySelector(".loupe-circle"),
+              tickN: ringRef.current.querySelector(".tick-n"),
+              tickS: ringRef.current.querySelector(".tick-s"),
+              tickW: ringRef.current.querySelector(".tick-w"),
+              tickE: ringRef.current.querySelector(".tick-e"),
+              label: ringRef.current.querySelector(".loupe-label"),
+            };
           }
 
-          const label = ringRef.current.querySelector(".loupe-label");
-          if (label) {
-            label.setAttribute("y", `${curR + 15}`);
+          const els = ringElementsRef.current;
+          if (els.circle) els.circle.setAttribute("r", `${curR}`);
+          if (els.tickN) {
+            els.tickN.setAttribute("y1", `${-curR}`);
+            els.tickN.setAttribute("y2", `${-curR - 6}`);
+          }
+          if (els.tickS) {
+            els.tickS.setAttribute("y1", `${curR}`);
+            els.tickS.setAttribute("y2", `${curR + 6}`);
+          }
+          if (els.tickW) {
+            els.tickW.setAttribute("x1", `${-curR}`);
+            els.tickW.setAttribute("x2", `${-curR - 6}`);
+          }
+          if (els.tickE) {
+            els.tickE.setAttribute("x1", `${curR}`);
+            els.tickE.setAttribute("x2", `${curR + 6}`);
+          }
+          if (els.label) {
+            els.label.setAttribute("y", `${curR + 15}`);
           }
         }
       }
@@ -181,7 +204,7 @@ export function useLens({
       });
 
       activeSweepAnimRef.current = [animX, animR];
-    }, 950);
+    }, 1800);
 
     return () => clearTimeout(timer);
   }, [motionOK, stageRef, rawX, rawY, rawR, measureStage]);

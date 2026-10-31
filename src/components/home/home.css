@@ -1,7 +1,7 @@
 /* Home Stage and Hero Styles */
 
 :root {
-  --name-vw: 24vw;
+  --name-vw: 22vw;
   --g-baseline: 0.76em;
   --g-xheight: 0.44em;
   --g-cap: 0.12em;
@@ -9,7 +9,7 @@
 
 @media (min-width: 480px) {
   :root {
-    --name-vw: 27vw;
+    --name-vw: 25vw;
   }
 }
 
@@ -71,11 +71,11 @@
 /* Display name typography scale */
 .display-name {
   font-family: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 0.86;
-  font-size: clamp(3.25rem, min(var(--name-vw), 18svh), 14rem);
+  font-size: clamp(2.75rem, min(var(--name-vw), 16svh), 14rem);
 }
 
 @media (min-width: 768px) {

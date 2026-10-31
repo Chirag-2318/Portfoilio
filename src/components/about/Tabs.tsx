@@ -79,7 +79,7 @@ export function Tabs({ activeTab, onSelectTab, className = "" }: TabsProps) {
               isSelected ? "text-ink font-medium" : "text-ink-2 hover:text-ink"
             }`}
           >
-            <span className="text-ink-3 mr-0.5 min-[360px]:mr-1 sm:mr-1.5">{tab.index}</span>
+            <span className="text-ink-2 mr-0.5 min-[360px]:mr-1 sm:mr-1.5">{tab.index}</span>
             <span>{tab.label}</span>
 
             {/* Sliding 2px var(--accent) underline */}

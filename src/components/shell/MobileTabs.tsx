@@ -13,7 +13,7 @@ export function MobileTabs() {
   return (
     <nav
       data-print="hide"
-      aria-label="Mobile Navigation"
+      aria-label="Primary mobile"
       className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-paper border-t border-line pb-[env(safe-area-inset-bottom,0px)] select-none"
     >
       <div className="h-14 grid grid-cols-5 items-stretch">
@@ -36,7 +36,10 @@ export function MobileTabs() {
                   className="absolute top-0 left-0 right-0 h-[2px] bg-accent"
                 />
               )}
-              <span className="font-mono text-[10px] leading-none text-ink-3 mb-0.5">
+              <span
+                className="font-mono text-[10px] leading-none text-ink-2 mb-0.5"
+                aria-hidden="true"
+              >
                 {item.index}
               </span>
               <span className="text-xs font-medium leading-none">

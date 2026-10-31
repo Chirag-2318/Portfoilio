@@ -85,31 +85,31 @@ export function ResumeSheet() {
       >
         {/* MASTHEAD */}
         <header className="border-b border-line pb-4">
-          <h1 className="font-serif text-3xl sm:text-[36px] font-medium leading-[1.05] tracking-tight text-ink">
+          <p className="font-serif text-3xl sm:text-[36px] font-medium leading-[1.05] tracking-tight text-ink">
             Chirag Patil<span className="text-accent">.</span>
-          </h1>
+          </p>
           <p className="text-base text-ink-2 mt-1 font-sans">{site.role}</p>
 
           <div className="mt-2.5 font-mono text-xs text-ink-2 flex flex-wrap items-center">
             <a
               href={`mailto:${site.email}`}
-              className="hover:text-ink hover:underline underline-offset-2 [&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-3"
+              className="hover:text-ink hover:underline underline-offset-2 [&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-2"
             >
               {site.email}
             </a>
             <a
               href={site.phone.href}
-              className="hover:text-ink hover:underline underline-offset-2 [&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-3"
+              className="hover:text-ink hover:underline underline-offset-2 [&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-2"
             >
               {site.phone.display}
             </a>
-            <span className="[&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-3">
+            <span className="[&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-2">
               Pune, Maharashtra, India
             </span>
             {socials.map((s) => (
               <span
                 key={s.key}
-                className="[&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-3"
+                className="[&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-2 [&:not(:last-child)]:after:text-ink-2"
               >
                 {!s.placeholder ? (
                   <a
@@ -132,7 +132,7 @@ export function ResumeSheet() {
         <div className="pt-4 space-y-5">
           {/* 1. EDUCATION */}
           <section id="resume-education" className="resume-section scroll-mt-6" tabIndex={-1}>
-            <h2 className="label text-ink-3 uppercase pb-1 border-b border-line">
+            <h2 className="label text-ink-2 uppercase pb-1 border-b border-line">
               Education
             </h2>
             <div className="mt-2.5 space-y-2.5">
@@ -141,7 +141,7 @@ export function ResumeSheet() {
                   key={edu.institution}
                   className="resume-row grid grid-cols-1 sm:grid-cols-[96px_1fr] gap-1 sm:gap-4 items-baseline"
                 >
-                  <span className="font-mono text-xs text-ink-3 shrink-0 tabular">
+                  <span className="font-mono text-xs text-ink-2 shrink-0 tabular">
                     {edu.years}
                   </span>
                   <div>
@@ -159,7 +159,7 @@ export function ResumeSheet() {
 
           {/* 2. SKILLS */}
           <section id="resume-skills" className="resume-section scroll-mt-6" tabIndex={-1}>
-            <h2 className="label text-ink-3 uppercase pb-1 border-b border-line">
+            <h2 className="label text-ink-2 uppercase pb-1 border-b border-line">
               Skills
             </h2>
             <div className="mt-2.5 space-y-2">
@@ -173,7 +173,7 @@ export function ResumeSheet() {
                     {skill.items.map((item) => (
                       <li
                         key={item}
-                        className="inline [&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-1.5 [&:not(:last-child)]:after:text-ink-3 text-ink"
+                        className="inline [&:not(:last-child)]:after:content-['·'] [&:not(:last-child)]:after:mx-1.5 [&:not(:last-child)]:after:text-ink-2 text-ink"
                       >
                         {item}
                       </li>
@@ -186,7 +186,7 @@ export function ResumeSheet() {
 
           {/* 3. PROJECTS */}
           <section id="resume-projects" className="resume-section scroll-mt-6" tabIndex={-1}>
-            <h2 className="label text-ink-3 uppercase pb-1 border-b border-line">
+            <h2 className="label text-ink-2 uppercase pb-1 border-b border-line">
               Projects
             </h2>
             <div className="mt-2.5 space-y-2.5">
@@ -203,7 +203,7 @@ export function ResumeSheet() {
                     key={proj.id}
                     className="resume-row flex items-start gap-3 sm:gap-4"
                   >
-                    <span className="font-mono text-xs text-ink-3 shrink-0 pt-0.5">
+                    <span className="font-mono text-xs text-ink-2 shrink-0 pt-0.5">
                       {proj.index}
                     </span>
                     <div>
@@ -222,7 +222,7 @@ export function ResumeSheet() {
 
           {/* 4. HIGHLIGHTS */}
           <section id="resume-highlights" className="resume-section scroll-mt-6" tabIndex={-1}>
-            <h2 className="label text-ink-3 uppercase pb-1 border-b border-line">
+            <h2 className="label text-ink-2 uppercase pb-1 border-b border-line">
               Highlights
             </h2>
             <div className="mt-2.5 space-y-2">

@@ -11,3 +11,4 @@ export function difficulty(prints: number): DifficultySettings {
     wander: 260 * (1 + 0.04 * prints),
   };
 }
+

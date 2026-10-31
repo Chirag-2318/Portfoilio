@@ -82,7 +82,7 @@ export function ResumeActions() {
 
       {/* Desktop only: Jump to navigation */}
       <div className="hidden lg:flex flex-col pt-2">
-        <span className="label block mb-2 text-ink-3 select-none">Jump to</span>
+        <span className="label block mb-2 text-ink-2 select-none">Jump to</span>
         <nav aria-label="Resume sections" className="flex flex-col border-t border-line hairline">
           {SECTIONS.map((sec) => (
             <button
@@ -94,7 +94,7 @@ export function ResumeActions() {
               <span className="group-hover:translate-x-0.5 transition-transform duration-160 ease-out-expo">
                 {sec.label}
               </span>
-              <span className="font-mono text-xs text-ink-3">
+              <span className="font-mono text-xs text-ink-2">
                 {sec.index}
               </span>
             </button>

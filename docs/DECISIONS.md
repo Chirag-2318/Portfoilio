@@ -233,7 +233,34 @@ This document logs decisions, trade-offs, and verification results across all im
    - Circular clip-path curtain transitions switch to subtle opacity fades.
    - Target wander acceleration is set to zero; sheet transitions and snap alignment animations swap instantly without motion.
 
+## Prompt 9 — Responsive Polish, Accessibility, Performance, SEO
 
+1. **Light Accent Token Refinement for WCAG AA Compliance (#B82D17)**:
+   - Automated relative luminance contrast audit via scripts/contrast.mjs revealed that the initial light accent token #C8321A achieved 4.29:1 against --paper-2 (#EAE6DB), narrowly missing the WCAG AA 4.5:1 threshold for normal text.
+   - Refined light --accent to #B82D17 (preserving exact hue while stepping down lightness), achieving:
+     - 4.92:1 against --paper-2 (#EAE6DB) [PASS]
+     - 5.38:1 against --paper (#F3F0E8) [PASS]
+     - 5.78:1 against --surface (#FAF8F3) [PASS]
+     - 6.13:1 for --accent-ink (#FFFFFF) against --accent [PASS]
+   - Switched all real text using --ink-3 (which is reserved exclusively for decorative rules, guides, and crop marks) to --ink-2, guaranteeing universal WCAG AA compliance across both themes.
 
+2. **Fraunces Axis Pruning (`WONK` removed)**:
+   - Pruned Fraunces configuration in `src/app/layout.tsx` from `axes: ["opsz", "WONK", "SOFT"]` to `axes: ["opsz", "SOFT"]`, matching the variable font specification and removing unnecessary font file overhead.
 
+3. **Dynamic Import for Command Palette (`CommandMenu`)**:
+   - Refactored `CommandMenu` in `CommandProvider.tsx` using `next/dynamic(() => import("@/components/command/CommandMenu"), { ssr: false })`.
+   - Preloaded on first idle callback (`requestIdleCallback` with 2s timeout) or immediately upon shortcut (`Ctrl/Cmd+K`) or search button trigger, completely removing its bundle from the initial critical rendering path.
 
+4. **WCAG 2.5.3 (Label in Name) Compliance in Header**:
+   - Monogram "CP" container marked `aria-hidden="true"` so the logo link accessible name matches visible "Chirag Patil" text.
+   - Removed conflicting `aria-label="Search"` on the desktop command trigger button; the button directly presents visible "Search" text, and the shortcut badge is marked `<Kbd aria-hidden="true">`.
+
+5. **Strict Semantic `<dl>` and `<list>` Content Models**:
+   - Grouping in `IndexList.tsx` updated so `<ViewLink>` is nested inside `<dd>`, ensuring `<dl>` contains exclusively `<div>` with `<dt>` and `<dd>`.
+   - Contact rows action button wrapper converted to `<dd>`.
+   - `WorkView` desktop container assigned `role="list"` and `ProjectRow` desktop item assigned `role="listitem"`, satisfying Axe-core semantic list hierarchy.
+
+6. **Signature Lens RAF Loop Dormancy & Element Caching**:
+   - `useLens.ts` enhanced to check `curR < 0.5 && prevR < 0.5`. When the lens is closed/dormant, DOM clip-path and SVG operations are bypassed, eliminating idle CPU consumption.
+   - SVG child elements in `ringRef` (`.loupe-circle`, ticks, label) are cached on first mount, eliminating 6 `querySelector` queries per frame.
+   - Auto-sweep intro timer scheduled for 1800ms, ensuring zero interference with initial paint and hydration metrics.

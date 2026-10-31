@@ -70,7 +70,7 @@ export function ProjectRow({
         >
           <div className="flex flex-col gap-1 pr-3 flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] text-ink-3 leading-none">
+              <span className="font-mono text-[10px] text-ink-2 leading-none">
                 {project.index}
               </span>
               <span className="font-mono text-[11px] text-ink-2 leading-none truncate">
@@ -90,7 +90,7 @@ export function ProjectRow({
           <div className="shrink-0 w-8 h-8 flex items-center justify-center">
             <span
               className={`transition-transform duration-260 ease-out-expo ${
-                isOpen ? "rotate-180 text-accent" : "text-ink-3 group-hover:text-ink"
+                isOpen ? "rotate-180 text-accent" : "text-ink-2 group-hover:text-ink"
               }`}
             >
               <Icon name="chevron-down" size={16} />
@@ -126,11 +126,10 @@ export function ProjectRow({
 
   // ===================== DESKTOP / TABLET ROW =====================
   return (
-    <li className="w-full">
+    <div role="listitem" className="w-full">
       <button
         ref={buttonRef}
         type="button"
-        role="button"
         tabIndex={tabIndex}
         aria-pressed={isSelected}
         aria-current={isSelected ? "true" : undefined}
@@ -153,7 +152,7 @@ export function ProjectRow({
           <div className="flex items-center gap-2">
             <span
               className={`font-mono text-[10px] leading-none transition-colors duration-160 ${
-                isSelected ? "text-ink-2 font-medium" : "text-ink-3 group-hover:text-ink-2"
+                isSelected ? "text-ink-2 font-medium" : "text-ink-2 group-hover:text-ink-2"
               }`}
             >
               {project.index}
@@ -178,13 +177,13 @@ export function ProjectRow({
             className={`transition-colors duration-160 ${
               isSelected
                 ? "text-accent"
-                : "text-ink-3 group-hover:text-ink"
+                : "text-ink-2 group-hover:text-ink"
             }`}
           >
             <Icon name="arrow-up-right" size={16} />
           </span>
         </div>
       </button>
-    </li>
+    </div>
   );
 }

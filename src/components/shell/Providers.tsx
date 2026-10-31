@@ -8,7 +8,6 @@ import { ViewTransitionProvider } from "@/components/transition/ViewTransitionPr
 import { Curtain } from "@/components/transition/Curtain";
 import { GameProvider } from "@/components/shell/GameProvider";
 import { CommandProvider } from "@/components/command/CommandProvider";
-import { CommandMenu } from "@/components/command/CommandMenu";
 import { DraftProvider } from "@/components/home/DraftContext";
 
 export function Providers({
@@ -33,7 +32,6 @@ export function Providers({
                 <CommandProvider>
                   {children}
                   <Curtain />
-                  <CommandMenu />
                 </CommandProvider>
               </GameProvider>
             </ViewTransitionProvider>

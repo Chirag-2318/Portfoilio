@@ -21,3 +21,4 @@ function getServerSnapshot(): boolean {
 export function useReducedMotionFlag(): boolean {
   return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
+

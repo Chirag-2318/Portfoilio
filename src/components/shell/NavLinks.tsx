@@ -12,7 +12,7 @@ export function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <nav className="hidden md:flex items-center gap-4 lg:gap-6" aria-label="Main Navigation">
+    <nav className="hidden md:flex items-center gap-4 lg:gap-6" aria-label="Primary">
       {site.nav.map((item) => {
         const isActive = pathname === item.href;
 
@@ -25,7 +25,10 @@ export function NavLinks() {
               isActive ? "text-ink" : "text-ink-2 hover:text-ink"
             }`}
           >
-            <span className="hidden lg:inline font-mono text-[11px] leading-none text-ink-3">
+            <span
+              className="hidden lg:inline font-mono text-[11px] leading-none text-ink-2"
+              aria-hidden="true"
+            >
               {item.index}
             </span>
             {isActive ? (

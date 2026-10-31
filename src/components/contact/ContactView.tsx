@@ -49,7 +49,7 @@ export function ContactView() {
         {/* LEFT COLUMN: Col 1-7, vertically anchored toward bottom */}
         <div className="col-span-7 flex flex-col justify-end">
           <Reveal delay={0.06} y={12}>
-            <span className="label block mb-3 text-ink-3">Email</span>
+            <span className="label block mb-3 text-ink-2">Email</span>
             <EmailLink />
           </Reveal>
 
@@ -101,7 +101,7 @@ export function ContactView() {
       {/* TABLET / MOBILE (< 1024px) */}
       <div className="flex flex-col gap-8 lg:hidden pt-2 pb-12">
         <Reveal delay={0.06} y={8}>
-          <span className="label block mb-2 text-ink-3">Email</span>
+          <span className="label block mb-2 text-ink-2">Email</span>
           <EmailLink />
         </Reveal>
 

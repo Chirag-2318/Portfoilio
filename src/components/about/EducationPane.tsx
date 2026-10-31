@@ -32,7 +32,7 @@ export function EducationPane() {
                 </h3>
                 <p className="text-sm sm:text-base text-ink">
                   <span>{item.degree}</span>
-                  <span className="text-ink-3 mx-2">·</span>
+                  <span className="text-ink-2 mx-2" aria-hidden="true">·</span>
                   <span className="text-ink-2">{item.field}</span>
                 </p>
               </div>
@@ -46,7 +46,7 @@ export function EducationPane() {
               </h3>
               <p className="text-xs sm:text-sm text-ink leading-relaxed">
                 <span>{item.degree}</span>
-                <span className="text-ink-3 mx-1.5">·</span>
+                <span className="text-ink-2 mx-1.5" aria-hidden="true">·</span>
                 <span className="text-ink-2">{item.field}</span>
               </p>
             </div>

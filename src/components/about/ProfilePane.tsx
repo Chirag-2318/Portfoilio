@@ -23,7 +23,7 @@ export function ProfilePane() {
                 key={fact.label}
                 className="grid grid-cols-[120px_1fr] items-center min-h-[44px] py-2 border-t border-line"
               >
-                <dt className="label text-ink-3">{fact.label}</dt>
+                <dt className="label text-ink-2">{fact.label}</dt>
                 <dd className="text-sm font-medium text-ink m-0">{fact.value}</dd>
               </div>
             ))}
@@ -53,7 +53,7 @@ export function ProfilePane() {
               key={fact.label}
               className="grid grid-cols-[100px_1fr] sm:grid-cols-[120px_1fr] items-center min-h-[44px] py-2 border-t border-line"
             >
-              <dt className="label text-ink-3">{fact.label}</dt>
+              <dt className="label text-ink-2">{fact.label}</dt>
               <dd className="text-sm font-medium text-ink m-0">{fact.value}</dd>
             </div>
           ))}

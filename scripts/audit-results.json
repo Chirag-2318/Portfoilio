@@ -1,0 +1,1160 @@
+{
+  "responsive": [
+    {
+      "viewport": "320x568",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "320x568",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "360x740",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "390x844",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "768x1024",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1024x768",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1366x768",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1440x900",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1920x1080",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "2560x1440",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "844x390-landscape",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/work/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/work/#sar",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/work/#validedi",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/work/#arthix",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/about/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/about/#profile",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/about/#education",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/about/#skills",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/about/#highlights",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/resume/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/contact/",
+      "status": "PASS",
+      "note": "Clean layout"
+    },
+    {
+      "viewport": "1280x720-zoom200",
+      "route": "/404.html",
+      "status": "PASS",
+      "note": "Clean layout"
+    }
+  ],
+  "axe": [
+    {
+      "theme": "light",
+      "route": "/",
+      "violationsCount": 2,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "route": "/work/",
+      "violationsCount": 2,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 3,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "route": "/about/",
+      "violationsCount": 1,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "route": "/resume/",
+      "violationsCount": 2,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 4,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "route": "/contact/",
+      "violationsCount": 2,
+      "violations": [
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/landmark-one-main?application=axeAPI"
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/page-has-heading-one?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "light",
+      "route": "/404.html",
+      "violationsCount": 1,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "route": "/",
+      "violationsCount": 2,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "route": "/work/",
+      "violationsCount": 1,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "route": "/about/",
+      "violationsCount": 1,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "route": "/resume/",
+      "violationsCount": 2,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 21,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "route": "/contact/",
+      "violationsCount": 2,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": 2,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    },
+    {
+      "theme": "dark",
+      "route": "/404.html",
+      "violationsCount": 1,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+          "nodes": 1,
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI"
+        }
+      ]
+    }
+  ],
+  "touchTargets": []
+}

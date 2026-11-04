@@ -3,6 +3,7 @@
 import * as React from "react";
 import type { CursorRole, CursorState } from "./inspector-types";
 import { INSPECTOR_CONFIG } from "./timeline-config";
+import { debugStore } from "./motion-tokens";
 
 interface CursorCanvasProps {
   active: boolean;
@@ -40,9 +41,10 @@ export function CursorCanvas({
     }
 
     const isMobile = window.innerWidth < 768;
+    const debugCount = debugStore.get().cursorCount;
     const count = isMobile
       ? INSPECTOR_CONFIG.mobileCursorCount
-      : INSPECTOR_CONFIG.desktopCursorCount;
+      : (debugCount || INSPECTOR_CONFIG.desktopCursorCount);
 
     const palette = INSPECTOR_CONFIG.cursorPalette;
     const newCursors: CursorState[] = [];
@@ -214,7 +216,7 @@ export function CursorCanvas({
         }
 
         // Prune old trail points
-        const trailLifetime = INSPECTOR_CONFIG.trailLifetimeMs;
+        const trailLifetime = debugStore.get().trailLifetimeMs || INSPECTOR_CONFIG.trailLifetimeMs;
         c.trail = c.trail.filter((p) => now - p.time <= trailLifetime);
 
         // 1. Render Ghost Trails
@@ -348,3 +350,4 @@ function drawNameTag(ctx: CanvasRenderingContext2D, tag: string, accentColor: st
 
   ctx.restore();
 }
+

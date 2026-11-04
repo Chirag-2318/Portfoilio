@@ -3,6 +3,7 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { site } from "@/content/site";
+import { TypewriterText } from "@/components/inspector/effects/TypewriterText";
 
 const TAGLINES = site.home.taglines;
 
@@ -80,6 +81,8 @@ export function RotatingTagline({ className = "" }: { className?: string }) {
       >
         {prefersReducedMotion ? (
           <span className="block truncate">{TAGLINES[0]}</span>
+        ) : index === 0 ? (
+          <TypewriterText text={TAGLINES[0]} targetId="hero-tagline" className="block truncate" />
         ) : (
           <AnimatePresence mode="wait">
             <motion.span

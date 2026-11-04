@@ -5,6 +5,7 @@ import { site } from "@/content/site";
 import { AvatarBadge } from "@/components/blueprint/AvatarBadge";
 import { RotatingTagline } from "@/components/hero/RotatingTagline";
 import { SoundToggle } from "@/components/sound/sound-effects";
+import { GhostEchoHeadline } from "@/components/inspector/effects/GhostEchoHeadline";
 
 interface HeroBlueprintProps {
   hasPhoto: boolean;
@@ -35,7 +36,7 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
             className="font-serif text-[1.85rem] min-[420px]:text-[2.25rem] sm:text-[3.25rem] leading-none font-normal tracking-[-0.01em] text-foreground whitespace-nowrap"
             style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
           >
-            {site.name.full}
+            <GhostEchoHeadline text={site.name.full} targetId="hero-name" />
           </h1>
 
           <SoundToggle

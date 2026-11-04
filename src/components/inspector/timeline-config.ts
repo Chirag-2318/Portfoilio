@@ -2,10 +2,11 @@
 //
 // ─── HOW TO RETIME OR ADD A NEW TARGET ───
 // 1. Add `data-build-id="your-id"` and `data-build-type="text|block|media|chrome|pill"` to your DOM element.
-// 2. Add an entry to HERO_STEPS below with your targetId, assigned cursorIndex, role, startMs, and durationMs.
+// 2. Add an entry to RAW_HERO_STEPS below with your targetId, assigned cursorIndex, role, startMs, and durationMs.
 // 3. To retime: adjust `startMs` or `durationMs` (all times in milliseconds relative to sequence start).
 
 import type { TimelineStep } from "./inspector-types";
+import { MOTION_DURATIONS, seededRandom } from "./motion-tokens";
 
 export const INSPECTOR_CONFIG = {
   // Cursor Swarm Counts
@@ -14,7 +15,7 @@ export const INSPECTOR_CONFIG = {
 
   // Swarm Burst Physics (fanning out from Enter button origin)
   burstSpreadRadius: 180,
-  burstDurationMs: 400,
+  burstDurationMs: MOTION_DURATIONS.normal,
 
   // Trail Settings
   trailSampleDistancePx: 12,
@@ -23,7 +24,7 @@ export const INSPECTOR_CONFIG = {
   // Timing Targets
   heroTotalDurationMs: 5200,      // Total hero sequence target (5-6s)
   sectionDurationMs: 1800,        // Brisk build for below-the-fold sections
-  failsafeTimeoutMs: 12000,       // Absolute fallback to force entire page visible
+  failsafeTimeoutMs: 8000,        // 8s failsafe: forces entire page visible under any slow/errored device
 
   // Inspector Visual Tokens
   blueOutlineColor: "#2563eb",    // Saturated blueprint blue (matches inspector theme)
@@ -63,43 +64,43 @@ export const INSPECTOR_CONFIG = {
   } as Record<number, string>,
 } as const;
 
-// ─── HERO SEQUENCE TIMELINE ───
+// ─── RAW HERO SEQUENCE TIMELINE ───
 // Sequence:
 // 1. Nav (0.0s - 0.9s): Logo, Links, Search, Tools
 // 2. Profile Block (0.9s - 2.6s): Photo Frame, Name, Mute Icon, Tagline
 // 3. Info Rows (2.6s - 4.4s): 6 rows (icons then text typing)
 // 4. Handwritten Annotation (4.4s - 5.2s): "find me here" stroke reveal
-export const HERO_STEPS: TimelineStep[] = [
+const RAW_HERO_STEPS: TimelineStep[] = [
   // ── 1. Navigation Bar (0.0s - 0.9s)
   {
     targetId: "nav-logo",
     cursorIndex: 0,
     cursorRole: "drawer",
     startMs: 80,
-    durationMs: 380,
+    durationMs: MOTION_DURATIONS.normal,
     guideAxis: "both",
   },
   {
     targetId: "nav-links",
     cursorIndex: 1,
     cursorRole: "drawer",
-    startMs: 200,
-    durationMs: 450,
+    startMs: 210,
+    durationMs: 440,
     guideAxis: "y",
   },
   {
     targetId: "nav-search",
     cursorIndex: 2,
     cursorRole: "drawer",
-    startMs: 340,
-    durationMs: 400,
+    startMs: 350,
+    durationMs: MOTION_DURATIONS.normal,
     guideAxis: "y",
   },
   {
     targetId: "nav-tools",
     cursorIndex: 3,
     cursorRole: "drawer",
-    startMs: 460,
+    startMs: 470,
     durationMs: 360,
     guideAxis: "both",
   },
@@ -110,17 +111,17 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "hero-photo",
     cursorIndex: 2,
     cursorRole: "placer",
-    startMs: 880,
-    durationMs: 650,
+    startMs: 890,
+    durationMs: MOTION_DURATIONS.slow,
     guideAxis: "both",
   },
-  // Name "Chirag Patil" (Drawer frames it, then Typer resolves)
+  // Name "Chirag Patil" (Ghost Echo Headline Collapse)
   {
     targetId: "hero-name",
     cursorIndex: 1,
     cursorRole: "drawer",
-    startMs: 1200,
-    durationMs: 600,
+    startMs: 1210,
+    durationMs: 620,
     guideAxis: "both",
   },
   // Mute Sound Toggle Button
@@ -128,17 +129,17 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "hero-mute",
     cursorIndex: 4,
     cursorRole: "drawer",
-    startMs: 1550,
-    durationMs: 350,
+    startMs: 1560,
+    durationMs: 340,
     guideAxis: "y",
   },
-  // Monospace Tagline (Typer types in)
+  // Monospace Tagline (Typewriter typing)
   {
     targetId: "hero-tagline",
     cursorIndex: 1,
     cursorRole: "typer",
-    startMs: 1850,
-    durationMs: 700,
+    startMs: 1860,
+    durationMs: 720,
     guideAxis: "x",
   },
 
@@ -148,7 +149,7 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-1-icon",
     cursorIndex: 5,
     cursorRole: "drawer",
-    startMs: 2550,
+    startMs: 2560,
     durationMs: 300,
     guideAxis: "x",
   },
@@ -156,7 +157,7 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-1-text",
     cursorIndex: 6,
     cursorRole: "typer",
-    startMs: 2650,
+    startMs: 2660,
     durationMs: 450,
     guideAxis: "x",
   },
@@ -166,7 +167,7 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-2-icon",
     cursorIndex: 7,
     cursorRole: "drawer",
-    startMs: 2950,
+    startMs: 2960,
     durationMs: 280,
     guideAxis: "x",
   },
@@ -174,17 +175,17 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-2-text",
     cursorIndex: 8,
     cursorRole: "typer",
-    startMs: 3050,
+    startMs: 3060,
     durationMs: 420,
     guideAxis: "x",
   },
 
-  // Row 3: Live IST Clock & Timezone
+  // Row 3: Live IST Clock & Timezone (Scramble decode)
   {
     targetId: "info-row-3-icon",
     cursorIndex: 9,
     cursorRole: "drawer",
-    startMs: 3300,
+    startMs: 3310,
     durationMs: 280,
     guideAxis: "x",
   },
@@ -192,17 +193,17 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-3-text",
     cursorIndex: 10,
     cursorRole: "typer",
-    startMs: 3400,
-    durationMs: 450,
+    startMs: 3410,
+    durationMs: 460,
     guideAxis: "x",
   },
 
-  // Row 4: Email
+  // Row 4: Email (Scramble decode)
   {
     targetId: "info-row-4-icon",
     cursorIndex: 11,
     cursorRole: "drawer",
-    startMs: 3650,
+    startMs: 3660,
     durationMs: 280,
     guideAxis: "x",
   },
@@ -210,17 +211,17 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-4-text",
     cursorIndex: 12,
     cursorRole: "typer",
-    startMs: 3750,
-    durationMs: 400,
+    startMs: 3760,
+    durationMs: 410,
     guideAxis: "x",
   },
 
-  // Row 5: Phone Number
+  // Row 5: Phone Number (Scramble decode)
   {
     targetId: "info-row-5-icon",
     cursorIndex: 13,
     cursorRole: "drawer",
-    startMs: 4000,
+    startMs: 4010,
     durationMs: 280,
     guideAxis: "x",
   },
@@ -228,8 +229,8 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-5-text",
     cursorIndex: 14,
     cursorRole: "typer",
-    startMs: 4080,
-    durationMs: 400,
+    startMs: 4090,
+    durationMs: 410,
     guideAxis: "x",
   },
 
@@ -238,7 +239,7 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-6-icon",
     cursorIndex: 5,
     cursorRole: "drawer",
-    startMs: 4300,
+    startMs: 4310,
     durationMs: 280,
     guideAxis: "x",
   },
@@ -246,8 +247,8 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "info-row-6-text",
     cursorIndex: 6,
     cursorRole: "typer",
-    startMs: 4380,
-    durationMs: 480,
+    startMs: 4390,
+    durationMs: 490,
     guideAxis: "x",
   },
 
@@ -256,16 +257,25 @@ export const HERO_STEPS: TimelineStep[] = [
     targetId: "social-buttons",
     cursorIndex: 3,
     cursorRole: "drawer",
-    startMs: 4700,
-    durationMs: 400,
+    startMs: 4710,
+    durationMs: MOTION_DURATIONS.normal,
     guideAxis: "both",
   },
   {
     targetId: "social-note",
     cursorIndex: 0,
     cursorRole: "typer",
-    startMs: 4850,
-    durationMs: 480,
+    startMs: 4860,
+    durationMs: 490,
     guideAxis: "both",
   },
 ];
+
+// Apply deterministic seeded micro-variance so no two elements ever share the exact same start frame
+export const HERO_STEPS: TimelineStep[] = RAW_HERO_STEPS.map((step, idx) => {
+  const jitterMs = Math.round((seededRandom(idx * 7919) - 0.5) * 14); // -7ms to +7ms
+  return {
+    ...step,
+    startMs: Math.max(0, step.startMs + jitterMs),
+  };
+});

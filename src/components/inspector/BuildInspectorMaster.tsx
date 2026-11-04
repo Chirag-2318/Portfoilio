@@ -8,6 +8,8 @@ import { InspectorOverlay } from "./InspectorOverlay";
 import { HERO_STEPS, INSPECTOR_CONFIG } from "./timeline-config";
 import type { ActiveSkeletonBox, CursorRole, InspectorGuide } from "./inspector-types";
 import { playSound } from "@/components/sound/sound-effects";
+import { DebugTuningPanel } from "./DebugTuningPanel";
+import { debugStore } from "./motion-tokens";
 
 export function BuildInspectorMaster() {
   const [active, setActive] = React.useState(false);
@@ -40,6 +42,13 @@ export function BuildInspectorMaster() {
     if (typeof document !== "undefined") {
       document.documentElement.removeAttribute("data-build-active");
     }
+  }, []);
+
+  // Subscribe to debugStore for live tuning
+  React.useEffect(() => {
+    return debugStore.subscribe((cfg) => {
+      speedRef.current = cfg.speedMultiplier;
+    });
   }, []);
 
   // Subscribe to introController "intro:entering"
@@ -305,12 +314,19 @@ export function BuildInspectorMaster() {
         <button
           type="button"
           onClick={finishSequence}
-          aria-label="Skip inspector animation (or press Escape)"
-          className="fixed bottom-4 right-4 z-[9995] px-2.5 py-1 rounded-[6px] border border-[var(--border)] bg-[var(--background)] text-muted-foreground hover:text-foreground text-xs font-mono shadow-md backdrop-blur-sm transition-all hover:scale-105 active:scale-95 focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
+          aria-label="Skip inspector live build (or press Escape)"
+          className="fixed bottom-5 right-5 z-[9995] inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--line-strong)] bg-[var(--background)]/90 backdrop-blur-md text-foreground font-mono text-xs tracking-wider uppercase hover:border-[var(--accent)] hover:text-[var(--accent)] active:scale-[0.97] transition-all shadow-lg focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
         >
-          Skip build <span className="opacity-60 text-[10px] ml-1">[Esc]</span>
+          <span>Skip</span>
+          <kbd className="text-[10px] text-muted-foreground bg-[var(--muted)] px-1.5 py-0.5 rounded border border-[var(--border)] font-sans">
+            ESC
+          </kbd>
         </button>
       )}
+
+      {/* Hidden Debug Tuning Panel (?debug) */}
+      <DebugTuningPanel />
     </>
   );
 }
+

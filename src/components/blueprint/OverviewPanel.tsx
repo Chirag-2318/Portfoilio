@@ -4,6 +4,7 @@ import * as React from "react";
 import { site } from "@/content/site";
 import { IconTile } from "@/components/blueprint/IconTile";
 import { CopyButton } from "@/components/blueprint/CopyButton";
+import { ScrambleDecodeText } from "@/components/inspector/effects/ScrambleDecodeText";
 
 export function OverviewPanel() {
   const [timeStr, setTimeStr] = React.useState<string>("");
@@ -114,7 +115,11 @@ export function OverviewPanel() {
             className="flex items-baseline gap-1.5 truncate"
           >
             <span className="tabular-nums text-foreground">
-              {mounted ? timeStr : "--:-- --"}
+              {mounted ? (
+                <ScrambleDecodeText text={timeStr} targetId="info-row-3-text" />
+              ) : (
+                "--:-- --"
+              )}
             </span>
             <span className="text-xs text-muted-foreground truncate">
               {mounted ? tzOffsetNote : "// IST"}
@@ -136,7 +141,7 @@ export function OverviewPanel() {
               href={`mailto:${site.email}`}
               className="link truncate text-foreground"
             >
-              {site.email}
+              <ScrambleDecodeText text={site.email} targetId="info-row-4-text" />
             </a>
           </div>
           <CopyButton text={site.email} message="Email copied to clipboard" />
@@ -156,7 +161,7 @@ export function OverviewPanel() {
               href="tel:+918080645366"
               className="link truncate text-foreground"
             >
-              +91 8080645366
+              <ScrambleDecodeText text="+91 8080645366" targetId="info-row-5-text" />
             </a>
           </div>
           <CopyButton text="+918080645366" message="Phone number copied" />

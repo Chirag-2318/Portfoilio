@@ -3,6 +3,7 @@
 import * as React from "react";
 import type { ActiveSkeletonBox, InspectorGuide } from "./inspector-types";
 import { INSPECTOR_CONFIG } from "./timeline-config";
+import { debugStore } from "./motion-tokens";
 
 interface InspectorOverlayProps {
   active: boolean;
@@ -17,11 +18,19 @@ export function InspectorOverlay({
   guides,
   showTopRuler = false,
 }: InspectorOverlayProps) {
+  const [showLines, setShowLines] = React.useState(true);
+
+  React.useEffect(() => {
+    return debugStore.subscribe((cfg) => {
+      setShowLines(cfg.showInspectorLines);
+    });
+  }, []);
+
   if (!active && boxes.size === 0 && guides.length === 0) {
     return null;
   }
 
-  const activeBoxes = Array.from(boxes.values());
+  const activeBoxes = showLines ? Array.from(boxes.values()) : [];
 
   return (
     <div
@@ -248,3 +257,4 @@ export function InspectorOverlay({
     </div>
   );
 }
+

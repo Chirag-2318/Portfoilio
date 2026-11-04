@@ -5,6 +5,7 @@ import { SkipLink } from "@/components/shell/SkipLink";
 import { SiteHeader } from "@/components/blueprint/SiteHeader";
 import { ScrollTopButton } from "@/components/blueprint/ScrollTopButton";
 import { IntroGate } from "@/components/intro/IntroGate";
+import { BuildInspectorMaster } from "@/components/inspector/BuildInspectorMaster";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const portfolioRef = React.useRef<HTMLDivElement>(null);
@@ -24,6 +25,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <ScrollTopButton />
       </div>
 
+      <BuildInspectorMaster />
       <IntroGate portfolioRef={portfolioRef} />
     </>
   );

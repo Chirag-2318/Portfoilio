@@ -21,6 +21,8 @@ export function SocialPanel() {
       <div className="relative inline-flex items-center">
         {/* Handwritten note "find me here": tip ends 8px left of button, vertically at centre line */}
         <div
+          data-build-id="social-note"
+          data-build-type="text"
           aria-hidden="true"
           className="hidden xl:flex absolute right-full mr-2 top-1/2 -translate-y-full flex-col items-end pointer-events-none select-none z-20"
         >
@@ -58,7 +60,12 @@ export function SocialPanel() {
         </div>
 
         {/* Buttons Row */}
-        <div data-social-buttons className="flex items-center gap-2">
+        <div
+          data-social-buttons
+          data-build-id="social-buttons"
+          data-build-type="block"
+          className="flex items-center gap-2"
+        >
           {renderGithub && (
             <a
               href={githubUrl}

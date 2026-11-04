@@ -17,7 +17,11 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
       className="relative mx-auto max-w-3xl w-full border-x border-[var(--line-soft)] screen-line-bottom select-none grid grid-cols-[auto_1fr] bg-[var(--background)]"
     >
       {/* 1. Avatar Block: Square ID-Frame Avatar with Crop Marks (left column) */}
-      <div className="relative border-r border-[var(--line)] -mx-px flex items-center justify-center p-2.5 sm:p-3 bg-[var(--background)] shrink-0">
+      <div
+        data-build-id="hero-photo"
+        data-build-type="media"
+        className="relative border-r border-[var(--line)] -mx-px flex items-center justify-center p-2.5 sm:p-3 bg-[var(--background)] shrink-0"
+      >
         <AvatarBadge hasPhoto={hasPhoto} />
       </div>
 
@@ -26,17 +30,27 @@ export function HeroBlueprint({ hasPhoto }: HeroBlueprintProps) {
         {/* Row 1: Serif H1 name + Mute toggle */}
         <div className="flex-1 pl-3 sm:pl-5 pr-2 sm:pr-4 py-2 sm:py-3 flex items-center justify-between sm:justify-start gap-3">
           <h1
+            data-build-id="hero-name"
+            data-build-type="text"
             className="font-serif text-[1.85rem] min-[420px]:text-[2.25rem] sm:text-[3.25rem] leading-none font-normal tracking-[-0.01em] text-foreground whitespace-nowrap"
             style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
           >
             {site.name.full}
           </h1>
 
-          <SoundToggle className="size-7 sm:size-8 rounded-[8px] shrink-0" />
+          <SoundToggle
+            data-build-id="hero-mute"
+            data-build-type="pill"
+            className="size-7 sm:size-8 rounded-[8px] shrink-0"
+          />
         </div>
 
         {/* Row 2: Rotating Humour Tagline */}
-        <div className="border-t border-[var(--line)] h-[44px] sm:h-10 py-1 pl-3 sm:pl-5 pr-3 flex items-center">
+        <div
+          data-build-id="hero-tagline"
+          data-build-type="text"
+          className="border-t border-[var(--line)] h-[44px] sm:h-10 py-1 pl-3 sm:pl-5 pr-3 flex items-center"
+        >
           <RotatingTagline className="w-full" />
         </div>
       </div>

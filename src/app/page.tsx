@@ -58,7 +58,7 @@ export default function HomePage() {
         <StripeDivider />
 
         {/* 7. About Panel (id=about) */}
-        <Panel id="about" noTopLine noBottomLine>
+        <Panel id="about" data-build-section="about" noTopLine noBottomLine>
           <AboutPanel />
         </Panel>
 
@@ -66,12 +66,12 @@ export default function HomePage() {
         <StripeDivider />
 
         {/* 9. Experience (id=experience) */}
-        <Panel id="experience" noTopLine>
+        <Panel id="experience" data-build-section="experience" noTopLine>
           <ExperiencePanel />
         </Panel>
 
         {/* 10. Projects (id=projects) */}
-        <Panel id="projects" noTopLine noBottomLine>
+        <Panel id="projects" data-build-section="projects" noTopLine noBottomLine>
           <ProjectsPanel />
         </Panel>
 
@@ -79,17 +79,17 @@ export default function HomePage() {
         <StripeDivider />
 
         {/* 12. Achievements (id=achievements) */}
-        <Panel id="achievements" noTopLine>
+        <Panel id="achievements" data-build-section="achievements" noTopLine>
           <AchievementsPanel />
         </Panel>
 
         {/* 13. Education (id=education) */}
-        <Panel id="education" noTopLine>
+        <Panel id="education" data-build-section="education" noTopLine>
           <EducationPanel />
         </Panel>
 
         {/* 14. Stack (id=stack) */}
-        <Panel id="stack" noTopLine noBottomLine>
+        <Panel id="stack" data-build-section="stack" noTopLine noBottomLine>
           <StackPanel />
         </Panel>
 
@@ -97,12 +97,12 @@ export default function HomePage() {
         <StripeDivider />
 
         {/* 16. Resume (id=resume) */}
-        <Panel id="resume" noTopLine>
+        <Panel id="resume" data-build-section="resume" noTopLine>
           <ResumePanel />
         </Panel>
 
         {/* 17. Contact (id=contact) */}
-        <Panel id="contact" noTopLine noBottomLine>
+        <Panel id="contact" data-build-section="contact" noTopLine noBottomLine>
           <ContactPanel />
         </Panel>
 

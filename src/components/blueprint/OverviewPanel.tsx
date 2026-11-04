@@ -64,10 +64,16 @@ export function OverviewPanel() {
       <div className="relative grid gap-x-8 gap-y-4 sm:grid-cols-2">
         {/* Row 1: Spans both columns: Briefcase icon */}
         <div className="sm:col-span-2 flex items-center gap-3 font-mono text-sm group">
-          <IconTile>
-            <BriefcaseIcon />
-          </IconTile>
-          <span className="text-foreground">
+          <div data-build-id="info-row-1-icon" data-build-type="chrome">
+            <IconTile>
+              <BriefcaseIcon />
+            </IconTile>
+          </div>
+          <span
+            data-build-id="info-row-1-text"
+            data-build-type="text"
+            className="text-foreground"
+          >
             Summer Intern @{" "}
             <a href="#experience" className="link font-semibold">
               Barclays
@@ -78,10 +84,14 @@ export function OverviewPanel() {
 
         {/* Row 2: Map pin icon */}
         <div className="flex items-center gap-3 font-mono text-sm group min-w-0">
-          <IconTile>
-            <MapPinIcon />
-          </IconTile>
+          <div data-build-id="info-row-2-icon" data-build-type="chrome">
+            <IconTile>
+              <MapPinIcon />
+            </IconTile>
+          </div>
           <a
+            data-build-id="info-row-2-text"
+            data-build-type="text"
             href="https://maps.google.com/?q=Pune,+Maharashtra,+India"
             target="_blank"
             rel="noopener noreferrer"
@@ -93,10 +103,16 @@ export function OverviewPanel() {
 
         {/* Row 3: Clock icon (live local time in Asia/Kolkata formatted hh:mm AM/PM) */}
         <div className="flex items-center gap-3 font-mono text-sm group min-w-0">
-          <IconTile>
-            <ClockIcon />
-          </IconTile>
-          <div className="flex items-baseline gap-1.5 truncate">
+          <div data-build-id="info-row-3-icon" data-build-type="chrome">
+            <IconTile>
+              <ClockIcon />
+            </IconTile>
+          </div>
+          <div
+            data-build-id="info-row-3-text"
+            data-build-type="text"
+            className="flex items-baseline gap-1.5 truncate"
+          >
             <span className="tabular-nums text-foreground">
               {mounted ? timeStr : "--:-- --"}
             </span>
@@ -109,10 +125,14 @@ export function OverviewPanel() {
         {/* Row 4: Mail icon with copy button */}
         <div className="flex items-center gap-3 font-mono text-sm group min-w-0 justify-between sm:justify-start">
           <div className="flex items-center gap-3 min-w-0 truncate">
-            <IconTile>
-              <MailIcon />
-            </IconTile>
+            <div data-build-id="info-row-4-icon" data-build-type="chrome">
+              <IconTile>
+                <MailIcon />
+              </IconTile>
+            </div>
             <a
+              data-build-id="info-row-4-text"
+              data-build-type="text"
               href={`mailto:${site.email}`}
               className="link truncate text-foreground"
             >
@@ -125,10 +145,14 @@ export function OverviewPanel() {
         {/* Row 5: Phone icon with copy button */}
         <div className="flex items-center gap-3 font-mono text-sm group min-w-0 justify-between sm:justify-start">
           <div className="flex items-center gap-3 min-w-0 truncate">
-            <IconTile>
-              <PhoneIcon />
-            </IconTile>
+            <div data-build-id="info-row-5-icon" data-build-type="chrome">
+              <IconTile>
+                <PhoneIcon />
+              </IconTile>
+            </div>
             <a
+              data-build-id="info-row-5-text"
+              data-build-type="text"
               href="tel:+918080645366"
               className="link truncate text-foreground"
             >
@@ -140,10 +164,16 @@ export function OverviewPanel() {
 
         {/* Row 6: Graduation cap icon */}
         <div className="sm:col-span-2 flex items-center gap-3 font-mono text-sm group">
-          <IconTile>
-            <GraduationCapIcon />
-          </IconTile>
-          <span className="text-foreground">
+          <div data-build-id="info-row-6-icon" data-build-type="chrome">
+            <IconTile>
+              <GraduationCapIcon />
+            </IconTile>
+          </div>
+          <span
+            data-build-id="info-row-6-text"
+            data-build-type="text"
+            className="text-foreground"
+          >
             B.Tech E&amp;TC at PICT + B.Sc at IIT Madras
           </span>
         </div>

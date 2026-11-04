@@ -1,13 +1,14 @@
 import * as React from "react";
 import { cn } from "@/lib/cn";
 
-interface PanelProps {
+interface PanelProps extends React.HTMLAttributes<HTMLElement> {
   id?: string;
   className?: string;
   children: React.ReactNode;
   noTopLine?: boolean;
   noBottomLine?: boolean;
   "aria-labelledby"?: string;
+  "data-build-section"?: string;
 }
 
 export function Panel({
@@ -17,11 +18,15 @@ export function Panel({
   noTopLine = false,
   noBottomLine = false,
   "aria-labelledby": ariaLabelledBy,
+  "data-build-section": dataBuildSection,
+  ...props
 }: PanelProps) {
   return (
     <section
       id={id}
       aria-labelledby={ariaLabelledBy}
+      data-build-section={dataBuildSection}
+      {...props}
       className={cn(
         "mx-auto max-w-3xl w-full border-x border-[var(--line-soft)] relative bg-[var(--background)]",
         noTopLine ? "screen-line-top-none" : "screen-line-top",

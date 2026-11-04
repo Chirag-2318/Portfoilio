@@ -71,7 +71,11 @@ export function SiteHeader({ className }: SiteHeaderProps) {
     >
       <div className="mx-auto md:max-w-3xl h-full flex items-center gap-2 sm:gap-4 border-x border-[var(--line-soft)] pl-4 pr-2 screen-line-top screen-line-bottom relative">
         {/* Left: Original 28px "CP" monogram + Breadcrumb */}
-        <div className="flex items-center gap-2.5">
+        <div
+          data-build-id="nav-logo"
+          data-build-type="chrome"
+          className="flex items-center gap-2.5"
+        >
           <a
             href="#top"
             aria-label="Chirag Patil — back to top"
@@ -100,6 +104,8 @@ export function SiteHeader({ className }: SiteHeaderProps) {
 
         {/* Nav (hidden below sm): Experience, Projects, Education, Resume */}
         <nav
+          data-build-id="nav-links"
+          data-build-type="chrome"
           aria-label="Main navigation"
           className="hidden sm:flex items-center gap-4 text-sm font-medium tracking-wide"
         >
@@ -129,10 +135,16 @@ export function SiteHeader({ className }: SiteHeaderProps) {
         />
 
         {/* Right tools: Search, Gamepad, ThemeToggle */}
-        <div className="flex items-center gap-1 sm:gap-1.5">
+        <div
+          data-build-id="nav-tools"
+          data-build-type="chrome"
+          className="flex items-center gap-1 sm:gap-1.5"
+        >
           {/* Search ghost button */}
           <button
             type="button"
+            data-build-id="nav-search"
+            data-build-type="pill"
             data-sound="open"
             onClick={toggleCommand}
             aria-label="Search"

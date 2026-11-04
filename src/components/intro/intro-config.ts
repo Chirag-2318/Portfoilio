@@ -27,3 +27,4 @@ export const INTRO_CONFIG = {
   // Query parameter to bypass gate during development
   skipParam: "skipintro",
 } as const;
+

@@ -251,17 +251,12 @@ Following an architectural review to eliminate visual anxiety, reduce grid clutt
   - Projects panel: replaced hatched index tiles with plain mono text `P-01`, `P-02`, `P-03` in `--muted-foreground`.
   - Sheet tags: dimmed to 60% opacity (`opacity-60`).
 
-### 3. Hero Artwork: "Construction Sheet Monogram"
-- **Clean 2D Vector Drafting**: Replaced the 3D isometric slab block drawing with `ConstructionMonogram.tsx` in a 768x400 viewBox.
-- **Precise Geometry**:
-  - Letter **C**: arc with outer radius $R = 100$, inner radius $r = 76$ (stroke width 24), open mouth at 30°.
-  - Letter **P**: vertical stem (stroke width 24) spanning $y = 90$ to $y = 290$, semicircular bowl with radius $r = 56$ matching C's cap height.
-  - Centered horizontally at $x = 384$ via $+4\text{px}$ alignment shift.
-  - Underlying construction lines in 1px `var(--line-strong)`: tangents, concentric reference circles, center marks, and exactly two callout labels (`R = 100`, `r = 56`).
-- **Placement & Animation**:
-  - Placed in the upper hero zone (`bottom-[148px] sm:bottom-[160px]`), ensuring $>32\text{px}$ breathing room above the avatar and name block.
-  - 1.8s draw-in animation with traveling pen tips, settling at 45% opacity, interactive hover brightening to 80%.
-  - Reduced hero height: `h-[340px] sm:h-[440px]`.
+### 3. Hero Layout Cleanup
+- **Direct Navigation Integration**: The upper drawing canvas and large CP vector monogram artwork were completely removed.
+- **Profile Block Hero**: The profile block (avatar frame on left, name & rotating humorous tagline on right) now sits directly under the top navigation bar.
+- **Continuous Hairline Grid**:
+  - The under-nav hairline seamlessly caps the hero block without double borders.
+  - The vertical column borders (`border-x border-[var(--line-soft)]`) and internal divider (`border-r border-[var(--line)]`) meet cleanly with the horizontal line below (`screen-line-bottom`).
 
 ### 4. Rotating Humour Tagline
 - Replaced static hero tagline with `RotatingTagline.tsx`.
